@@ -54,17 +54,35 @@
           :y2="drawEdgeCords.y2"
         ></line>
         <g class="edges">
-          <line
-            v-for="edge in data.edges"
-            :key="`${edge.source}-${edge.target}`"
-            class="stroke-[4] stroke-black hover:stroke-red-400 hover:stroke-[4] hover:cursor-pointer"
-            :x1="(edge.source as NodeData).x"
-            :y1="(edge.source as NodeData).y"
-            :x2="(edge.target as NodeData).x"
-            :y2="(edge.target as NodeData).y"
-            @contextmenu.prevent="removeEdge($event, edge)"
-            @mousedown.stop
-          ></line>
+          <g v-for="edge in data.edges" :key="`${edge.source}-${edge.target}`">
+            <line
+              class="stroke-[4] stroke-black hover:stroke-red-400 hover:stroke-[4] hover:cursor-pointer"
+              :x1="(edge.source as NodeData).x"
+              :y1="(edge.source as NodeData).y"
+              :x2="(edge.target as NodeData).x"
+              :y2="(edge.target as NodeData).y"
+              @contextmenu.prevent="removeEdge($event, edge)"
+              @mousedown.stop
+            ></line>
+            <rect
+              class="fill-gray-300 pointer-events-none"
+              width="20"
+              height="20"
+              rx="2"
+              :x="(((edge.source as NodeData).x as number) + ((edge.target as NodeData).x as number)) / 2 - 10"
+              :y="(((edge.source as NodeData).y as number) + ((edge.target as NodeData).y as number)) / 2 - 10"
+            />
+            <text
+              class="font-mono select-none pointer-events-none"
+              dx="-4.5"
+              dy="0"
+              alignment-baseline="central"
+              :x="(((edge.source as NodeData).x as number) + ((edge.target as NodeData).x as number)) / 2"
+              :y="(((edge.source as NodeData).y as number) + ((edge.target as NodeData).y as number)) / 2"
+            >
+              {{ edge.weight }}
+            </text>
+          </g>
         </g>
         <g class="nodes">
           <g v-for="node in data.nodes" :key="node.id" class="node">
@@ -76,15 +94,12 @@
               r="10"
               @contextmenu.prevent="removeNode($event, node)"
               @mousedown.prevent.stop="beginDrawEdge($event, node)"
-              @mouseup="endDrawEdge($event, node)"
+              @mouseup="endDrawEdgeWithRandomWeight($event, node)"
               @mouseenter="highlightNode($event, node)"
               @mouseleave="unhighlightNode()"
             >
               <title>Node ID: {{ node.id }}</title>
             </circle>
-            <!-- <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
-              {{ node.id }}
-            </text> -->
           </g>
         </g>
       </svg>
@@ -94,16 +109,18 @@
 
 <script setup lang="ts">
 definePageMeta({
-  name: 'Vertex and Edge',
-  path: '/tutorial/basic/vertex-and-edge',
-  pageOrder: 1,
+  name: 'Weighted Graph',
+  path: '/tutorial/basic/weighted-graph',
+  pageOrder: 5,
 })
 
 interface NodeData extends d3.SimulationNodeDatum {
   id: number
 }
 
-interface EdgeData extends d3.SimulationLinkDatum<NodeData> {}
+interface EdgeData extends d3.SimulationLinkDatum<NodeData> {
+  weight: number
+}
 
 interface GraphData {
   nodes: NodeData[]
@@ -113,8 +130,8 @@ interface GraphData {
 const initData: GraphData = {
   nodes: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
   edges: [
-    { source: 0, target: 1 },
-    { source: 0, target: 2 },
+    { source: 0, target: 1, weight: 3 },
+    { source: 0, target: 2, weight: 3 },
   ],
 }
 
@@ -128,14 +145,14 @@ const {
   drawEdgeCords,
   beginDrawEdge,
   updateDrawEdge,
-  endDrawEdge,
+  endDrawEdgeWithRandomWeight,
   hideDrawEdge,
   removeEdge,
   data,
   colors,
   width,
   height,
-} = useD3(initData)
+} = useD3(initData, { linkDistance: 70, chargeStrength: -200 })
 </script>
 
 <style scoped>

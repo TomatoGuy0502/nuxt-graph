@@ -45,6 +45,19 @@
         @mouseleave="hideDrawEdge()"
         @contextmenu.prevent
       >
+        <defs>
+          <marker
+            id="arrow"
+            viewBox="0 0 10 10"
+            refX="14"
+            refY="5"
+            markerWidth="4"
+            markerHeight="4"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
         <line
           class="draw-edge cursor-cell stroke-[3]"
           :class="[mousedownNode ? 'stroke-current' : 'stroke-none']"
@@ -62,6 +75,7 @@
             :y1="(edge.source as NodeData).y"
             :x2="(edge.target as NodeData).x"
             :y2="(edge.target as NodeData).y"
+            marker-end="url(#arrow)"
             @contextmenu.prevent="removeEdge($event, edge)"
             @mousedown.stop
           ></line>
@@ -94,9 +108,9 @@
 
 <script setup lang="ts">
 definePageMeta({
-  name: 'Vertex and Edge',
-  path: '/tutorial/basic/vertex-and-edge',
-  pageOrder: 1,
+  name: 'Directed Graph',
+  path: '/tutorial/basic/directed-graph',
+  pageOrder: 4,
 })
 
 interface NodeData extends d3.SimulationNodeDatum {
@@ -135,7 +149,7 @@ const {
   colors,
   width,
   height,
-} = useD3(initData)
+} = useD3(initData, { linkDistance: 60, chargeStrength: -200 })
 </script>
 
 <style scoped>

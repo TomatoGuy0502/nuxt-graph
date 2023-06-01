@@ -51,8 +51,7 @@
     <div class="drawer-side">
       <label for="my-drawer" class="drawer-overlay"></label>
       <div
-        class="flex flex-col gap-4 border-r-2 border-base-300 bg-base-200 p-4 text-base-content"
-        :class="[isExpanded ? 'w-80' : 'w-[84px]']"
+        class="flex flex-col gap-4 border-r-2 border-base-300 bg-base-200 p-4 text-base-content w-80"
       >
         <NuxtLink
           class="btn btn-ghost normal-case text-xl hidden lg:inline-flex"
@@ -80,8 +79,7 @@
                   d="M21 7.5l-2.25-1.313M21 7.5v2.25m0-2.25l-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3l2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75l2.25-1.313M12 21.75V19.5m0 2.25l-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25"
                 />
               </svg>
-
-              {{ isExpanded ? 'Playground' : '' }}
+              Playground
             </NuxtLink>
           </li>
         </ul>
@@ -107,21 +105,12 @@
             </div>
           </div>
         </ul>
-        <button class="btn" type="button" @click="toggle">
-          {{ isExpanded ? '←' : '→' }}
-        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const isExpanded = ref(true)
-
-const toggle = () => {
-  isExpanded.value = !isExpanded.value
-}
-
 interface TutorialRoute {
   name: string
   path: string

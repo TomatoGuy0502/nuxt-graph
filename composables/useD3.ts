@@ -151,6 +151,63 @@ export const useD3 = <
     return adjacencyMatrix
   })
 
+  function dragstarted(
+    event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
+    d: NodeDatum
+  ) {
+    if (!event.active) simulation.alphaTarget(0.3).restart()
+    d.fx = event.x
+    d.fy = event.y
+  }
+
+  function dragged(
+    event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
+    d: NodeDatum
+  ) {
+    d.fx = event.x
+    d.fy = event.y
+  }
+
+  function dragended(
+    event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
+    d: NodeDatum
+  ) {
+    if (!event.active) simulation.alphaTarget(0)
+    d.fx = null
+    d.fy = null
+  }
+
+  function enableDrag() {
+    const drag = d3
+      .drag<SVGCircleElement, NodeDatum>()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended)
+
+    drag.filter((event) => {
+      return (event.metaKey || event.ctrlKey) && !event.button
+    })
+
+    onMounted(() => {
+      drag(
+        d3
+          .selectAll<SVGCircleElement, NodeDatum>('.node circle')
+          .data(data.nodes)
+      )
+    })
+    watch(
+      () => data.nodes.length,
+      () => {
+        drag(
+          d3
+            .selectAll<SVGCircleElement, NodeDatum>('.node circle')
+            .data(data.nodes)
+        )
+      },
+      { flush: 'post' }
+    )
+  }
+
   return {
     clearData,
     addNode,
@@ -171,5 +228,6 @@ export const useD3 = <
     width,
     height,
     adjacencyMatrix,
+    enableDrag,
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="drawer-mobile drawer">
+  <div class="drawer lg:drawer-open">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content">
       <div class="navbar bg-base-100 p-4">
@@ -51,14 +51,14 @@
     <div class="drawer-side">
       <label for="my-drawer" class="drawer-overlay"></label>
       <div
-        class="flex flex-col gap-4 border-r-2 border-base-300 bg-base-200 p-4 text-base-content w-80"
+        class="flex flex-col gap-4 border-r-2 border-base-300 bg-base-200 p-4 text-base-content w-80 h-screen"
       >
         <NuxtLink
           class="btn btn-ghost normal-case text-xl hidden lg:inline-flex"
           to="/"
           >Graph Theory</NuxtLink
         >
-        <ul class="menu gap-2">
+        <ul class="menu gap-2 p-0">
           <li>
             <NuxtLink
               class="whitespace-nowrap rounded-lg leading-5"
@@ -83,27 +83,31 @@
             </NuxtLink>
           </li>
         </ul>
-        <ul class="menu menu-compact bg-base-100 p-2 rounded-box">
-          <div
+        <ul class="menu bg-base-100 rounded-box">
+          <li
             v-for="(section, i) in tutorialSectionNames"
             :key="section"
-            class="collapse collapse-arrow"
+            class="w-full"
           >
-            <input type="checkbox" class="min-h-fit" checked />
-            <li class="collapse-title menu-title min-h-fit capitalize">
-              {{ i + 1 }}. {{ section }}
-            </li>
-            <div class="collapse-content">
-              <li
-                v-for="(route, ii) in tutorialRoutes[section]"
-                :key="route.name"
-              >
-                <NuxtLink :to="route.path" active-class="active"
-                  >{{ i + 1 }}-{{ ii + 1 }}. {{ route.name }}</NuxtLink
+            <details class="w-full" open>
+              <summary class="font-bold text-sm capitalize">
+                {{ i + 1 }}. {{ section }}
+              </summary>
+              <ul>
+                <li
+                  v-for="(route, ii) in tutorialRoutes[section]"
+                  :key="route.name"
                 >
-              </li>
-            </div>
-          </div>
+                  <NuxtLink
+                    class="whitespace-break-spaces block"
+                    :to="route.path"
+                    active-class="active"
+                    >{{ i + 1 }}-{{ ii + 1 }}. {{ route.name }}</NuxtLink
+                  >
+                </li>
+              </ul>
+            </details>
+          </li>
         </ul>
       </div>
     </div>

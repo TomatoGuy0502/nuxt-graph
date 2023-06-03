@@ -74,6 +74,15 @@ export const useD3 = <
     hoverNode.value = null
   }
 
+  // Heightlight Edge
+  const hoverEdge = ref<EdgeDatum | null>(null) as Ref<EdgeDatum | null>
+  function highlightEdge(_event: PointerEvent | MouseEvent, d: EdgeDatum) {
+    hoverEdge.value = d
+  }
+  function unhighlightEdge() {
+    hoverEdge.value = null
+  }
+
   // Edit Edge
   const mousedownNode = ref<NodeDatum | null>(null) as Ref<NodeDatum | null>
   const drawEdgeCords = reactive({
@@ -151,6 +160,18 @@ export const useD3 = <
     return adjacencyMatrix
   })
 
+  const adjacencyList = computed(() => {
+    return adjacencyMatrix.value.map((row, i) => {
+      return {
+        id: data.nodes[i].id,
+        value: row
+          .map((isConnected, j) => (isConnected ? data.nodes[j].id : -1))
+          .filter((n) => n !== -1),
+      }
+    })
+  })
+
+  // Handle Drag
   function dragstarted(
     event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
     d: NodeDatum
@@ -215,6 +236,9 @@ export const useD3 = <
     hoverNode,
     highlightNode,
     unhighlightNode,
+    hoverEdge,
+    highlightEdge,
+    unhighlightEdge,
     mousedownNode,
     drawEdgeCords,
     beginDrawEdge,
@@ -228,6 +252,7 @@ export const useD3 = <
     width,
     height,
     adjacencyMatrix,
+    adjacencyList,
     enableDrag,
   }
 }

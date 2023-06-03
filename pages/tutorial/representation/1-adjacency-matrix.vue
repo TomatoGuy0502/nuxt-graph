@@ -15,12 +15,14 @@
         <line
           v-for="edge in data.edges"
           :key="`${edge.source}-${edge.target}`"
-          class="stroke-[4] stroke-black hover:stroke-red-400 hover:stroke-[4] hover:cursor-pointer"
+          class="stroke-[5] stroke-black hover:stroke-red-400 hover:cursor-pointer"
           :x1="(edge.source as NodeDatum).x"
           :y1="(edge.source as NodeDatum).y"
           :x2="(edge.target as NodeDatum).x"
           :y2="(edge.target as NodeDatum).y"
           @contextmenu.prevent="removeEdge($event, edge)"
+          @mouseenter="highlightEdge($event, edge)"
+          @mouseleave="unhighlightEdge()"
         ></line>
       </template>
       <template #nodes>
@@ -47,17 +49,12 @@
     </D3Svg>
     <div>
       <p>Adjacency Matrix</p>
-      <ul class="flex flex-col">
-        <li
-          v-for="(row, i) in adjacencyMatrix"
-          :key="i"
-          class="flex rounded px-1 py-0.5 transition"
-          :class="{ 'bg-base-300': hoverNode?.index === i }"
-        >
-          <pre>{{ data.nodes[i].id }} </pre>
-          <code>[{{ row.join(', ') }}]</code>
-        </li>
-      </ul>
+      <D3AdjacencyMatrix
+        :adjacency-matrix="adjacencyMatrix"
+        :hover-node="hoverNode"
+        :hover-edge="hoverEdge"
+        :node-ids="data.nodes.map((node) => node.id)"
+      />
     </div>
   </div>
 </template>
@@ -94,6 +91,8 @@ const {
   removeNode,
   highlightNode,
   unhighlightNode,
+  highlightEdge,
+  unhighlightEdge,
   mousedownNode,
   drawEdgeCords,
   beginDrawEdge,
@@ -107,6 +106,7 @@ const {
   height,
   adjacencyMatrix,
   hoverNode,
+  hoverEdge,
 } = useD3(initData)
 </script>
 

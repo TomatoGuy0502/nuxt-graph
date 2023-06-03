@@ -84,6 +84,7 @@
           </li>
         </ul>
         <ul class="menu bg-base-100 rounded-box">
+          <li class="menu-title">Tutorial</li>
           <li
             v-for="(section, i) in tutorialSectionNames"
             :key="section"

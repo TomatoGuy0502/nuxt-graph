@@ -10,7 +10,6 @@
       :on-svg-mousemove="updateDrawEdge"
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
-      :is-draggable="true"
     >
       <template #edges>
         <line
@@ -49,28 +48,34 @@
       </template>
     </D3Svg>
     <div>
-      <p>Adjacency Matrix</p>
-      <D3AdjacencyMatrix
-        :adjacency-matrix="adjacencyMatrix"
-        :hover-node="hoverNode"
-        :hover-edge="hoverEdge"
-        :node-ids="data.nodes.map((node) => node.id)"
-      />
-      <p>Adjacency List</p>
-      <D3AdjacencyList
-        :hover-node="hoverNode"
-        :hover-edge="hoverEdge"
-        :adjacency-list="adjacencyList"
-      />
+      <p>Edge List</p>
+      <ul class="flex font-mono">
+        [
+        <li
+          v-for="(edge, i) in data.edges"
+          :key="`${edge.source}-${edge.target}`"
+          class="flex"
+        >
+          <code
+            class="px-0.5 transition rounded"
+            :class="{ 'bg-base-300': hoverEdge === edge }"
+            >[{{ (edge.source as NodeDatum).id }},{{
+              (edge.target as NodeDatum).id
+            }}]</code
+          >
+          <code v-if="i !== data.edges.length - 1">,</code>
+        </li>
+        ]
+      </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import * as d3 from 'd3'
-
 definePageMeta({
-  name: 'Playground',
+  name: 'Edge List',
+  path: '/tutorial/representation/edge-list',
+  pageOrder: 3,
 })
 
 interface NodeDatum extends d3.SimulationNodeDatum {
@@ -99,10 +104,6 @@ const {
   highlightNode,
   unhighlightNode,
   mousedownNode,
-  hoverNode,
-  hoverEdge,
-  highlightEdge,
-  unhighlightEdge,
   drawEdgeCords,
   beginDrawEdge,
   updateDrawEdge,
@@ -113,41 +114,21 @@ const {
   colors,
   width,
   height,
-  adjacencyMatrix,
-  adjacencyList,
-  enableDrag,
+  highlightEdge,
+  unhighlightEdge,
+  hoverEdge,
 } = useD3(initData)
 
-enableDrag()
-
-// const adjacencyMatrixOutput = computed(() => {
-//   const n = data.nodes.length
-//   let output = ''
-//   for (let i = 0; i < n; i++) {
-//     const id = data.nodes[i].id
-//     output += `${id} [${adjacencyMatrix.value[i].join(', ')}]`
-//     if (i < n - 1) {
-//       output += '\n'
+// Edge List with order
+// const edgeList = computed(() => {
+//   data.edges.map((edge) => {
+//     const source = edge.source as NodeDatum
+//     const target = edge.target as NodeDatum
+//     if (source.id > target.id) {
+//       edge.source = target
+//       edge.target = source
 //     }
-//   }
-//   return output
-// })
-
-// const adjacencyListOutput = computed(() => {
-//   const n = data.nodes.length
-
-//   let output = ''
-//   const adjacencyList = adjacencyMatrix.value.map((arr) =>
-//     arr.map((n, i) => (n ? data.nodes[i].id : 0)).filter(Boolean)
-//   )
-//   for (let i = 0; i < n; i++) {
-//     const id = data.nodes[i].id
-//     output += `${id} [${adjacencyList[i].join(', ')}]`
-//     if (i < n - 1) {
-//       output += '\n'
-//     }
-//   }
-//   return output
+//   })
 // })
 </script>
 

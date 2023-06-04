@@ -62,7 +62,7 @@ const props = defineProps({
   },
 })
 
-const isHeightlightedEdge = (i: Number, j: Number) => {
+const isHeightlightedEdge = (i: number, j: number) => {
   if (!props.hoverEdge) return false
   const sourceIndex = (props.hoverEdge.source as NodeDatum).index
   const targetIndex = (props.hoverEdge.target as NodeDatum).index

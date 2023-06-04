@@ -3,6 +3,26 @@ import * as d3 from 'd3'
 
 interface NodeDatumWithId extends d3.SimulationNodeDatum {
   id: number
+  depth?: number
+}
+
+interface AdjacencyListItem {
+  id: number
+  value: number[]
+}
+
+interface useD3Config {
+  width?: number
+  height?: number
+  linkDistance?: number
+  linkStrength?: number
+  linkIterations?: number
+  chargeStrength?: number
+  chargeDistanceMax?: number
+  forceX?: number
+  forceXStrength?: number
+  forceY?: number
+  forceYStrength?: number
 }
 
 export const useD3 = <
@@ -13,23 +33,37 @@ export const useD3 = <
     nodes: NodeDatum[]
     edges: EdgeDatum[]
   },
-  { width = 600, height = 600, linkDistance = 40, chargeStrength = -200 } = {}
+  {
+    width = 600,
+    height = 600,
+    linkDistance = 40,
+    linkStrength = undefined,
+    linkIterations = 1,
+    chargeStrength = -200,
+    chargeDistanceMax = width / 2,
+    forceX = width / 2,
+    forceXStrength = 0.1,
+    forceY = height / 2,
+    forceYStrength = 0.1,
+  }: useD3Config = {}
 ) => {
   const data = reactive(initData) as typeof initData
   const colors = d3.schemeTableau10
+  const forceLink = d3
+    .forceLink(data.edges)
+    .distance(linkDistance)
+    .iterations(linkIterations)
+  if (linkStrength) forceLink.strength(linkStrength)
+
   const simulation = d3
     .forceSimulation<NodeDatum, EdgeDatum>(data.nodes)
     .force('link', d3.forceLink(data.edges).distance(linkDistance))
     .force(
       'charge',
-      d3
-        .forceManyBody()
-        .strength(chargeStrength)
-        .distanceMax(width / 2)
+      d3.forceManyBody().strength(chargeStrength).distanceMax(chargeDistanceMax)
     )
-    // .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('x', d3.forceX(width / 2))
-    .force('y', d3.forceY(height / 2))
+    .force('x', d3.forceX(forceX).strength(forceXStrength))
+    .force('y', d3.forceY(forceY).strength(forceYStrength))
 
   onMounted(() => {
     updateSimulation()
@@ -63,6 +97,32 @@ export const useD3 = <
     data.edges = data.edges.filter(
       (edge) => edge.source !== d && edge.target !== d
     )
+  }
+
+  // Edit Tree
+  function addLeafNode(_event: PointerEvent | MouseEvent, d: NodeDatum) {
+    const id = (data.nodes.at(-1)?.id ?? -1) + 1
+    const [x, y] = d3.pointer(_event)
+    data.nodes.push({
+      id,
+      x,
+      y: y + 10,
+      depth: (d.depth ?? 0) + 1,
+    } as NodeDatum)
+    data.edges.push({ source: d, target: data.nodes.at(-1) } as EdgeDatum)
+  }
+  function removeSubTree(_event: PointerEvent | MouseEvent, d: NodeDatum) {
+    if (d.id === 0) return
+    const queue: NodeDatum[] = [d]
+    while (queue.length) {
+      const node = queue.shift()!
+      queue.push(
+        ...data.edges
+          .filter((edge) => edge.source === node)
+          .map((edge) => edge.target as NodeDatum)
+      )
+      removeNode(_event, node)
+    }
   }
 
   // Heightlight Node
@@ -148,7 +208,7 @@ export const useD3 = <
 
   const adjacencyMatrix = computed(() => {
     const n = data.nodes.length
-    const adjacencyMatrix: Number[][] = [...Array(n)].map(() =>
+    const adjacencyMatrix: number[][] = [...Array(n)].map(() =>
       Array(n).fill(0)
     )
     data.edges.forEach((edge) => {
@@ -160,7 +220,7 @@ export const useD3 = <
     return adjacencyMatrix
   })
 
-  const adjacencyList = computed(() => {
+  const adjacencyList = computed<AdjacencyListItem[]>(() => {
     return adjacencyMatrix.value.map((row, i) => {
       return {
         id: data.nodes[i].id,
@@ -172,7 +232,7 @@ export const useD3 = <
   })
 
   // Handle Drag
-  function dragstarted(
+  function _dragstarted(
     event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
     d: NodeDatum
   ) {
@@ -181,7 +241,7 @@ export const useD3 = <
     d.fy = event.y
   }
 
-  function dragged(
+  function _dragged(
     event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
     d: NodeDatum
   ) {
@@ -189,7 +249,7 @@ export const useD3 = <
     d.fy = event.y
   }
 
-  function dragended(
+  function _dragended(
     event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
     d: NodeDatum
   ) {
@@ -198,16 +258,19 @@ export const useD3 = <
     d.fy = null
   }
 
-  function enableDrag() {
+  /** Call this function to enable drag */
+  function enableDrag(
+    filter: (event: PointerEvent | MouseEvent, d: NodeDatum) => boolean = (
+      event: PointerEvent | MouseEvent
+    ) => (event.metaKey || event.ctrlKey) && !event.button
+  ) {
     const drag = d3
       .drag<SVGCircleElement, NodeDatum>()
-      .on('start', dragstarted)
-      .on('drag', dragged)
-      .on('end', dragended)
+      .on('start', _dragstarted)
+      .on('drag', _dragged)
+      .on('end', _dragended)
 
-    drag.filter((event) => {
-      return (event.metaKey || event.ctrlKey) && !event.button
-    })
+    drag.filter(filter)
 
     onMounted(() => {
       drag(
@@ -229,10 +292,69 @@ export const useD3 = <
     )
   }
 
+  const graphProperties = computed(() => {
+    const visited = new Set()
+    const connectedComponents: number[][] = []
+    let hasCycle = false
+
+    // DFS
+    function dfs(nodeId: number, parentId: number | null, component: number[]) {
+      visited.add(nodeId)
+      component.push(nodeId)
+
+      for (const neighbor of getNodeById(nodeId).value) {
+        if (neighbor === parentId) continue // Skip the parent node
+        if (visited.has(neighbor)) {
+          hasCycle = true // Cycle detected
+          continue // Skip already visited neighbor
+        }
+        dfs(neighbor, nodeId, component)
+      }
+    }
+
+    function getNodeById(id: number) {
+      return adjacencyList.value.find(
+        (node) => node.id === id
+      ) as AdjacencyListItem
+    }
+
+    for (const node of adjacencyList.value) {
+      if (!visited.has(node.id)) {
+        const component: number[] = []
+        dfs(node.id, null, component)
+        connectedComponents.push(component)
+      }
+    }
+
+    const numNodes = data.nodes.length
+    const isForest = !hasCycle
+    const isTree = isForest && data.edges.length === numNodes - 1
+    const isComplete = data.edges.length === (numNodes * (numNodes - 1)) / 2
+
+    return {
+      hasCycle,
+      connectedComponents,
+      isTree,
+      isForest,
+      isComplete,
+    }
+  })
+
+  /** Used to color nodes based on their connected components */
+  const nodesColorIndex = computed(() =>
+    data.nodes.map((node) =>
+      graphProperties.value.connectedComponents.findIndex((arr) =>
+        arr.includes(node.id)
+      )
+    )
+  )
+
   return {
     clearData,
     addNode,
     removeNode,
+    addLeafNode,
+    removeSubTree,
     hoverNode,
     highlightNode,
     unhighlightNode,
@@ -254,5 +376,7 @@ export const useD3 = <
     adjacencyMatrix,
     adjacencyList,
     enableDrag,
+    graphProperties,
+    nodesColorIndex,
   }
 }

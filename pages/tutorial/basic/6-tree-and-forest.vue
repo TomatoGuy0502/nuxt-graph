@@ -10,6 +10,7 @@
       :on-svg-mousemove="updateDrawEdge"
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
+      :is-draggable="true"
     >
       <template #edges>
         <line
@@ -39,24 +40,25 @@
           >
             <title>Node ID: {{ node.id }}</title>
           </circle>
-          <!-- <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
-              {{ node.id }}
-            </text> -->
+          <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
+            {{ node.id }}
+          </text>
         </g>
       </template>
     </D3Svg>
-    <div>isComplete: {{ graphProperties.isComplete }}</div>
-    <div>
-      connectedComponents: {{ graphProperties.connectedComponents.length }}
-    </div>
+    <ul>
+      <li v-for="(value, key) in graphProperties" :key="key">
+        {{ key }}: {{ value }}
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  name: 'Connected and Complete Graph',
-  path: '/tutorial/basic/connected-and-complete-graph',
-  pageOrder: 3,
+  name: 'Tree and Forest',
+  path: '/tutorial/basic/tree-and-forest',
+  pageOrder: 6,
 })
 
 interface NodeDatum extends d3.SimulationNodeDatum {
@@ -95,9 +97,12 @@ const {
   colors,
   width,
   height,
+  enableDrag,
   graphProperties,
   nodesColorIndex,
 } = useD3(initData)
+
+enableDrag()
 </script>
 
 <style scoped>

@@ -24,14 +24,19 @@
           <div class="card-body">
             <h2 class="card-title">How To Interact?</h2>
             <ul class="list-disc list-inside">
-              <li><b>Left click</b> on empty space to add vertex</li>
-              <li><b>Drag</b> from one vertex to another to add edge</li>
-              <li><b>Right click</b> on vertex/edge to delete it</li>
-              <li v-if="isDraggable">
-                <kbd v-if="isMac" class="kbd kbd-sm">⌘</kbd>
-                <kbd v-else class="kbd kbd-sm">ctrl</kbd> + <b>Drag</b> on
-                vertex to move it
-              </li>
+              <slot name="hint-start"></slot>
+              <slot name="hint">
+                <li><b>Hover</b> on vertex to see the details</li>
+                <li><b>Left click</b> on empty space to add vertex</li>
+                <li><b>Drag</b> from one vertex to another to add edge</li>
+                <li><b>Right click</b> on vertex/edge to delete it</li>
+                <li v-if="isDraggable">
+                  <kbd v-if="isMac" class="kbd kbd-sm">⌘</kbd>
+                  <kbd v-else class="kbd kbd-sm">ctrl</kbd> + <b>Drag</b> on
+                  vertex to move it
+                </li>
+              </slot>
+              <slot name="hint-end"></slot>
             </ul>
           </div>
         </div>
@@ -42,7 +47,8 @@
       ref="svg"
       :width="width"
       :height="height"
-      class="cursor-cell bg-gray-100"
+      class="bg-gray-100 select-none"
+      :class="svgClass"
       @mousedown="onSvgMousedown($event)"
       @mousemove="onSvgMousemove($event)"
       @mouseup="onSvgMouseup()"
@@ -77,9 +83,13 @@ defineProps({
     type: Number,
     required: true,
   },
+  svgClass: {
+    type: Array as PropType<string[]>,
+    default: () => ['cursor-cell'],
+  },
   hasMouseDownNode: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   isDraggable: {
     type: Boolean,
@@ -92,32 +102,34 @@ defineProps({
       x2: number
       y2: number
     }>,
-    required: true,
+    default: () => ({
+      x1: 0,
+      y1: 0,
+      x2: 0,
+      y2: 0,
+    }),
   },
   onClearData: {
     type: Function as PropType<() => void>,
-    required: true,
+    default: () => {},
   },
   onSvgMousedown: {
     type: Function as PropType<(event: PointerEvent | MouseEvent) => void>,
-    required: true,
+    default: (_event: PointerEvent | MouseEvent) => {},
   },
   onSvgMousemove: {
     type: Function as PropType<(event: PointerEvent | MouseEvent) => void>,
-    required: true,
+    default: (_event: PointerEvent | MouseEvent) => {},
   },
   onSvgMouseup: {
     type: Function as PropType<() => void>,
-    required: true,
+    default: () => {},
   },
   onSvgMouseleave: {
     type: Function as PropType<() => void>,
-    required: true,
+    default: () => {},
   },
 })
 
-const isMac = ref(false)
-onMounted(() => {
-  isMac.value = navigator.userAgent.includes('Mac')
-})
+const { isMac } = usePlatform()
 </script>

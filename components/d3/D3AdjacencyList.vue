@@ -49,7 +49,7 @@ const props = defineProps({
   },
 })
 
-const isHighlighted = (sourceNodeId: Number, targetNodeId: Number) => {
+const isHighlighted = (sourceNodeId: number, targetNodeId: number) => {
   return (
     (props.hoverEdge?.source.id === targetNodeId &&
       props.hoverEdge?.target.id === sourceNodeId) ||

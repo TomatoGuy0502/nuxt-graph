@@ -14,7 +14,7 @@
       <template #edges>
         <line
           v-for="edge in data.edges"
-          :key="`${edge.source}-${edge.target}`"
+          :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
           class="stroke-[5] stroke-black hover:stroke-red-400 hover:cursor-pointer"
           :x1="(edge.source as NodeDatum).x"
           :y1="(edge.source as NodeDatum).y"

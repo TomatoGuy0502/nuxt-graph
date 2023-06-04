@@ -13,7 +13,10 @@
       :is-draggable="true"
     >
       <template #edges>
-        <g v-for="edge in data.edges" :key="`${edge.source}-${edge.target}`">
+        <g
+          v-for="edge in data.edges"
+          :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
+        >
           <line
             class="stroke-[4] stroke-black hover:stroke-red-400 hover:stroke-[4] hover:cursor-pointer"
             :x1="(edge.source as NodeDatum).x"

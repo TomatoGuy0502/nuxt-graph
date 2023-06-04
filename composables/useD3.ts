@@ -82,6 +82,109 @@ export const useD3 = <
     data.edges.length = 0
   }
 
+  const { adjacencyMatrix, adjacencyList, edgeList } = useGraphRepresentation({
+    data,
+  })
+
+  const { graphProperties, nodesColorIndex } = useGraphProperties({
+    data,
+    adjacencyList,
+  })
+
+  return {
+    clearData,
+    ...useD3EditNode({ data }),
+    ...useD3EditEdge({ data }),
+    ...useD3Drag({ simulation, data }),
+    data,
+    colors,
+    width,
+    height,
+    adjacencyMatrix,
+    adjacencyList,
+    edgeList,
+    graphProperties,
+    nodesColorIndex,
+  }
+}
+
+function useD3Drag<
+  NodeDatum extends NodeDatumWithId,
+  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
+>({
+  simulation,
+  data,
+}: {
+  simulation: d3.Simulation<NodeDatum, EdgeDatum>
+  data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
+}) {
+  function _dragstarted(
+    event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
+    d: NodeDatum
+  ) {
+    if (!event.active) simulation.alphaTarget(0.3).restart()
+    d.fx = event.x
+    d.fy = event.y
+  }
+
+  function _dragged(
+    event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
+    d: NodeDatum
+  ) {
+    d.fx = event.x
+    d.fy = event.y
+  }
+
+  function _dragended(
+    event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
+    d: NodeDatum
+  ) {
+    if (!event.active) simulation.alphaTarget(0)
+    d.fx = null
+    d.fy = null
+  }
+
+  /** Call this function to enable drag */
+  function enableDrag(
+    filter: (event: PointerEvent | MouseEvent, d: NodeDatum) => boolean = (
+      event: PointerEvent | MouseEvent
+    ) => (event.metaKey || event.ctrlKey) && !event.button
+  ) {
+    const drag = d3
+      .drag<SVGCircleElement, NodeDatum>()
+      .on('start', _dragstarted)
+      .on('drag', _dragged)
+      .on('end', _dragended)
+
+    drag.filter(filter)
+
+    onMounted(() => {
+      drag(
+        d3
+          .selectAll<SVGCircleElement, NodeDatum>('.node circle')
+          .data(data.nodes)
+      )
+    })
+    watch(
+      () => data.nodes.length,
+      () => {
+        drag(
+          d3
+            .selectAll<SVGCircleElement, NodeDatum>('.node circle')
+            .data(data.nodes)
+        )
+      },
+      { flush: 'post' }
+    )
+  }
+
+  return { enableDrag }
+}
+
+function useD3EditNode<
+  NodeDatum extends NodeDatumWithId,
+  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
+>({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
   // Edit Node
   function addNode(event: PointerEvent | MouseEvent) {
     if (event.button !== 0) return
@@ -134,6 +237,21 @@ export const useD3 = <
     hoverNode.value = null
   }
 
+  return {
+    addNode,
+    removeNode,
+    addLeafNode,
+    removeSubTree,
+    hoverNode,
+    highlightNode,
+    unhighlightNode,
+  }
+}
+
+function useD3EditEdge<
+  NodeDatum extends NodeDatumWithId,
+  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
+>({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
   // Heightlight Edge
   const hoverEdge = ref<EdgeDatum | null>(null) as Ref<EdgeDatum | null>
   function highlightEdge(_event: PointerEvent | MouseEvent, d: EdgeDatum) {
@@ -205,7 +323,25 @@ export const useD3 = <
   function removeEdge(_event: PointerEvent | MouseEvent, d: EdgeDatum) {
     data.edges.splice(data.edges.indexOf(d), 1)
   }
+  return {
+    hoverEdge,
+    highlightEdge,
+    unhighlightEdge,
+    mousedownNode,
+    drawEdgeCords,
+    beginDrawEdge,
+    updateDrawEdge,
+    endDrawEdge,
+    endDrawEdgeWithRandomWeight,
+    hideDrawEdge,
+    removeEdge,
+  }
+}
 
+function useGraphRepresentation<
+  NodeDatum extends NodeDatumWithId,
+  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
+>({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
   const adjacencyMatrix = computed(() => {
     const n = data.nodes.length
     const adjacencyMatrix: number[][] = [...Array(n)].map(() =>
@@ -231,67 +367,27 @@ export const useD3 = <
     })
   })
 
-  // Handle Drag
-  function _dragstarted(
-    event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
-    d: NodeDatum
-  ) {
-    if (!event.active) simulation.alphaTarget(0.3).restart()
-    d.fx = event.x
-    d.fy = event.y
-  }
-
-  function _dragged(
-    event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
-    d: NodeDatum
-  ) {
-    d.fx = event.x
-    d.fy = event.y
-  }
-
-  function _dragended(
-    event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
-    d: NodeDatum
-  ) {
-    if (!event.active) simulation.alphaTarget(0)
-    d.fx = null
-    d.fy = null
-  }
-
-  /** Call this function to enable drag */
-  function enableDrag(
-    filter: (event: PointerEvent | MouseEvent, d: NodeDatum) => boolean = (
-      event: PointerEvent | MouseEvent
-    ) => (event.metaKey || event.ctrlKey) && !event.button
-  ) {
-    const drag = d3
-      .drag<SVGCircleElement, NodeDatum>()
-      .on('start', _dragstarted)
-      .on('drag', _dragged)
-      .on('end', _dragended)
-
-    drag.filter(filter)
-
-    onMounted(() => {
-      drag(
-        d3
-          .selectAll<SVGCircleElement, NodeDatum>('.node circle')
-          .data(data.nodes)
-      )
+  const edgeList = computed(() =>
+    data.edges.map((edge) => {
+      const sourceId = (edge.source as NodeDatum).id
+      const targetId = (edge.target as NodeDatum).id
+      return { sourceId, targetId }
     })
-    watch(
-      () => data.nodes.length,
-      () => {
-        drag(
-          d3
-            .selectAll<SVGCircleElement, NodeDatum>('.node circle')
-            .data(data.nodes)
-        )
-      },
-      { flush: 'post' }
-    )
-  }
+  )
 
+  return { adjacencyMatrix, adjacencyList, edgeList }
+}
+
+function useGraphProperties<
+  NodeDatum extends NodeDatumWithId,
+  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
+>({
+  data,
+  adjacencyList,
+}: {
+  data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
+  adjacencyList: Ref<AdjacencyListItem[]>
+}) {
   const graphProperties = computed(() => {
     const visited = new Set()
     const connectedComponents: number[][] = []
@@ -327,9 +423,10 @@ export const useD3 = <
     }
 
     const numNodes = data.nodes.length
+    const numEdges = data.edges.length
     const isForest = !hasCycle
-    const isTree = isForest && data.edges.length === numNodes - 1
-    const isComplete = data.edges.length === (numNodes * (numNodes - 1)) / 2
+    const isTree = isForest && numEdges === numNodes - 1
+    const isComplete = numEdges === (numNodes * (numNodes - 1)) / 2
 
     return {
       hasCycle,
@@ -349,34 +446,5 @@ export const useD3 = <
     )
   )
 
-  return {
-    clearData,
-    addNode,
-    removeNode,
-    addLeafNode,
-    removeSubTree,
-    hoverNode,
-    highlightNode,
-    unhighlightNode,
-    hoverEdge,
-    highlightEdge,
-    unhighlightEdge,
-    mousedownNode,
-    drawEdgeCords,
-    beginDrawEdge,
-    updateDrawEdge,
-    endDrawEdge,
-    endDrawEdgeWithRandomWeight,
-    hideDrawEdge,
-    removeEdge,
-    data,
-    colors,
-    width,
-    height,
-    adjacencyMatrix,
-    adjacencyList,
-    enableDrag,
-    graphProperties,
-    nodesColorIndex,
-  }
+  return { graphProperties, nodesColorIndex }
 }

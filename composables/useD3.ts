@@ -387,23 +387,28 @@ function useGraphProperties<
     let hasCycle = false
 
     // DFS
-    function dfs(nodeIndex: number, component: number[]) {
+    function dfs(
+      nodeIndex: number,
+      parentIndex: number | null,
+      component: number[]
+    ) {
       visited.add(nodeIndex)
       component.push(nodeIndex)
 
       for (const neighborIndex of adjacencyList.value[nodeIndex]) {
+        if (neighborIndex === parentIndex) continue // Skip parent
         if (visited.has(neighborIndex)) {
           hasCycle = true // Cycle detected
           continue // Skip already visited neighbor
         }
-        dfs(neighborIndex, component)
+        dfs(neighborIndex, nodeIndex, component)
       }
     }
 
     adjacencyList.value.forEach((_, nodeIndex) => {
       if (!visited.has(nodeIndex)) {
         const component: number[] = []
-        dfs(nodeIndex, component)
+        dfs(nodeIndex, null, component)
         connectedComponents.push(component)
       }
     })

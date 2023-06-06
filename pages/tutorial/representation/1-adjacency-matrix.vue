@@ -1,8 +1,8 @@
 <template>
-  <div class="flex gap-4 p-4">
+  <div class="flex gap-4 p-4 h-full">
     <D3Svg
-      :width="width"
-      :height="height"
+      ref="svg"
+      :height="600"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -47,14 +47,16 @@
         </g>
       </template>
     </D3Svg>
-    <div>
-      <p>Adjacency Matrix</p>
-      <D3AdjacencyMatrix
-        :adjacency-matrix="adjacencyMatrix"
-        :hover-node="hoverNode"
-        :hover-edge="hoverEdge"
-        :node-ids="data.nodes.map((node) => node.id)"
-      />
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2 p-2 rounded-lg bg-neutral">
+        <h2 class="font-bold">Adjacency Matrix</h2>
+        <D3AdjacencyMatrix
+          :adjacency-matrix="adjacencyMatrix"
+          :hover-node="hoverNode"
+          :hover-edge="hoverEdge"
+          :node-ids="data.nodes.map((node) => node.id)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -85,6 +87,8 @@ const initData: GraphData = {
   ],
 }
 
+const svg = ref<HTMLDivElement | null>(null)
+
 const {
   clearData,
   addNode,
@@ -102,12 +106,10 @@ const {
   removeEdge,
   data,
   colors,
-  width,
-  height,
   adjacencyMatrix,
   hoverNode,
   hoverEdge,
-} = useD3(initData)
+} = useD3(initData, svg)
 </script>
 
 <style scoped>

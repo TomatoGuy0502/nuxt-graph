@@ -1,8 +1,8 @@
 <template>
-  <div class="flex gap-4 p-4">
+  <div class="flex gap-4 p-4 h-full">
     <D3Svg
-      :width="width"
-      :height="height"
+      ref="svg"
+      :height="600"
       :is-draggable="true"
       :svg-class="['cursor-default']"
       :on-clear-data="resetData"
@@ -123,8 +123,7 @@ const initData: GraphData = {
   ],
 }
 
-const width = 600
-const height = 600
+const svg = ref<HTMLDivElement | null>(null)
 
 const {
   clearData,
@@ -136,14 +135,14 @@ const {
   data,
   colors,
   enableDrag,
-} = useD3(initData, {
+} = useD3(initData, svg, {
   linkDistance: 30,
   // linkStrength: 1,
   chargeStrength: -50,
-  chargeDistanceMax: width / 4,
-  forceX: width / 2,
+  chargeDistanceMaxRatio: 0.25,
+  forceXRatioOfWidth: 0.5,
   forceXStrength: 0,
-  forceY: height,
+  forceYRatioOfHeight: 1,
   forceYStrength: 0.01,
 })
 

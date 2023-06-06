@@ -7,16 +7,17 @@ interface NodeDatumWithId extends d3.SimulationNodeDatum {
 }
 
 interface useD3Config {
-  width?: number
-  height?: number
   linkDistance?: number
   linkStrength?: number
   linkIterations?: number
   chargeStrength?: number
-  chargeDistanceMax?: number
-  forceX?: number
+  /** Range [0,1] */
+  chargeDistanceMaxRatio?: number
+  /** Range [0,1] */
+  forceXRatioOfWidth?: number
   forceXStrength?: number
-  forceY?: number
+  /** Range [0,1] */
+  forceYRatioOfHeight?: number
   forceYStrength?: number
 }
 
@@ -28,17 +29,16 @@ export const useD3 = <
     nodes: NodeDatum[]
     edges: EdgeDatum[]
   },
+  svgRef: Ref<HTMLDivElement | null>,
   {
-    width = 600,
-    height = 600,
     linkDistance = 40,
     linkStrength = undefined,
     linkIterations = 1,
     chargeStrength = -200,
-    chargeDistanceMax = width / 2,
-    forceX = width / 2,
+    chargeDistanceMaxRatio = 0.5,
+    forceXRatioOfWidth = 0.5,
     forceXStrength = 0.1,
-    forceY = height / 2,
+    forceYRatioOfHeight = 0.5,
     forceYStrength = 0.1,
   }: useD3Config = {}
 ) => {
@@ -49,22 +49,39 @@ export const useD3 = <
     .distance(linkDistance)
     .iterations(linkIterations)
   if (linkStrength) forceLink.strength(linkStrength)
+  const forceX = d3.forceX().strength(forceXStrength)
+  const forceY = d3.forceY().strength(forceYStrength)
+  const forceManyBody = d3.forceManyBody().strength(chargeStrength)
+  const { width: svgWidth, height: svgHeight } = useElementSize(svgRef)
 
   const simulation = d3
     .forceSimulation<NodeDatum, EdgeDatum>(data.nodes)
     .force('link', forceLink)
-    .force(
-      'charge',
-      d3.forceManyBody().strength(chargeStrength).distanceMax(chargeDistanceMax)
-    )
-    .force('x', d3.forceX(forceX).strength(forceXStrength))
-    .force('y', d3.forceY(forceY).strength(forceYStrength))
+    .force('charge', forceManyBody)
+    .force('x', forceX)
+    .force('y', forceY)
+    .stop()
 
   onMounted(() => {
+    forceX.x(svgWidth.value * forceXRatioOfWidth)
+    forceY.y(svgHeight.value * forceYRatioOfHeight)
+    forceManyBody.distanceMax(
+      Math.min(svgWidth.value, svgHeight.value) * chargeDistanceMaxRatio
+    )
     updateSimulation()
   })
 
   watch([() => data.nodes.length, () => data.edges.length], updateSimulation)
+
+  watch([svgWidth, svgHeight], onResize)
+  function onResize() {
+    forceX.x(svgWidth.value * forceXRatioOfWidth)
+    forceY.y(svgHeight.value * forceYRatioOfHeight)
+    forceManyBody.distanceMax(
+      Math.min(svgWidth.value, svgHeight.value) * chargeDistanceMaxRatio
+    )
+    simulation.alpha(0.5).restart()
+  }
 
   function updateSimulation() {
     simulation.stop()
@@ -95,8 +112,6 @@ export const useD3 = <
     ...useD3Drag({ simulation, data }),
     data,
     colors,
-    width,
-    height,
     adjacencyMatrix,
     adjacencyList,
     edgeList,
@@ -224,7 +239,7 @@ function useD3EditNode<
     }
   }
 
-  // Heightlight Node
+  // Highlighted Node
   const hoverNode = ref<NodeDatum | null>(null) as Ref<NodeDatum | null>
   function highlightNode(_event: PointerEvent | MouseEvent, d: NodeDatum) {
     hoverNode.value = d
@@ -248,7 +263,7 @@ function useD3EditEdge<
   NodeDatum extends NodeDatumWithId,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
 >({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
-  // Heightlight Edge
+  // Highlighted Edge
   const hoverEdge = ref<EdgeDatum | null>(null) as Ref<EdgeDatum | null>
   function highlightEdge(_event: PointerEvent | MouseEvent, d: EdgeDatum) {
     hoverEdge.value = d
@@ -422,6 +437,7 @@ function useGraphProperties<
 
     return {
       hasCycle,
+      /** Using Node Index */
       connectedComponents,
       isTree,
       isForest,
@@ -433,6 +449,7 @@ function useGraphProperties<
   const nodesColorIndex = computed(() =>
     data.nodes.map((node) =>
       graphProperties.value.connectedComponents.findIndex((arr) =>
+        // TODO: Should be node.index
         arr.includes(node.id)
       )
     )

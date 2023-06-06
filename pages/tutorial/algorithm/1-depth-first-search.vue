@@ -1,8 +1,8 @@
 <template>
-  <div class="flex gap-4 p-4">
+  <div class="flex gap-4 p-4 h-full">
     <D3Svg
-      :width="width"
-      :height="height"
+      ref="svg"
+      :height="600"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -55,7 +55,7 @@
     <div class="flex flex-col gap-4">
       <div class="form-control w-64 gap-4 p-2 rounded-lg bg-neutral">
         <div class="form-control">
-          <label class="label">
+          <label class="label py-0">
             <span class="label-text font-bold">Start Node ID</span>
           </label>
           <select
@@ -207,6 +207,7 @@ const initData: GraphData = {
     { source: 2, target: 5 },
   ],
 }
+const svg = ref<HTMLDivElement | null>(null)
 
 const {
   clearData,
@@ -224,15 +225,13 @@ const {
   removeEdge,
   data,
   colors,
-  width,
-  height,
   adjacencyList,
   enableDrag,
   hoverNode,
   hoverEdge,
   highlightEdge,
   unhighlightEdge,
-} = useD3(initData, { width: 600, height: 400 })
+} = useD3(initData, svg)
 
 enableDrag()
 

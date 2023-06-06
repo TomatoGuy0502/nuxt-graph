@@ -112,8 +112,7 @@ const {
   removeEdge,
   data,
   colors,
-  width,
-  height,
+
   adjacencyMatrix,
   adjacencyList,
   enableDrag,

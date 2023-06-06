@@ -1,8 +1,8 @@
 <template>
-  <div class="flex gap-4 p-4">
+  <div class="flex gap-4 p-4 h-full">
     <D3Svg
-      :width="width"
-      :height="height"
+      ref="svg"
+      :height="600"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -85,6 +85,8 @@ const initData: GraphData = {
   ],
 }
 
+const svg = ref<HTMLDivElement | null>(null)
+
 const {
   clearData,
   addNode,
@@ -100,14 +102,12 @@ const {
   removeEdge,
   data,
   colors,
-  width,
-  height,
   adjacencyList,
   hoverNode,
   hoverEdge,
   highlightEdge,
   unhighlightEdge,
-} = useD3(initData)
+} = useD3(initData, svg)
 </script>
 
 <style scoped>

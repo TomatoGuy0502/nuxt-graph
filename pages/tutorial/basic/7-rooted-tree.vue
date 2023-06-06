@@ -22,7 +22,7 @@
         <line
           v-for="edge in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-          class="stroke-[4] stroke-black hover:stroke-red-400 hover:stroke-[4] hover:cursor-pointer"
+          class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
           :x1="(edge.source as NodeDatum).x"
           :y1="(edge.source as NodeDatum).y"
           :x2="(edge.target as NodeDatum).x"
@@ -33,7 +33,7 @@
       <template #nodes>
         <g class="node">
           <circle
-            class="hover:brightness-75 cursor-cell"
+            class="cursor-cell hover:brightness-75"
             :style="{ fill: colors[0] }"
             :cx="data.nodes[0].x"
             :cy="data.nodes[0].y"
@@ -50,7 +50,7 @@
             ></title>
           </circle>
           <text
-            class="select-none pointer-events-none"
+            class="pointer-events-none select-none"
             dx="12"
             dy="6"
             :x="data.nodes[0].x"

@@ -18,7 +18,7 @@
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
         >
           <line
-            class="stroke-[4] stroke-black hover:stroke-red-400 hover:stroke-[4] hover:cursor-pointer"
+            class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
             :x1="(edge.source as NodeDatum).x"
             :y1="(edge.source as NodeDatum).y"
             :x2="(edge.target as NodeDatum).x"
@@ -26,7 +26,7 @@
             @contextmenu.prevent="removeEdge($event, edge)"
           ></line>
           <rect
-            class="fill-gray-300 pointer-events-none"
+            class="pointer-events-none fill-gray-300"
             width="20"
             height="20"
             rx="2"
@@ -34,7 +34,7 @@
             :y="(((edge.source as NodeDatum).y as number) + ((edge.target as NodeDatum).y as number)) / 2 - 10"
           />
           <text
-            class="font-mono select-none pointer-events-none"
+            class="pointer-events-none select-none font-mono"
             dx="-4.5"
             dy="0"
             alignment-baseline="central"

@@ -28,11 +28,11 @@
         <line
           v-for="edge in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-          class="stroke-[4] stroke-black hover:stroke-red-400 hover:stroke-[4] hover:cursor-pointer"
-          :x1="(edge.source as NodeData).x"
-          :y1="(edge.source as NodeData).y"
-          :x2="(edge.target as NodeData).x"
-          :y2="(edge.target as NodeData).y"
+          class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
+          :x1="(edge.source as NodeDatum).x"
+          :y1="(edge.source as NodeDatum).y"
+          :x2="(edge.target as NodeDatum).x"
+          :y2="(edge.target as NodeDatum).y"
           marker-end="url(#arrow)"
           @contextmenu.prevent="removeEdge($event, edge)"
         ></line>
@@ -69,15 +69,15 @@ definePageMeta({
   pageOrder: 4,
 })
 
-interface NodeData extends d3.SimulationNodeDatum {
+interface NodeDatum extends d3.SimulationNodeDatum {
   id: number
 }
 
-interface EdgeData extends d3.SimulationLinkDatum<NodeData> {}
+interface EdgeDatum extends d3.SimulationLinkDatum<NodeDatum> {}
 
 interface GraphData {
-  nodes: NodeData[]
-  edges: EdgeData[]
+  nodes: NodeDatum[]
+  edges: EdgeDatum[]
 }
 
 const initData: GraphData = {

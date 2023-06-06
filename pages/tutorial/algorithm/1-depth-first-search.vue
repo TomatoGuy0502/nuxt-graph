@@ -16,7 +16,7 @@
         <line
           v-for="edge in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-          class="stroke-[4] hover:stroke-[5] hover:cursor-pointer"
+          class="stroke-[4] hover:cursor-pointer hover:stroke-[5]"
           :class="getEdgeColor(edge)"
           :x1="(edge.source as NodeDatum).x"
           :y1="(edge.source as NodeDatum).y"
@@ -30,7 +30,7 @@
           <circle
             class="cursor-pointer hover:brightness-75"
             :class="{
-              'stroke-[4] stroke-black': node.index === visitingNodeIndex,
+              'stroke-black stroke-[4]': node.index === visitingNodeIndex,
             }"
             :style="{ fill: getNodeColor(i) }"
             :cx="node.x"
@@ -57,7 +57,7 @@
         </label>
         <select
           v-model="traversalStartNodeIndex"
-          class="select select-bordered"
+          class="select-bordered select"
         >
           <option v-for="(node, i) in data.nodes" :key="node.id" :value="i">
             {{ node.id }}

@@ -6,7 +6,7 @@
         <code
           class="px-1.5 rounded-t transition"
           :class="{
-            'bg-base-300': hoverNode?.index === i,
+            'bg-base-300': (hoverNode as NodeDatum | undefined)?.index === i,
           }"
           >{{ nodeIds[i] }}</code
         >
@@ -17,7 +17,7 @@
       v-for="(row, i) in adjacencyMatrix"
       :key="i"
       class="flex rounded px-1 transition"
-      :class="{ 'bg-base-300': hoverNode?.index === i }"
+      :class="{ 'bg-base-300': (hoverNode as NodeDatum | undefined)?.index === i }"
     >
       <pre class="pr-1.5">{{ nodeIds[i] }}</pre>
       [
@@ -25,7 +25,7 @@
         <code
           class="px-1.5 transition"
           :class="{
-            'bg-base-300': hoverNode?.index === j || isHeightlightedEdge(i, j),
+            'bg-base-300': (hoverNode as NodeDatum | undefined)?.index === j || isHeightlightedEdge(i, j),
             'rounded outline outline-1': isHeightlightedEdge(i, j),
             'rounded-b': i === row.length - 1,
           }"
@@ -62,13 +62,20 @@ const props = defineProps({
   },
 })
 
-const isHeightlightedEdge = (i: number, j: number) => {
-  if (!props.hoverEdge) return false
-  const sourceIndex = (props.hoverEdge.source as NodeDatum).index
-  const targetIndex = (props.hoverEdge.target as NodeDatum).index
+const isHeightlightedEdge = (
+  sourceNodeIndex: number,
+  targetNodeIndex: number
+) => {
+  const hoverEdge = props.hoverEdge as EdgeDatum | null
+  const hoverEdgeSourceIndex = (hoverEdge?.source as NodeDatum | undefined)
+    ?.index
+  const hoverEdgeTargetIndex = (hoverEdge?.target as NodeDatum | undefined)
+    ?.index
   return (
-    (sourceIndex === i && targetIndex === j) ||
-    (sourceIndex === j && targetIndex === i)
+    (hoverEdgeSourceIndex === targetNodeIndex &&
+      hoverEdgeTargetIndex === sourceNodeIndex) ||
+    (hoverEdgeSourceIndex === sourceNodeIndex &&
+      hoverEdgeTargetIndex === targetNodeIndex)
   )
 }
 </script>

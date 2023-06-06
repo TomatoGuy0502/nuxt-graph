@@ -6,11 +6,6 @@ interface NodeDatumWithId extends d3.SimulationNodeDatum {
   depth?: number
 }
 
-interface AdjacencyListItem {
-  id: number
-  value: number[]
-}
-
 interface useD3Config {
   width?: number
   height?: number
@@ -57,7 +52,7 @@ export const useD3 = <
 
   const simulation = d3
     .forceSimulation<NodeDatum, EdgeDatum>(data.nodes)
-    .force('link', d3.forceLink(data.edges).distance(linkDistance))
+    .force('link', forceLink)
     .force(
       'charge',
       d3.forceManyBody().strength(chargeStrength).distanceMax(chargeDistanceMax)
@@ -72,8 +67,9 @@ export const useD3 = <
   watch([() => data.nodes.length, () => data.edges.length], updateSimulation)
 
   function updateSimulation() {
-    simulation.force('link', d3.forceLink(data.edges).distance(linkDistance))
+    simulation.stop()
     simulation.nodes(data.nodes)
+    forceLink.links(data.edges)
     simulation.alpha(0.5).restart()
   }
 
@@ -93,6 +89,7 @@ export const useD3 = <
 
   return {
     clearData,
+    updateSimulation,
     ...useD3EditNode({ data }),
     ...useD3EditEdge({ data }),
     ...useD3Drag({ simulation, data }),
@@ -168,11 +165,9 @@ function useD3Drag<
     watch(
       () => data.nodes.length,
       () => {
-        drag(
-          d3
-            .selectAll<SVGCircleElement, NodeDatum>('.node circle')
-            .data(data.nodes)
-        )
+        d3.selectAll<SVGCircleElement, NodeDatum>('.node circle')
+          .data(data.nodes)
+          .call(drag)
       },
       { flush: 'post' }
     )
@@ -321,6 +316,7 @@ function useD3EditEdge<
     mousedownNode.value = null
   }
   function removeEdge(_event: PointerEvent | MouseEvent, d: EdgeDatum) {
+    if (hoverEdge.value === d) unhighlightEdge()
     data.edges.splice(data.edges.indexOf(d), 1)
   }
   return {
@@ -356,14 +352,11 @@ function useGraphRepresentation<
     return adjacencyMatrix
   })
 
-  const adjacencyList = computed<AdjacencyListItem[]>(() => {
-    return adjacencyMatrix.value.map((row, i) => {
-      return {
-        id: data.nodes[i].id,
-        value: row
-          .map((isConnected, j) => (isConnected ? data.nodes[j].id : -1))
-          .filter((n) => n !== -1),
-      }
+  const adjacencyList = computed(() => {
+    return adjacencyMatrix.value.map((row) => {
+      return row
+        .map((isConnected, j) => (isConnected ? j : -1))
+        .filter((n) => n !== -1)
     })
   })
 
@@ -386,7 +379,7 @@ function useGraphProperties<
   adjacencyList,
 }: {
   data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
-  adjacencyList: Ref<AdjacencyListItem[]>
+  adjacencyList: Ref<number[][]>
 }) {
   const graphProperties = computed(() => {
     const visited = new Set()
@@ -394,33 +387,26 @@ function useGraphProperties<
     let hasCycle = false
 
     // DFS
-    function dfs(nodeId: number, parentId: number | null, component: number[]) {
-      visited.add(nodeId)
-      component.push(nodeId)
+    function dfs(nodeIndex: number, component: number[]) {
+      visited.add(nodeIndex)
+      component.push(nodeIndex)
 
-      for (const neighbor of getNodeById(nodeId).value) {
-        if (neighbor === parentId) continue // Skip the parent node
-        if (visited.has(neighbor)) {
+      for (const neighborIndex of adjacencyList.value[nodeIndex]) {
+        if (visited.has(neighborIndex)) {
           hasCycle = true // Cycle detected
           continue // Skip already visited neighbor
         }
-        dfs(neighbor, nodeId, component)
+        dfs(neighborIndex, component)
       }
     }
 
-    function getNodeById(id: number) {
-      return adjacencyList.value.find(
-        (node) => node.id === id
-      ) as AdjacencyListItem
-    }
-
-    for (const node of adjacencyList.value) {
-      if (!visited.has(node.id)) {
+    adjacencyList.value.forEach((_, nodeIndex) => {
+      if (!visited.has(nodeIndex)) {
         const component: number[] = []
-        dfs(node.id, null, component)
+        dfs(nodeIndex, component)
         connectedComponents.push(component)
       }
-    }
+    })
 
     const numNodes = data.nodes.length
     const numEdges = data.edges.length

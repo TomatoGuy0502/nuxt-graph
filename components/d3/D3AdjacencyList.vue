@@ -1,24 +1,24 @@
 <template>
   <ul class="flex flex-col font-mono">
     <li
-      v-for="(row, i) in adjacencyList"
-      :key="i"
+      v-for="(row, sourceIndex) in adjacencyList"
+      :key="sourceIndex"
       class="flex rounded px-1 py-0.5 transition w-fit"
-      :class="{ 'bg-base-300': hoverNode?.index === i }"
+      :class="{ 'bg-base-300': (hoverNode as NodeDatum | undefined)?.index === sourceIndex }"
     >
-      <pre class="pr-1.5">{{ row.id }}</pre>
-      [<template v-for="(targetNodeId, j) in row.value" :key="j">
+      <pre class="pr-1.5">{{ nodeIds[sourceIndex] }}</pre>
+      [<template v-for="(neighborIndex, j) in row" :key="neighborIndex">
         <code
           class="px-1.5 transition"
           :class="{
             'bg-base-300 rounded outline outline-1': isHighlighted(
-              row.id,
-              targetNodeId
+              sourceIndex,
+              neighborIndex
             ),
           }"
-          >{{ targetNodeId }}</code
+          >{{ nodeIds[neighborIndex] }}</code
         >
-        <code v-if="j !== row.value.length - 1">,</code></template
+        <code v-if="j !== row.length - 1">,</code></template
       >]
     </li>
   </ul>
@@ -29,32 +29,25 @@
   lang="ts"
   generic="NodeDatum extends d3.SimulationNodeDatum, EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>"
 >
-const props = defineProps({
-  adjacencyList: {
-    type: Array as PropType<
-      {
-        id: number
-        value: number[]
-      }[]
-    >,
-    required: true,
-  },
-  hoverNode: {
-    type: [Object, null] as PropType<NodeDatum | null>,
-    required: true,
-  },
-  hoverEdge: {
-    type: [Object, null] as PropType<EdgeDatum | null>,
-    required: true,
-  },
-})
+interface Props {
+  adjacencyList: number[][]
+  hoverNode: NodeDatum | null
+  hoverEdge: EdgeDatum | null
+  nodeIds: number[]
+}
+const props = defineProps<Props>()
 
-const isHighlighted = (sourceNodeId: number, targetNodeId: number) => {
+const isHighlighted = (sourceNodeIndex: number, targetNodeIndex: number) => {
+  const hoverEdge = props.hoverEdge as EdgeDatum | null
+  const hoverEdgeSourceIndex = (hoverEdge?.source as NodeDatum | undefined)
+    ?.index
+  const hoverEdgeTargetIndex = (hoverEdge?.target as NodeDatum | undefined)
+    ?.index
   return (
-    (props.hoverEdge?.source.id === targetNodeId &&
-      props.hoverEdge?.target.id === sourceNodeId) ||
-    (props.hoverEdge?.source.id === sourceNodeId &&
-      props.hoverEdge?.target.id === targetNodeId)
+    (hoverEdgeSourceIndex === targetNodeIndex &&
+      hoverEdgeTargetIndex === sourceNodeIndex) ||
+    (hoverEdgeSourceIndex === sourceNodeIndex &&
+      hoverEdgeTargetIndex === targetNodeIndex)
   )
 }
 </script>

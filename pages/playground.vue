@@ -61,6 +61,7 @@
         :hover-node="hoverNode"
         :hover-edge="hoverEdge"
         :adjacency-list="adjacencyList"
+        :node-ids="data.nodes.map((node) => node.id)"
       />
     </div>
   </div>

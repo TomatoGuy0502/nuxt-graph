@@ -45,7 +45,7 @@
 >
 const props = defineProps({
   adjacencyMatrix: {
-    type: Array as PropType<Number[][]>,
+    type: Array as PropType<number[][]>,
     required: true,
   },
   hoverNode: {
@@ -57,7 +57,7 @@ const props = defineProps({
     required: true,
   },
   nodeIds: {
-    type: Array as PropType<Number[]>,
+    type: Array as PropType<number[]>,
     required: true,
   },
 })

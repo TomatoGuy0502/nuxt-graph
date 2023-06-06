@@ -122,7 +122,7 @@ interface TutorialRoute {
 }
 
 // Edit this array to add new tutorial routes
-const tutorialSectionNames = ['basic', 'representation'] as const
+const tutorialSectionNames = ['basic', 'representation', 'algorithm'] as const
 
 const tutorialRoutes = tutorialSectionNames.reduce((acc, curr) => {
   acc[curr] = []

@@ -1,6 +1,7 @@
 <template>
   <div class="relative">
     <div class="flex gap-2 absolute right-4 top-4">
+      <button class="btn btn-sm" @click="onClearData">Clear</button>
       <div class="dropdown dropdown-hover dropdown-end">
         <label tabindex="0" class="btn btn-sm btn-square mb-1"
           ><svg
@@ -19,7 +20,7 @@
         ></label>
         <div
           tabindex="0"
-          class="dropdown-content card card-compact w-96 bg-base-100 shadow-xl"
+          class="dropdown-content card card-compact w-[360px] bg-base-100 shadow-xl"
         >
           <div class="card-body">
             <h2 class="card-title">How To Interact?</h2>
@@ -41,13 +42,11 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-sm" @click="onClearData">Clear</button>
     </div>
     <svg
-      ref="svg"
       :width="width"
       :height="height"
-      class="bg-gray-100 select-none"
+      class="bg-gray-100 select-none rounded-lg"
       :class="svgClass"
       @mousedown="onSvgMousedown($event)"
       @mousemove="onSvgMousemove($event)"

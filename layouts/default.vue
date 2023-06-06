@@ -1,15 +1,15 @@
 <template>
-  <div class="drawer lg:drawer-open">
+  <div class="drawer xl:drawer-open">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content">
-      <div class="navbar bg-base-100 p-4">
-        <div class="flex-none lg:hidden">
-          <label for="my-drawer" class="btn btn-square btn-ghost">
+      <div class="navbar bg-base-100 p-4 gap-2">
+        <div class="flex-none xl:hidden">
+          <label for="my-drawer" class="btn-ghost btn-square btn">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              class="inline-block w-6 h-6 stroke-current"
+              class="inline-block h-6 w-6 stroke-current"
             >
               <path
                 stroke-linecap="round"
@@ -21,20 +21,20 @@
           </label>
         </div>
         <div class="flex-1">
-          <NuxtLink class="btn btn-ghost normal-case text-xl lg:hidden" to="/"
+          <!-- <NuxtLink class="btn-ghost btn text-xl normal-case xl:hidden" to="/"
             >Graph Theory</NuxtLink
-          >
-          <h1 class="normal-case text-xl hidden lg:inline-flex font-bold">
+          > -->
+          <h1 class="block text-xl font-bold normal-case">
             {{ $route.name }}
           </h1>
         </div>
         <div class="flex-none">
-          <button class="btn btn-square btn-ghost">
+          <button class="btn-ghost btn-square btn">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              class="inline-block w-5 h-5 stroke-current"
+              class="inline-block h-5 w-5 stroke-current"
             >
               <path
                 stroke-linecap="round"
@@ -46,15 +46,16 @@
           </button>
         </div>
       </div>
+      <!-- Page content goes here -->
       <slot></slot>
     </div>
     <div class="drawer-side">
       <label for="my-drawer" class="drawer-overlay"></label>
       <div
-        class="flex flex-col gap-4 border-r-2 border-base-300 bg-base-200 p-4 text-base-content w-80 h-screen"
+        class="flex h-screen w-80 flex-col gap-4 border-r-2 border-base-300 bg-base-200 p-4 text-base-content"
       >
         <NuxtLink
-          class="btn btn-ghost normal-case text-xl hidden lg:inline-flex"
+          class="btn-ghost btn hidden text-xl normal-case lg:inline-flex"
           to="/"
           >Graph Theory</NuxtLink
         >
@@ -71,7 +72,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="2"
                 stroke="currentColor"
-                class="w-5 h-5"
+                class="h-5 w-5"
               >
                 <path
                   stroke-linecap="round"
@@ -83,7 +84,7 @@
             </NuxtLink>
           </li>
         </ul>
-        <ul class="menu bg-base-100 rounded-box">
+        <ul class="menu rounded-box bg-base-100">
           <li class="menu-title">Tutorial</li>
           <li
             v-for="(section, i) in tutorialSectionNames"
@@ -91,7 +92,7 @@
             class="w-full"
           >
             <details class="w-full" open>
-              <summary class="font-bold text-sm capitalize">
+              <summary class="text-sm font-bold capitalize">
                 {{ i + 1 }}. {{ section }}
               </summary>
               <ul>
@@ -100,7 +101,7 @@
                   :key="route.name"
                 >
                   <NuxtLink
-                    class="whitespace-break-spaces block"
+                    class="block whitespace-break-spaces"
                     :to="route.path"
                     active-class="active"
                     >{{ i + 1 }}-{{ ii + 1 }}. {{ route.name }}</NuxtLink

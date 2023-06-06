@@ -191,6 +191,7 @@ function useD3EditNode<
     } as NodeDatum)
   }
   function removeNode(_event: PointerEvent | MouseEvent, d: NodeDatum) {
+    if (hoverNode.value === d) unhighlightNode()
     data.nodes.splice(data.nodes.indexOf(d), 1)
     data.edges = data.edges.filter(
       (edge) => edge.source !== d && edge.target !== d

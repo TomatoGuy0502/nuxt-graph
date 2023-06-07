@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 w-72 p-2 rounded-lg bg-neutral">
+  <div class="flex flex-col gap-2 w-72 p-4 rounded-lg bg-base-300">
     <h2 class="font-bold">Traversal Node</h2>
     <div class="flex overflow-x-auto p-1 rounded-lg bg-base-100 no-scrollbar">
       <ol class="flex">

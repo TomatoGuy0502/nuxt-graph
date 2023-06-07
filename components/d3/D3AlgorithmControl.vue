@@ -1,5 +1,5 @@
 <template>
-  <div class="form-control w-72 gap-4 p-2 rounded-lg bg-neutral">
+  <div class="form-control w-72 gap-4 p-4 rounded-lg bg-base-300">
     <div class="form-control">
       <label class="label py-0">
         <span class="label-text font-bold">Start Node ID</span>
@@ -15,7 +15,7 @@
     </div>
     <div class="join">
       <button
-        class="btn-success join-item btn w-1/2 gap-0.5 normal-case"
+        class="join-item btn w-1/2 gap-0.5 normal-case"
         :class="[isPlaying ? 'btn-error' : 'btn-success']"
         @click="$emit('play')"
       >

@@ -1,5 +1,5 @@
 <template>
-  <div class="drawer xl:drawer-open">
+  <div class="drawer xl:drawer-open h-screen">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
       <div class="navbar bg-base-100 p-4 gap-2">

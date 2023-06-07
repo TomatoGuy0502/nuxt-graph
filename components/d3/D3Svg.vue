@@ -84,12 +84,10 @@
 defineProps({
   width: {
     type: Number,
-    required: false,
     default: undefined,
   },
   height: {
     type: Number,
-    required: false,
     default: undefined,
   },
   svgClass: {

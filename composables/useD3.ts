@@ -1,7 +1,8 @@
 import { ref, reactive, onMounted, watch, computed } from 'vue'
 import * as d3 from 'd3'
 
-interface NodeDatumWithId extends d3.SimulationNodeDatum {
+// TODO: Export these base types from d3
+export interface BaseNodeDatum extends d3.SimulationNodeDatum {
   id: number
   depth?: number
 }
@@ -22,7 +23,7 @@ interface useD3Config {
 }
 
 export const useD3 = <
-  NodeDatum extends NodeDatumWithId,
+  NodeDatum extends BaseNodeDatum,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
 >(
   initData: {
@@ -121,7 +122,7 @@ export const useD3 = <
 }
 
 function useD3Drag<
-  NodeDatum extends NodeDatumWithId,
+  NodeDatum extends BaseNodeDatum,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
 >({
   simulation,
@@ -192,7 +193,7 @@ function useD3Drag<
 }
 
 function useD3EditNode<
-  NodeDatum extends NodeDatumWithId,
+  NodeDatum extends BaseNodeDatum,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
 >({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
   // Edit Node
@@ -260,7 +261,7 @@ function useD3EditNode<
 }
 
 function useD3EditEdge<
-  NodeDatum extends NodeDatumWithId,
+  NodeDatum extends BaseNodeDatum,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
 >({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
   // Highlighted Edge
@@ -351,7 +352,7 @@ function useD3EditEdge<
 }
 
 function useGraphRepresentation<
-  NodeDatum extends NodeDatumWithId,
+  NodeDatum extends BaseNodeDatum,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
 >({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
   const adjacencyMatrix = computed(() => {
@@ -388,7 +389,7 @@ function useGraphRepresentation<
 }
 
 function useGraphProperties<
-  NodeDatum extends NodeDatumWithId,
+  NodeDatum extends BaseNodeDatum,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
 >({
   data,

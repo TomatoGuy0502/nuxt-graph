@@ -47,8 +47,17 @@
       </template>
     </D3Svg>
     <ul>
-      <li v-for="(value, key) in graphProperties" :key="key">
-        {{ key }}: {{ value }}
+      <li>hasCycle: {{ graphProperties.hasCycle }}</li>
+      <li>isTree: {{ graphProperties.isTree }}</li>
+      <li>isForest: {{ graphProperties.isForest }}</li>
+      <li>isComplete: {{ graphProperties.isComplete }}</li>
+      <li>
+        connectedComponents:
+        {{
+          graphProperties.connectedComponents.map((component) =>
+            component.map((nodeIndex) => data.nodes[nodeIndex].id)
+          )
+        }}
       </li>
     </ul>
   </div>

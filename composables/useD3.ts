@@ -425,7 +425,7 @@ function useGraphProperties<
       if (!visited.has(nodeIndex)) {
         const component: number[] = []
         dfs(nodeIndex, null, component)
-        connectedComponents.push(component)
+        connectedComponents.push(component.sort((a, b) => a - b))
       }
     })
 
@@ -449,8 +449,7 @@ function useGraphProperties<
   const nodesColorIndex = computed(() =>
     data.nodes.map((node) =>
       graphProperties.value.connectedComponents.findIndex((arr) =>
-        // TODO: Should be node.index
-        arr.includes(node.id)
+        arr.includes(node.index ?? -1)
       )
     )
   )

@@ -2,6 +2,7 @@
   <div class="flex gap-4 p-4 h-full">
     <D3Svg
       ref="svg"
+      :width="500"
       :height="600"
       :is-draggable="true"
       :svg-class="['cursor-default']"
@@ -113,7 +114,7 @@ interface GraphData {
 
 const initData: GraphData = {
   nodes: [
-    { id: 0, fx: 300, fy: 20, depth: 0 },
+    { id: 0, fx: 250, fy: 20, depth: 0 },
     { id: 1, depth: 1 },
     { id: 2, depth: 1 },
   ],

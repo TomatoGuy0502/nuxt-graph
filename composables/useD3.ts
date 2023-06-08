@@ -20,6 +20,7 @@ interface useD3Config {
   /** Range [0,1] */
   forceYRatioOfHeight?: number
   forceYStrength?: number
+  isRootedTree?: boolean
 }
 
 export const useD3 = <
@@ -41,6 +42,7 @@ export const useD3 = <
     forceXStrength = 0.1,
     forceYRatioOfHeight = 0.5,
     forceYStrength = 0.1,
+    isRootedTree = false,
   }: useD3Config = {}
 ) => {
   const data = reactive(initData) as typeof initData
@@ -76,6 +78,9 @@ export const useD3 = <
 
   watch([svgWidth, svgHeight], onResize)
   function onResize() {
+    if (isRootedTree) {
+      data.nodes[0].fx = svgWidth.value / 2
+    }
     forceX.x(svgWidth.value * forceXRatioOfWidth)
     forceY.y(svgHeight.value * forceYRatioOfHeight)
     forceManyBody.distanceMax(

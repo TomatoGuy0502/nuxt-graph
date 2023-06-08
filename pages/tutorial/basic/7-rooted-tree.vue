@@ -8,11 +8,11 @@
     </div>
     <D3Svg
       ref="svg"
-      :width="600"
       :height="600"
       :is-draggable="true"
       :svg-class="['cursor-default']"
       :on-clear-data="resetData"
+      class="flex-1"
     >
       <template #hint>
         <li>Root vertex can't be deleted</li>
@@ -150,6 +150,7 @@ const {
   forceXStrength: 0,
   forceYRatioOfHeight: 1,
   forceYStrength: 0.01,
+  isRootedTree: true,
 })
 
 enableDrag()

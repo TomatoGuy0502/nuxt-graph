@@ -19,6 +19,7 @@
         :class="[isPlaying ? 'btn-error' : 'btn-success']"
         @click="$emit('play')"
       >
+        <!-- TODO: Prev / Play / Next -->
         <template v-if="isPlaying"
           ><svg
             xmlns="http://www.w3.org/2000/svg"

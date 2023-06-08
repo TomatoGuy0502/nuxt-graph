@@ -1,8 +1,13 @@
 <template>
-  <div class="flex gap-4 p-4 h-full">
+  <div class="flex gap-4 p-4 h-full overflow-y-auto">
+    <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg flex-1">
+      <ContentDoc
+        class="prose prose-sm xl:prose-base max-w-none"
+        path="basic/vertex-and-edge"
+      />
+    </div>
     <D3Svg
       ref="svg"
-      :height="600"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -10,6 +15,7 @@
       :on-svg-mousemove="updateDrawEdge"
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
+      class="flex-1"
     >
       <template #edges>
         <line

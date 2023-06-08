@@ -1,8 +1,13 @@
 <template>
-  <div class="flex gap-4 p-4 h-full">
+  <div class="flex gap-4 p-4 h-full overflow-y-auto">
+    <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg flex-1">
+      <ContentDoc
+        class="prose prose-sm xl:prose-base max-w-none"
+        path="basic/vertex-and-edge"
+      />
+    </div>
     <D3Svg
       ref="svg"
-      :height="600"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -10,7 +15,22 @@
       :on-svg-mousemove="updateDrawEdge"
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
+      class="flex-1"
     >
+      <template #info>
+        <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+          <li class="font-bold">
+            Connected Components:
+            <code class="font-normal">{{
+              graphProperties.connectedComponents.length
+            }}</code>
+          </li>
+          <li class="font-bold">
+            Complete:
+            <code class="font-normal">{{ graphProperties.isComplete }}</code>
+          </li>
+        </ul>
+      </template>
       <template #edges>
         <line
           v-for="edge in data.edges"
@@ -45,10 +65,6 @@
         </g>
       </template>
     </D3Svg>
-    <div>isComplete: {{ graphProperties.isComplete }}</div>
-    <div>
-      connectedComponents: {{ graphProperties.connectedComponents.length }}
-    </div>
   </div>
 </template>
 

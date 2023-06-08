@@ -1,8 +1,13 @@
 <template>
-  <div class="flex gap-4 p-4 h-full">
+  <div class="flex gap-4 p-4 h-full overflow-y-auto">
+    <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg flex-1">
+      <ContentDoc
+        class="prose prose-sm xl:prose-base max-w-none"
+        path="basic/vertex-and-edge"
+      />
+    </div>
     <D3Svg
       ref="svg"
-      :height="600"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -11,7 +16,41 @@
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
       :is-draggable="true"
+      class="flex-1"
     >
+      <template #info>
+        <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+          <li class="font-bold">
+            has Cycle:
+            <code class="font-normal">{{ graphProperties.hasCycle }}</code>
+          </li>
+          <li class="font-bold">
+            is Tree:
+            <code class="font-normal">{{ graphProperties.isTree }}</code>
+          </li>
+          <li class="font-bold">
+            is Forest:
+            <code class="font-normal"
+              >{{ graphProperties.isForest }}
+              {{
+                `(${graphProperties.connectedComponents.length} ${
+                  graphProperties.connectedComponents.length > 1
+                    ? 'trees'
+                    : 'tree'
+                })`
+              }}
+            </code>
+          </li>
+          <!-- <li class="font-bold">
+            connectedComponents:
+            <code class="font-normal">{{
+              graphProperties.connectedComponents.map((component) =>
+                component.map((nodeIndex) => data.nodes[nodeIndex].id)
+              )
+            }}</code>
+          </li> -->
+        </ul>
+      </template>
       <template #edges>
         <line
           v-for="edge in data.edges"
@@ -46,20 +85,6 @@
         </g>
       </template>
     </D3Svg>
-    <ul>
-      <li>hasCycle: {{ graphProperties.hasCycle }}</li>
-      <li>isTree: {{ graphProperties.isTree }}</li>
-      <li>isForest: {{ graphProperties.isForest }}</li>
-      <li>isComplete: {{ graphProperties.isComplete }}</li>
-      <li>
-        connectedComponents:
-        {{
-          graphProperties.connectedComponents.map((component) =>
-            component.map((nodeIndex) => data.nodes[nodeIndex].id)
-          )
-        }}
-      </li>
-    </ul>
   </div>
 </template>
 

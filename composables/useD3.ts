@@ -1,7 +1,7 @@
 import { ref, reactive, onMounted, watch, computed } from 'vue'
 import * as d3 from 'd3'
 
-// TODO: Export these base types from d3
+// TODO: Split use* into multiple files
 export interface BaseNodeDatum extends d3.SimulationNodeDatum {
   id: number
   depth?: number

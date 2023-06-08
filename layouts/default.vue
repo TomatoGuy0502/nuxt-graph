@@ -1,9 +1,9 @@
 <template>
-  <div class="drawer xl:drawer-open h-screen">
+  <div class="drawer 2xl:drawer-open h-screen">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content flex flex-col">
+    <div class="drawer-content flex flex-col overflow-y-auto">
       <div class="navbar bg-base-100 p-4 gap-2">
-        <div class="flex-none xl:hidden">
+        <div class="flex-none 2xl:hidden">
           <label for="my-drawer" class="btn-ghost btn-square btn">
             <svg
               xmlns="http://www.w3.org/2000/svg"

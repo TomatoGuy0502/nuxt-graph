@@ -3,7 +3,7 @@
     <template #content
       ><ContentDoc
         class="prose prose-sm xl:prose-base max-w-none"
-        path="algorithm/depth-first-search"
+        path="algorithm/breadth-first-search"
     /></template>
     <template #svg>
       <D3Svg

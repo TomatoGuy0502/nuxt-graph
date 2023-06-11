@@ -11,5 +11,11 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxt/devtools',
     '@vueuse/nuxt',
+    '@nuxt/content',
   ],
+  content: {
+    highlight: {
+      theme: 'github-dark',
+    },
+  },
 })

@@ -1,8 +1,13 @@
 <template>
-  <div class="flex gap-4 p-4 h-full">
+  <div class="grid grid-cols-[1fr_1fr] gap-4 p-4 h-full overflow-y-auto">
+    <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg">
+      <ContentDoc
+        class="prose prose-sm xl:prose-base max-w-none"
+        path="basic/vertex-and-edge"
+      />
+    </div>
     <D3Svg
       ref="svg"
-      :width="500"
       :height="600"
       :is-draggable="true"
       :svg-class="['cursor-default']"
@@ -89,7 +94,6 @@
         </g>
       </template>
     </D3Svg>
-    <p>isCtrlOrCmdPressed: {{ isCtrlOrCmdPressed }}</p>
   </div>
 </template>
 
@@ -114,7 +118,7 @@ interface GraphData {
 
 const initData: GraphData = {
   nodes: [
-    { id: 0, fx: 250, fy: 20, depth: 0 },
+    { id: 0, fx: 300, fy: 20, depth: 0 },
     { id: 1, depth: 1 },
     { id: 2, depth: 1 },
   ],
@@ -145,12 +149,10 @@ const {
   forceXStrength: 0,
   forceYRatioOfHeight: 1,
   forceYStrength: 0.01,
+  isRootedTree: true,
 })
 
-enableDrag((event: PointerEvent | MouseEvent, d: NodeDatum) => {
-  if (d.id === 0) return false
-  return (event.metaKey || event.ctrlKey) && !event.button
-})
+enableDrag()
 
 const { isCtrlOrCmdPressed } = useCtrl()
 const { isMac } = usePlatform()

@@ -1,17 +1,20 @@
 <template>
-  <ul class="flex flex-col font-mono">
+  <ul class="flex flex-col font-mono overflow-auto">
     <li
       v-for="(row, sourceIndex) in adjacencyList"
       :key="sourceIndex"
-      class="flex rounded px-1 py-0.5 transition w-fit"
-      :class="{ 'bg-base-300': (hoverNode as NodeDatum | undefined)?.index === sourceIndex }"
+      class="flex rounded transition w-fit"
+      :class="{ 'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === sourceIndex }"
     >
-      <pre class="pr-1.5">{{ nodeIds[sourceIndex] }}</pre>
+      <pre
+        class="flex justify-center w-[22px] border-transparent border-r-[1px]"
+        >{{ nodeIds[sourceIndex] }}</pre
+      >
       [<template v-for="(neighborIndex, j) in row" :key="neighborIndex">
         <code
-          class="px-1.5 transition"
+          class="flex justify-center items-center transition w-[22px] h-[24px]"
           :class="{
-            'bg-base-300 rounded outline outline-1': isHighlighted(
+            'bg-gray-700 rounded border': isHighlighted(
               sourceIndex,
               neighborIndex
             ),

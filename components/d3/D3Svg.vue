@@ -6,6 +6,9 @@
       height: height ? height + 'px' : undefined,
     }"
   >
+    <div class="flex gap-2 absolute left-4 top-4">
+      <slot name="info"></slot>
+    </div>
     <div class="flex gap-2 absolute right-4 top-4">
       <button class="btn btn-sm" @click="onClearData">Clear</button>
       <div class="dropdown dropdown-hover dropdown-end">
@@ -49,12 +52,9 @@
         </div>
       </div>
     </div>
+
     <svg
-      :style="{
-        width: width ? width + 'px' : undefined,
-        height: height ? height + 'px' : undefined,
-      }"
-      class="bg-gray-100 select-none rounded-lg h-full w-[400px]"
+      class="bg-gray-100 select-none rounded-lg h-full w-full"
       :class="svgClass"
       @mousedown="onSvgMousedown($event)"
       @mousemove="onSvgMousemove($event)"

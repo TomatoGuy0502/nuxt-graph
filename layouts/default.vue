@@ -49,7 +49,7 @@
       <!-- Page content goes here -->
       <slot></slot>
     </div>
-    <div class="drawer-side">
+    <div class="drawer-side z-10">
       <label for="my-drawer" class="drawer-overlay"></label>
       <div
         class="flex h-screen w-80 flex-col gap-4 border-r-2 border-base-300 bg-base-200 p-4 text-base-content"

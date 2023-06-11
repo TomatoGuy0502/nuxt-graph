@@ -1,39 +1,54 @@
 <template>
-  <ul class="flex flex-col font-mono">
-    <li class="flex px-1">
-      <pre class="pr-1.5">{{ '  ' }}</pre>
+  <ul class="flex flex-col font-mono overflow-auto">
+    <li v-if="!adjacencyMatrix.length">Add a node to see the matrix</li>
+    <li
+      v-if="adjacencyMatrix.length"
+      class="flex bg-base-300 sticky top-0 border-b-[1px] z-[1] w-fit"
+    >
+      <div class="w-[22px] bg-base-300 sticky left-0 border-r-[1px]"></div>
+      <div class="w-[10px]"></div>
       <template v-for="(row, i) in adjacencyMatrix" :key="i">
         <code
-          class="px-1.5 rounded-t transition"
+          class="rounded-t transition flex justify-center w-[22px]"
           :class="{
-            'bg-base-300': (hoverNode as NodeDatum | undefined)?.index === i,
+            'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === i,
           }"
           >{{ nodeIds[i] }}</code
         >
-        <code v-if="i !== row.length - 1">,</code>
+        <code v-if="i !== row.length - 1" class="w-[10px]">,</code>
       </template>
+      <div class="w-[10px]"></div>
     </li>
     <li
       v-for="(row, i) in adjacencyMatrix"
       :key="i"
-      class="flex rounded px-1 transition"
-      :class="{ 'bg-base-300': (hoverNode as NodeDatum | undefined)?.index === i }"
+      class="flex rounded transition w-fit"
+      :class="{ 'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === i }"
     >
-      <pre class="pr-1.5">{{ nodeIds[i] }}</pre>
-      [
+      <div class="sticky left-0 bg-base-300">
+        <span
+          class="flex justify-center w-[22px] border-r-[1px] rounded-l transition"
+          :class="{'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === i}"
+        >
+          {{ nodeIds[i] }}
+        </span>
+      </div>
+      <code class="w-[10px]">[</code>
       <template v-for="(n, j) in row" :key="j">
         <code
-          class="px-1.5 transition"
+          class="flex justify-center items-center transition w-[22px] h-[24px]"
           :class="{
-            'bg-base-300': (hoverNode as NodeDatum | undefined)?.index === j || isHeightlightedEdge(i, j),
-            'rounded outline outline-1': isHeightlightedEdge(i, j),
+            'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === j,
+            'bg-gray-700 rounded border': isHeightlightedEdge(i, j),
             'rounded-b': i === row.length - 1,
+            'text-base-content/20': i === j,
           }"
+          :data-index="`${i},${j}`"
           >{{ n }}</code
         >
-        <code v-if="j !== row.length - 1">,</code>
+        <code v-if="j !== row.length - 1" class="w-[10px]">,</code>
       </template>
-      ]
+      <code class="w-[10px] pr-1">]</code>
     </li>
   </ul>
 </template>
@@ -41,8 +56,11 @@
 <script
   setup
   lang="ts"
-  generic="NodeDatum extends d3.SimulationNodeDatum, EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>"
+  generic="NodeDatum extends BaseNodeDatum, EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>"
 >
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { BaseNodeDatum } from '@/composables/useD3'
+
 const props = defineProps({
   adjacencyMatrix: {
     type: Array as PropType<number[][]>,
@@ -78,4 +96,22 @@ const isHeightlightedEdge = (
       hoverEdgeTargetIndex === targetNodeIndex)
   )
 }
+
+watch(
+  () => props.hoverNode,
+  (hoverNode) => {
+    if (hoverNode) {
+      const nodeIndex = (hoverNode as NodeDatum).index
+      document
+        .querySelector<HTMLElement>(
+          `code[data-index="${nodeIndex},${nodeIndex}"]`
+        )
+        ?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center',
+        })
+    }
+  }
+)
 </script>

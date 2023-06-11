@@ -1,8 +1,17 @@
 <template>
-  <div class="flex gap-4 p-4 h-full">
+  <div
+    class="grid grid-cols-[1fr_1fr] grid-rows-[1fr_auto] gap-4 p-4 h-full overflow-y-auto"
+  >
+    <div
+      class="h-full overflow-y-auto col-span-1 row-span-2 p-4 bg-base-200 rounded-lg"
+    >
+      <ContentDoc
+        class="prose prose-sm xl:prose-base max-w-none"
+        path="basic/vertex-and-edge"
+      />
+    </div>
     <D3Svg
       ref="svg"
-      :height="600"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -47,13 +56,16 @@
         </g>
       </template>
     </D3Svg>
-    <div>
-      <p>Adjacency List</p>
+    <div
+      class="flex flex-col gap-2 p-2 rounded-lg bg-base-300 overflow-x-auto w-fit"
+    >
+      <h2 class="font-bold">Adjacency List</h2>
       <D3AdjacencyList
         :hover-node="hoverNode"
         :hover-edge="hoverEdge"
         :adjacency-list="adjacencyList"
         :node-ids="data.nodes.map((node) => node.id)"
+        class="max-h-[264px] max-w-[360px]"
       />
     </div>
   </div>

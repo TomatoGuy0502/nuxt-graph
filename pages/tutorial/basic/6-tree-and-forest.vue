@@ -1,6 +1,6 @@
 <template>
-  <div class="flex gap-4 p-4 h-full overflow-y-auto">
-    <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg flex-1">
+  <div class="grid grid-cols-[1fr_1fr] gap-4 p-4 h-full overflow-y-auto">
+    <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg">
       <ContentDoc
         class="prose prose-sm xl:prose-base max-w-none"
         path="basic/vertex-and-edge"
@@ -16,7 +16,6 @@
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
       :is-draggable="true"
-      class="flex-1"
     >
       <template #info>
         <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">

@@ -1,10 +1,47 @@
 <template>
   <NuxtLayout name="algorithm">
     <template #content
-      ><ContentDoc
-        class="prose prose-sm xl:prose-base max-w-none"
-        path="algorithm/breadth-first-search"
-    /></template>
+      ><div class="tabs px-4 pt-2 bg-base-300">
+        <div class="tab tab-lifted hidden"></div>
+        <button
+          class="tab tab-lifted font-medium"
+          :class="[
+            activeTab === 0
+              ? 'tab-active [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))] [--tab-color:hsl(var(--bc))]'
+              : '[--tab-border-color:transparent]',
+          ]"
+          @click="activeTab = 0"
+        >
+          Introduction
+        </button>
+        <button
+          class="tab tab-lifted font-medium [--tab-border-color:transparent]"
+          :class="[
+            activeTab === 1
+              ? 'tab-active [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))] [--tab-color:hsl(var(--bc))]'
+              : '[--tab-border-color:transparent]',
+          ]"
+          @click="activeTab = 1"
+        >
+          Code Example
+        </button>
+        <div class="tab tab-lifted hidden"></div>
+      </div>
+      <div class="overflow-y-auto p-4">
+        <div v-show="activeTab === 0">
+          <ContentDoc
+            class="prose prose-sm xl:prose-base max-w-none"
+            path="algorithm/breadth-first-search"
+          />
+        </div>
+        <div v-show="activeTab === 1">
+          <ContentDoc
+            class="prose prose-sm xl:prose-base max-w-none"
+            path="algorithm/breadth-first-search.code"
+            :head="false"
+          />
+        </div></div
+    ></template>
     <template #svg>
       <D3Svg
         ref="svg"
@@ -69,6 +106,16 @@
         @visit-next-node="visitNextNode"
         @generate-random-graph="generateRandomGraph(20, 20)"
       />
+      <p>
+        queue:
+        {{
+          algorithmRecords![
+            visitingTraversalIndex === null
+              ? 0
+              : (visitingTraversalIndex ?? 0) + 1
+          ] || []
+        }}
+      </p>
     </template>
     <template #result>
       <D3AlgorithmResult
@@ -88,6 +135,8 @@ definePageMeta({
   path: '/tutorial/algorithm/breadth-first-search',
   pageOrder: 2,
 })
+
+const activeTab = ref(0)
 
 interface NodeDatum extends d3.SimulationNodeDatum {
   id: number
@@ -155,6 +204,7 @@ watch(
 const {
   traversal,
   walk,
+  algorithmRecords,
   visitingTraversalIndex,
   visitingNodeIndex,
   visitedNodeIndices,
@@ -165,12 +215,14 @@ const {
   const visited = new Set()
   const traversal: number[] = []
   const walk: string[] = []
+  const algorithmRecords: number[][] = []
 
   // BFS
   function bfs(nodeIndex: number) {
     const queue = [nodeIndex]
 
     while (queue.length > 0) {
+      algorithmRecords.push([...queue])
       const nodeIndex = queue.shift()!
 
       visited.add(nodeIndex)
@@ -196,6 +248,7 @@ const {
   return {
     traversal,
     walk,
+    algorithmRecords,
   }
 })
 

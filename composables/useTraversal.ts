@@ -1,11 +1,19 @@
 import type { MaybeRefOrGetter } from 'vue'
 
 export const useTraversal = (
-  traversalAlgorithm: () => { traversal: number[]; walk: string[] },
+  traversalAlgorithm: () => {
+    traversal: number[]
+    walk: string[]
+    algorithmRecords?: number[][]
+  },
   interval: MaybeRefOrGetter<number> = 500
 ) => {
   /** Traversal order using index */
-  const { traversal, walk } = toRefs(toReactive(computed(traversalAlgorithm)))
+  const {
+    traversal,
+    walk,
+    algorithmRecords = ref([]),
+  } = toRefs(toReactive(computed(traversalAlgorithm)))
 
   const visitingTraversalIndex = ref<number | null>(null)
 
@@ -49,6 +57,7 @@ export const useTraversal = (
   return {
     traversal,
     walk,
+    algorithmRecords,
     visitingTraversalIndex,
     visitingNodeIndex,
     visitedNodeIndices,

@@ -1,10 +1,48 @@
 <template>
   <NuxtLayout name="algorithm">
-    <template #content
-      ><ContentDoc
-        class="prose prose-sm xl:prose-base max-w-none"
-        path="algorithm/depth-first-search"
-    /></template>
+    <template #content>
+      <div class="tabs px-4 pt-2 bg-base-300">
+        <div class="tab tab-lifted hidden"></div>
+        <button
+          class="tab tab-lifted font-medium"
+          :class="[
+            activeTab === 0
+              ? 'tab-active [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))] [--tab-color:hsl(var(--bc))]'
+              : '[--tab-border-color:transparent]',
+          ]"
+          @click="activeTab = 0"
+        >
+          Introduction
+        </button>
+        <button
+          class="tab tab-lifted font-medium [--tab-border-color:transparent]"
+          :class="[
+            activeTab === 1
+              ? 'tab-active [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))] [--tab-color:hsl(var(--bc))]'
+              : '[--tab-border-color:transparent]',
+          ]"
+          @click="activeTab = 1"
+        >
+          Code Example
+        </button>
+        <div class="tab tab-lifted hidden"></div>
+      </div>
+      <div class="overflow-y-auto p-4">
+        <div v-show="activeTab === 0">
+          <ContentDoc
+            class="prose prose-sm xl:prose-base max-w-none"
+            path="algorithm/depth-first-search"
+          />
+        </div>
+        <div v-show="activeTab === 1">
+          <ContentDoc
+            class="prose prose-sm xl:prose-base max-w-none"
+            path="algorithm/depth-first-search.code"
+            :head="false"
+          />
+        </div>
+      </div>
+    </template>
     <template #svg>
       <D3Svg
         ref="svg"
@@ -89,6 +127,8 @@ definePageMeta({
   pageOrder: 1,
 })
 
+const activeTab = ref(0)
+
 interface NodeDatum extends d3.SimulationNodeDatum {
   id: number
 }
@@ -101,13 +141,13 @@ interface GraphData {
 }
 
 const initData: GraphData = {
-  nodes: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+  nodes: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }],
   edges: [
     { source: 0, target: 1 },
     { source: 0, target: 2 },
     { source: 1, target: 3 },
     { source: 1, target: 4 },
-    { source: 2, target: 5 },
+    { source: 2, target: 4 },
   ],
 }
 const svg = ref<HTMLDivElement | null>(null)

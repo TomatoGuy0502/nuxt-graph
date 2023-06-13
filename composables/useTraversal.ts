@@ -29,7 +29,7 @@ export const useTraversal = (
 
   const visitedNodeIndices = ref(new Set<number>())
 
-  const visitNextNode = () => {
+  const goNextStep = () => {
     if (visitingTraversalIndex.value === null) {
       visitingTraversalIndex.value = 0
     } else {
@@ -43,11 +43,23 @@ export const useTraversal = (
     visitedNodeIndices.value.add(visitingNodeIndex.value!)
   }
 
+  const goPrevStep = () => {
+    if (visitingTraversalIndex.value === null) return
+
+    visitedNodeIndices.value.delete(visitingNodeIndex.value!)
+    visitingTraversalIndex.value--
+
+    if (visitingTraversalIndex.value < 0) {
+      visitingTraversalIndex.value = null
+      visitedNodeIndices.value.clear()
+    }
+  }
+
   const {
     isActive: isPlaying,
     resume,
     pause,
-  } = useTimeoutPoll(visitNextNode, interval)
+  } = useTimeoutPoll(goNextStep, interval)
 
   const play = () => {
     if (isPlaying.value) pause()
@@ -61,7 +73,8 @@ export const useTraversal = (
     visitingTraversalIndex,
     visitingNodeIndex,
     visitedNodeIndices,
-    visitNextNode,
+    goNextStep,
+    goPrevStep,
     isPlaying,
     play,
   }

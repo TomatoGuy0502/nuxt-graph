@@ -104,7 +104,8 @@
         :visiting-traversal-index="visitingTraversalIndex"
         :is-playing="isPlaying"
         @play="play"
-        @visit-next-node="visitNextNode"
+        @go-next-step="goNextStep"
+        @go-prev-step="goPrevStep"
         @generate-random-graph="generateRandomGraph(20, 20)"
       />
     </template>
@@ -199,7 +200,8 @@ const {
   visitingTraversalIndex,
   visitingNodeIndex,
   visitedNodeIndices,
-  visitNextNode,
+  goNextStep,
+  goPrevStep,
   isPlaying,
   play,
 } = useTraversal(() => {

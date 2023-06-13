@@ -7,7 +7,7 @@ export interface BaseNodeDatum extends d3.SimulationNodeDatum {
   depth?: number
 }
 
-interface useD3Config {
+interface SimulationConfig {
   linkDistance?: number
   linkStrength?: number
   linkIterations?: number
@@ -32,74 +32,20 @@ export const useD3 = <
     edges: EdgeDatum[]
   },
   svgRef: Ref<HTMLDivElement | null>,
-  {
-    linkDistance = 40,
-    linkStrength = undefined,
-    linkIterations = 1,
-    chargeStrength = -200,
-    chargeDistanceMaxRatio = 0.5,
-    forceXRatioOfWidth = 0.5,
-    forceXStrength = 0.1,
-    forceYRatioOfHeight = 0.5,
-    forceYStrength = 0.1,
-    isRootedTree = false,
-  }: useD3Config = {}
+  simulationConfig: SimulationConfig = {}
 ) => {
   const data = reactive(initData) as typeof initData
-  const colors = d3.schemeTableau10
-  const forceLink = d3
-    .forceLink(data.edges)
-    .distance(linkDistance)
-    .iterations(linkIterations)
-  if (linkStrength) forceLink.strength(linkStrength)
-  const forceX = d3.forceX().strength(forceXStrength)
-  const forceY = d3.forceY().strength(forceYStrength)
-  const forceManyBody = d3.forceManyBody().strength(chargeStrength)
-  const { width: svgWidth, height: svgHeight } = useElementSize(svgRef)
-
-  const simulation = d3
-    .forceSimulation<NodeDatum, EdgeDatum>(data.nodes)
-    .force('link', forceLink)
-    .force('charge', forceManyBody)
-    .force('x', forceX)
-    .force('y', forceY)
-    .stop()
-
-  onMounted(() => {
-    forceX.x(svgWidth.value * forceXRatioOfWidth)
-    forceY.y(svgHeight.value * forceYRatioOfHeight)
-    forceManyBody.distanceMax(
-      Math.min(svgWidth.value, svgHeight.value) * chargeDistanceMaxRatio
-    )
-    updateSimulation()
-  })
-
-  watch([() => data.nodes.length, () => data.edges.length], updateSimulation)
-
-  watch([svgWidth, svgHeight], onResize)
-  function onResize() {
-    if (isRootedTree) {
-      data.nodes[0].fx = svgWidth.value / 2
-    }
-    forceX.x(svgWidth.value * forceXRatioOfWidth)
-    forceY.y(svgHeight.value * forceYRatioOfHeight)
-    forceManyBody.distanceMax(
-      Math.min(svgWidth.value, svgHeight.value) * chargeDistanceMaxRatio
-    )
-    simulation.alpha(0.5).restart()
-  }
-
-  function updateSimulation() {
-    simulation.stop()
-    simulation.nodes(data.nodes)
-    forceLink.links(data.edges)
-    simulation.alpha(0.5).restart()
-  }
-
   function clearData() {
     data.nodes.length = 0
     data.edges.length = 0
   }
+
+  const colors = d3.schemeTableau10
+
+  const { simulation, initSimulation, updateSimulation } = useD3Simulation({
+    data,
+  })
+  initSimulation(svgRef, simulationConfig)
 
   const { adjacencyMatrix, adjacencyList, edgeList } = useGraphRepresentation({
     data,
@@ -112,6 +58,7 @@ export const useD3 = <
 
   return {
     clearData,
+    initSimulation,
     updateSimulation,
     ...useD3EditNode({ data }),
     ...useD3EditEdge({ data }),
@@ -126,6 +73,89 @@ export const useD3 = <
   }
 }
 
+function useD3Simulation<
+  NodeDatum extends BaseNodeDatum,
+  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
+>({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
+  const simulation: Ref<d3.Simulation<NodeDatum, EdgeDatum> | undefined> = ref()
+  let forceLink: d3.ForceLink<d3.SimulationNodeDatum, EdgeDatum>
+  let forceX: d3.ForceX<d3.SimulationNodeDatum>
+  let forceY: d3.ForceY<d3.SimulationNodeDatum>
+  let forceManyBody: d3.ForceManyBody<d3.SimulationNodeDatum>
+
+  /** Call this function to initialize simulation */
+  function initSimulation(
+    svgRef: Ref<HTMLDivElement | null>,
+    {
+      linkDistance = 40,
+      linkStrength = undefined,
+      linkIterations = 1,
+      chargeStrength = -200,
+      chargeDistanceMaxRatio = 0.5,
+      forceXRatioOfWidth = 0.5,
+      forceXStrength = 0.1,
+      forceYRatioOfHeight = 0.5,
+      forceYStrength = 0.1,
+      isRootedTree = false,
+    }: SimulationConfig = {}
+  ) {
+    forceLink = d3
+      .forceLink(data.edges)
+      .distance(linkDistance)
+      .iterations(linkIterations)
+    if (linkStrength) forceLink.strength(linkStrength)
+    forceX = d3.forceX().strength(forceXStrength)
+    forceY = d3.forceY().strength(forceYStrength)
+    forceManyBody = d3.forceManyBody().strength(chargeStrength)
+    const { width: svgWidth, height: svgHeight } = useElementSize(svgRef)
+
+    simulation.value = d3
+      .forceSimulation<NodeDatum, EdgeDatum>(data.nodes)
+      .force('link', forceLink)
+      .force('charge', forceManyBody)
+      .force('x', forceX)
+      .force('y', forceY)
+      .stop()
+
+    onMounted(() => {
+      forceX.x(svgWidth.value * forceXRatioOfWidth)
+      forceY.y(svgHeight.value * forceYRatioOfHeight)
+      forceManyBody.distanceMax(
+        Math.min(svgWidth.value, svgHeight.value) * chargeDistanceMaxRatio
+      )
+      updateSimulation()
+    })
+
+    watch([() => data.nodes.length, () => data.edges.length], updateSimulation)
+
+    watch([svgWidth, svgHeight], onResize)
+    function onResize() {
+      if (isRootedTree) {
+        data.nodes[0].fx = svgWidth.value / 2
+      }
+      forceX.x(svgWidth.value * forceXRatioOfWidth)
+      forceY.y(svgHeight.value * forceYRatioOfHeight)
+      forceManyBody.distanceMax(
+        Math.min(svgWidth.value, svgHeight.value) * chargeDistanceMaxRatio
+      )
+      simulation.value?.alpha(0.5).restart()
+    }
+  }
+
+  function updateSimulation() {
+    simulation.value?.stop()
+    simulation.value?.nodes(data.nodes)
+    forceLink.links(data.edges)
+    simulation.value?.alpha(0.5).restart()
+  }
+
+  return {
+    simulation,
+    initSimulation,
+    updateSimulation,
+  }
+}
+
 function useD3Drag<
   NodeDatum extends BaseNodeDatum,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
@@ -133,14 +163,14 @@ function useD3Drag<
   simulation,
   data,
 }: {
-  simulation: d3.Simulation<NodeDatum, EdgeDatum>
+  simulation: Ref<d3.Simulation<NodeDatum, EdgeDatum> | undefined>
   data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
 }) {
   function _dragstarted(
     event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
     d: NodeDatum
   ) {
-    if (!event.active) simulation.alphaTarget(0.3).restart()
+    if (!event.active) simulation.value?.alphaTarget(0.3).restart()
     d.fx = event.x
     d.fy = event.y
   }
@@ -157,7 +187,7 @@ function useD3Drag<
     event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
     d: NodeDatum
   ) {
-    if (!event.active) simulation.alphaTarget(0)
+    if (!event.active) simulation.value?.alphaTarget(0)
     d.fx = null
     d.fy = null
   }
@@ -168,6 +198,7 @@ function useD3Drag<
       event: PointerEvent | MouseEvent
     ) => (event.metaKey || event.ctrlKey) && !event.button
   ) {
+    if (!simulation.value) return
     const drag = d3
       .drag<SVGCircleElement, NodeDatum>()
       .on('start', _dragstarted)
@@ -177,11 +208,9 @@ function useD3Drag<
     drag.filter(filter)
 
     onMounted(() => {
-      drag(
-        d3
-          .selectAll<SVGCircleElement, NodeDatum>('.node circle')
-          .data(data.nodes)
-      )
+      d3.selectAll<SVGCircleElement, NodeDatum>('.node circle')
+        .data(data.nodes)
+        .call(drag)
     })
     watch(
       () => data.nodes.length,

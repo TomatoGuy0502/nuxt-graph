@@ -32,7 +32,8 @@ export const useD3 = <
     edges: EdgeDatum[]
   },
   svgRef: Ref<HTMLDivElement | null>,
-  simulationConfig: SimulationConfig = {}
+  simulationConfig: SimulationConfig = {},
+  isDirected = false
 ) => {
   const data = reactive(initData) as typeof initData
   function clearData() {
@@ -49,6 +50,7 @@ export const useD3 = <
 
   const { adjacencyMatrix, adjacencyList, edgeList } = useGraphRepresentation({
     data,
+    isDirected,
   })
 
   const { graphProperties, nodesColorIndex } = useGraphProperties({
@@ -61,7 +63,7 @@ export const useD3 = <
     initSimulation,
     updateSimulation,
     ...useD3EditNode({ data }),
-    ...useD3EditEdge({ data }),
+    ...useD3EditEdge({ data, isDirected }),
     ...useD3Drag({ simulation, data }),
     data,
     colors,
@@ -297,7 +299,13 @@ function useD3EditNode<
 function useD3EditEdge<
   NodeDatum extends BaseNodeDatum,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
->({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
+>({
+  data,
+  isDirected = false,
+}: {
+  data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
+  isDirected: boolean
+}) {
   // Highlighted Edge
   const hoverEdge = ref<EdgeDatum | null>(null) as Ref<EdgeDatum | null>
   function highlightEdge(_event: PointerEvent | MouseEvent, d: EdgeDatum) {
@@ -335,11 +343,16 @@ function useD3EditEdge<
   function endDrawEdge(_event: PointerEvent | MouseEvent, d: NodeDatum) {
     if (!mousedownNode.value || d === mousedownNode.value) return
     if (
-      data.edges.some(
-        (edge) =>
-          (edge.source === d && edge.target === mousedownNode.value) ||
-          (edge.source === mousedownNode.value && edge.target === d)
-      )
+      data.edges.some((edge) => {
+        if (isDirected) {
+          return edge.source === mousedownNode.value && edge.target === d
+        } else {
+          return (
+            (edge.source === d && edge.target === mousedownNode.value) ||
+            (edge.source === mousedownNode.value && edge.target === d)
+          )
+        }
+      })
     )
       return
     data.edges.push({ source: mousedownNode.value, target: d } as EdgeDatum)
@@ -388,7 +401,13 @@ function useD3EditEdge<
 function useGraphRepresentation<
   NodeDatum extends BaseNodeDatum,
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
->({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
+>({
+  data,
+  isDirected = false,
+}: {
+  data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
+  isDirected: boolean
+}) {
   const adjacencyMatrix = computed(() => {
     const n = data.nodes.length
     const adjacencyMatrix: number[][] = [...Array(n)].map(() =>
@@ -398,7 +417,7 @@ function useGraphRepresentation<
       const sourceIndex = (edge.source as NodeDatum).index || 0
       const targetIndex = (edge.target as NodeDatum).index || 0
       adjacencyMatrix[sourceIndex][targetIndex] = 1
-      adjacencyMatrix[targetIndex][sourceIndex] = 1
+      if (!isDirected) adjacencyMatrix[targetIndex][sourceIndex] = 1
     })
     return adjacencyMatrix
   })

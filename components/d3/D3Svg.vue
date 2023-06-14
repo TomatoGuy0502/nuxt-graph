@@ -62,6 +62,19 @@
       @mouseleave="onSvgMouseleave()"
       @contextmenu.prevent
     >
+      <defs>
+        <marker
+          id="drawEdgeArrow"
+          viewBox="0 0 10 10"
+          refX="10"
+          refY="5"
+          markerWidth="4"
+          markerHeight="4"
+          orient="auto-start-reverse"
+        >
+          <path d="M 0 0 L 10 5 L 0 10 z" class="fill-current" />
+        </marker>
+      </defs>
       <line
         class="draw-edge cursor-cell stroke-[3]"
         :class="[hasMouseDownNode ? 'stroke-current' : 'stroke-none']"
@@ -69,6 +82,9 @@
         :y1="drawEdgeCords.y1"
         :x2="drawEdgeCords.x2"
         :y2="drawEdgeCords.y2"
+        :marker-end="
+          isDirected && hasMouseDownNode ? 'url(#drawEdgeArrow)' : 'none'
+        "
       ></line>
       <g class="edges" @mousedown.stop>
         <slot name="edges"></slot>
@@ -82,6 +98,11 @@
 
 <script setup lang="ts">
 defineProps({
+  /** Show arrow when drawing edge */
+  isDirected: {
+    type: Boolean,
+    default: false,
+  },
   width: {
     type: Number,
     default: undefined,
@@ -98,6 +119,7 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  /** Show draggable hint */
   isDraggable: {
     type: Boolean,
     default: false,

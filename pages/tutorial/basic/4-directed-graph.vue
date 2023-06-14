@@ -15,13 +15,15 @@
       :on-svg-mousemove="updateDrawEdge"
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
+      :is-draggable="true"
+      :is-directed="true"
     >
       <template #edges>
         <defs>
           <marker
             id="arrow"
             viewBox="0 0 10 10"
-            refX="14"
+            refX="12"
             refY="5"
             markerWidth="4"
             markerHeight="4"
@@ -29,16 +31,26 @@
           >
             <path d="M 0 0 L 10 5 L 0 10 z" />
           </marker>
+          <marker
+            id="arrowHover"
+            viewBox="0 0 10 10"
+            refX="12"
+            refY="5"
+            markerWidth="4"
+            markerHeight="4"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#f87171" />
+          </marker>
         </defs>
         <line
           v-for="edge in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-          class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
+          class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
           :x1="(edge.source as NodeDatum).x"
           :y1="(edge.source as NodeDatum).y"
           :x2="(edge.target as NodeDatum).x"
           :y2="(edge.target as NodeDatum).y"
-          marker-end="url(#arrow)"
           @contextmenu.prevent="removeEdge($event, edge)"
         ></line>
       </template>
@@ -59,8 +71,8 @@
             <title>Node ID: {{ node.id }}</title>
           </circle>
           <!-- <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
-              {{ node.id }}
-            </text> -->
+            {{ node.id }}
+          </text> -->
         </g>
       </template>
     </D3Svg>
@@ -86,10 +98,11 @@ interface GraphData {
 }
 
 const initData: GraphData = {
-  nodes: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+  nodes: [{ id: 0 }, { id: 1 }, { id: 2 }],
   edges: [
     { source: 0, target: 1 },
     { source: 0, target: 2 },
+    { source: 1, target: 0 },
   ],
 }
 
@@ -110,12 +123,19 @@ const {
   removeEdge,
   data,
   colors,
-} = useD3(initData, svg, { linkDistance: 60, chargeStrength: -200 })
+  enableDrag,
+} = useD3(initData, svg, { linkDistance: 80, chargeStrength: -300 }, true)
+
+enableDrag()
 </script>
 
 <style scoped>
 line {
   stroke-linecap: round;
   stroke-linejoin: round;
+  marker-end: url('#arrow');
+  &:hover {
+    marker-end: url('#arrowHover');
+  }
 }
 </style>

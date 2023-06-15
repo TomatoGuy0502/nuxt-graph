@@ -1,5 +1,6 @@
 import { ref, reactive, onMounted, watch, computed } from 'vue'
 import * as d3 from 'd3'
+import { almostEqual } from '@/utils'
 
 // TODO: Split use* into multiple files
 export interface BaseNodeDatum extends d3.SimulationNodeDatum {
@@ -33,7 +34,7 @@ export const useD3 = <
   },
   svgRef: Ref<HTMLDivElement | null>,
   simulationConfig: SimulationConfig = {},
-  isDirected = false
+  isDirected = ref(false)
 ) => {
   const data = reactive(initData) as typeof initData
   function clearData() {
@@ -301,10 +302,10 @@ function useD3EditEdge<
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
 >({
   data,
-  isDirected = false,
+  isDirected = ref(false),
 }: {
   data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
-  isDirected: boolean
+  isDirected: Ref<boolean>
 }) {
   // Highlighted Edge
   const hoverEdge = ref<EdgeDatum | null>(null) as Ref<EdgeDatum | null>
@@ -344,7 +345,7 @@ function useD3EditEdge<
     if (!mousedownNode.value || d === mousedownNode.value) return
     if (
       data.edges.some((edge) => {
-        if (isDirected) {
+        if (isDirected.value) {
           return edge.source === mousedownNode.value && edge.target === d
         } else {
           return (
@@ -383,6 +384,54 @@ function useD3EditEdge<
     if (hoverEdge.value === d) unhighlightEdge()
     data.edges.splice(data.edges.indexOf(d), 1)
   }
+
+  /** Calculate the edge cords for directed graph */
+  const edgesCords = computed(() => {
+    const translate = 6
+
+    return data.edges.map((edge) => {
+      const x1 = (edge.source as NodeDatum).x!
+      const y1 = (edge.source as NodeDatum).y!
+      const x2 = (edge.target as NodeDatum).x!
+      const y2 = (edge.target as NodeDatum).y!
+
+      // If there is only one direction, return x1, y1, x2, y2
+      if (!isDirected.value) {
+        return { x1, y1, x2, y2 }
+      }
+      if (
+        !data.edges.some(
+          (e) => e.source === edge.target && e.target === edge.source
+        )
+      ) {
+        return { x1, y1, x2, y2 }
+      }
+
+      // If the edge is vertical or horizontal, just change x or y
+      if (almostEqual(x1, x2) || almostEqual(y1, y2)) {
+        return {
+          x1: x1 + translate * Number(!almostEqual(y1, y2)),
+          y1: y1 + translate * Number(!almostEqual(x1, x2)),
+          x2: x2 + translate * Number(!almostEqual(y1, y2)),
+          y2: y2 + translate * Number(!almostEqual(x1, x2)),
+        }
+      }
+
+      const k = (y2 - y1) / (x2 - x1)
+      const kPrime = -1 / k
+      const dx = translate / Math.sqrt(1 + kPrime * kPrime)
+      const dy = kPrime * dx
+
+      // If the edge is not vertical or horizontal, calculate the new x and y
+      return {
+        x1: x1 + dx * (y2 > y1 ? -1 : 1),
+        y1: y1 + dy * (y2 > y1 ? -1 : 1),
+        x2: x2 + dx * (y2 > y1 ? -1 : 1),
+        y2: y2 + dy * (y2 > y1 ? -1 : 1),
+      }
+    })
+  })
+
   return {
     hoverEdge,
     highlightEdge,
@@ -395,6 +444,7 @@ function useD3EditEdge<
     endDrawEdgeWithRandomWeight,
     hideDrawEdge,
     removeEdge,
+    edgesCords,
   }
 }
 
@@ -403,10 +453,10 @@ function useGraphRepresentation<
   EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
 >({
   data,
-  isDirected = false,
+  isDirected = ref(false),
 }: {
   data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
-  isDirected: boolean
+  isDirected: Ref<boolean>
 }) {
   const adjacencyMatrix = computed(() => {
     const n = data.nodes.length
@@ -417,7 +467,7 @@ function useGraphRepresentation<
       const sourceIndex = (edge.source as NodeDatum).index || 0
       const targetIndex = (edge.target as NodeDatum).index || 0
       adjacencyMatrix[sourceIndex][targetIndex] = 1
-      if (!isDirected) adjacencyMatrix[targetIndex][sourceIndex] = 1
+      if (!isDirected.value) adjacencyMatrix[targetIndex][sourceIndex] = 1
     })
     return adjacencyMatrix
   })

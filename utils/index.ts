@@ -35,3 +35,7 @@ export function generateRandomGraphData(nodeCount: number, edgeCount: number) {
 
   return initData
 }
+
+export function almostEqual(a: number, b: number, epsilon = 0.01) {
+  return Math.abs(a - b) < epsilon
+}

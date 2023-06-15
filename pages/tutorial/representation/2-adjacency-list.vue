@@ -12,6 +12,8 @@
     </div>
     <D3Svg
       ref="svg"
+      v-model:is-directed="isDirected"
+      :can-toggle-directed="true"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -19,16 +21,41 @@
       :on-svg-mousemove="updateDrawEdge"
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
+      :is-draggable="true"
     >
       <template #edges>
+        <defs>
+          <marker
+            id="arrow"
+            viewBox="0 0 10 10"
+            refX="12"
+            refY="4"
+            markerWidth="3"
+            markerHeight="3"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 8 4 L 0 8 z" />
+          </marker>
+          <marker
+            id="arrowHover"
+            viewBox="0 0 10 10"
+            refX="12"
+            refY="4"
+            markerWidth="3"
+            markerHeight="3"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 8 4 L 0 8 z" fill="#f87171" />
+          </marker>
+        </defs>
         <line
-          v-for="edge in data.edges"
+          v-for="(edge, i) in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
           class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
-          :x1="(edge.source as NodeDatum).x"
-          :y1="(edge.source as NodeDatum).y"
-          :x2="(edge.target as NodeDatum).x"
-          :y2="(edge.target as NodeDatum).y"
+          :x1="edgesCords[i].x1"
+          :y1="edgesCords[i].y1"
+          :x2="edgesCords[i].x2"
+          :y2="edgesCords[i].y2"
           @contextmenu.prevent="removeEdge($event, edge)"
           @mouseenter="highlightEdge($event, edge)"
           @mouseleave="unhighlightEdge()"
@@ -50,7 +77,12 @@
           >
             <title>Node ID: {{ node.id }}</title>
           </circle>
-          <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
+          <text
+            class="select-none pointer-events-none font-mono text-sm"
+            style="alignment-baseline: central; text-anchor: middle"
+            :x="node.x"
+            :y="node.y"
+          >
             {{ node.id }}
           </text>
         </g>
@@ -65,6 +97,7 @@
         :hover-edge="hoverEdge"
         :adjacency-list="adjacencyList"
         :node-ids="data.nodes.map((node) => node.id)"
+        :is-directed="isDirected"
         class="max-h-[264px] max-w-[360px]"
       />
     </div>
@@ -98,6 +131,7 @@ const initData: GraphData = {
 }
 
 const svg = ref<HTMLDivElement | null>(null)
+const isDirected = ref(false)
 
 const {
   clearData,
@@ -119,12 +153,11 @@ const {
   hoverEdge,
   highlightEdge,
   unhighlightEdge,
-} = useD3(initData, svg)
+  enableDrag,
+  edgesCords,
+} = useD3(initData, svg, {}, isDirected)
+
+enableDrag()
 </script>
 
-<style scoped>
-line {
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-</style>
+<style scoped></style>

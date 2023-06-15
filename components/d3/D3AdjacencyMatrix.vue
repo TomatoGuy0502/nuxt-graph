@@ -78,6 +78,10 @@ const props = defineProps({
     type: Array as PropType<number[]>,
     required: true,
   },
+  isDirected: {
+    type: Boolean,
+    required: true,
+  },
 })
 
 const isHeightlightedEdge = (
@@ -90,10 +94,11 @@ const isHeightlightedEdge = (
   const hoverEdgeTargetIndex = (hoverEdge?.target as NodeDatum | undefined)
     ?.index
   return (
-    (hoverEdgeSourceIndex === targetNodeIndex &&
-      hoverEdgeTargetIndex === sourceNodeIndex) ||
     (hoverEdgeSourceIndex === sourceNodeIndex &&
-      hoverEdgeTargetIndex === targetNodeIndex)
+      hoverEdgeTargetIndex === targetNodeIndex) ||
+    (!props.isDirected &&
+      hoverEdgeSourceIndex === targetNodeIndex &&
+      hoverEdgeTargetIndex === sourceNodeIndex)
   )
 }
 

@@ -37,6 +37,7 @@ interface Props {
   hoverNode: NodeDatum | null
   hoverEdge: EdgeDatum | null
   nodeIds: number[]
+  isDirected: boolean
 }
 const props = defineProps<Props>()
 
@@ -47,10 +48,11 @@ const isHighlighted = (sourceNodeIndex: number, targetNodeIndex: number) => {
   const hoverEdgeTargetIndex = (hoverEdge?.target as NodeDatum | undefined)
     ?.index
   return (
-    (hoverEdgeSourceIndex === targetNodeIndex &&
-      hoverEdgeTargetIndex === sourceNodeIndex) ||
     (hoverEdgeSourceIndex === sourceNodeIndex &&
-      hoverEdgeTargetIndex === targetNodeIndex)
+      hoverEdgeTargetIndex === targetNodeIndex) ||
+    (!props.isDirected &&
+      hoverEdgeSourceIndex === targetNodeIndex &&
+      hoverEdgeTargetIndex === sourceNodeIndex)
   )
 }
 </script>

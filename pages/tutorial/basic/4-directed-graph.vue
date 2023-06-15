@@ -107,6 +107,7 @@ const initData: GraphData = {
 }
 
 const svg = ref<HTMLDivElement | null>(null)
+const isDirected = ref(false)
 
 const {
   clearData,
@@ -124,7 +125,7 @@ const {
   data,
   colors,
   enableDrag,
-} = useD3(initData, svg, { linkDistance: 80, chargeStrength: -300 }, true)
+} = useD3(initData, svg, { linkDistance: 80, chargeStrength: -300 }, isDirected)
 
 enableDrag()
 </script>

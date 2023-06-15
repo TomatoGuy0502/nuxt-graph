@@ -12,6 +12,8 @@
     </div>
     <D3Svg
       ref="svg"
+      v-model:is-directed="isDirected"
+      :can-toggle-directed="true"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -19,16 +21,18 @@
       :on-svg-mousemove="updateDrawEdge"
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
+      :is-draggable="true"
     >
       <template #edges>
         <line
-          v-for="edge in data.edges"
+          v-for="(edge, i) in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
           class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
-          :x1="(edge.source as NodeDatum).x"
-          :y1="(edge.source as NodeDatum).y"
-          :x2="(edge.target as NodeDatum).x"
-          :y2="(edge.target as NodeDatum).y"
+          :x1="edgesCords[i].x1"
+          :y1="edgesCords[i].y1"
+          :x2="edgesCords[i].x2"
+          :y2="edgesCords[i].y2"
+          :style="{}"
           @contextmenu.prevent="removeEdge($event, edge)"
           @mouseenter="highlightEdge($event, edge)"
           @mouseleave="unhighlightEdge()"
@@ -50,14 +54,19 @@
           >
             <title>Node ID: {{ node.id }}</title>
           </circle>
-          <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
+          <text
+            class="select-none pointer-events-none font-mono text-sm"
+            style="alignment-baseline: central; text-anchor: middle"
+            :x="node.x"
+            :y="node.y"
+          >
             {{ node.id }}
           </text>
         </g>
       </template>
     </D3Svg>
     <div class="flex flex-col gap-2 p-2 rounded-lg bg-base-300 w-fit">
-      <p>Edge List</p>
+      <h2 class="font-bold">Edge List</h2>
       <ul class="flex font-mono flex-wrap">
         [
         <li
@@ -107,6 +116,7 @@ const initData: GraphData = {
 }
 
 const svg = ref<HTMLDivElement | null>(null)
+const isDirected = ref(false)
 
 const {
   clearData,
@@ -126,7 +136,8 @@ const {
   highlightEdge,
   unhighlightEdge,
   hoverEdge,
-} = useD3(initData, svg)
+  edgesCords,
+} = useD3(initData, svg, {}, isDirected)
 
 // Edge List with order
 // const edgeList = computed(() => {
@@ -141,9 +152,4 @@ const {
 // })
 </script>
 
-<style scoped>
-line {
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-</style>
+<style scoped></style>

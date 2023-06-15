@@ -10,6 +10,17 @@
       <slot name="info"></slot>
     </div>
     <div class="flex gap-2 absolute right-4 top-4">
+      <label
+        v-if="canToggleDirected"
+        class="flex items-center gap-2 p-1 px-2 rounded-lg bg-base-300 h-fit cursor-pointer select-none"
+      >
+        <h2 class="font-bold text-sm">Directed Graph</h2>
+        <input
+          v-model="isDirected"
+          type="checkbox"
+          class="toggle toggle-success"
+        />
+      </label>
       <button class="btn btn-sm" @click="onClearData">Clear</button>
       <div class="dropdown dropdown-hover dropdown-end">
         <label tabindex="0" class="btn btn-sm btn-square mb-1"
@@ -74,6 +85,28 @@
         >
           <path d="M 0 0 L 10 5 L 0 10 z" class="fill-current" />
         </marker>
+        <marker
+          id="arrow"
+          viewBox="0 0 10 10"
+          refX="12"
+          refY="4"
+          markerWidth="3"
+          markerHeight="3"
+          orient="auto-start-reverse"
+        >
+          <path d="M 0 0 L 8 4 L 0 8 z" />
+        </marker>
+        <marker
+          id="arrowHover"
+          viewBox="0 0 10 10"
+          refX="12"
+          refY="4"
+          markerWidth="3"
+          markerHeight="3"
+          orient="auto-start-reverse"
+        >
+          <path d="M 0 0 L 8 4 L 0 8 z" fill="#f87171" />
+        </marker>
       </defs>
       <line
         class="draw-edge cursor-cell stroke-[3]"
@@ -86,7 +119,7 @@
           isDirected && hasMouseDownNode ? 'url(#drawEdgeArrow)' : 'none'
         "
       ></line>
-      <g class="edges" @mousedown.stop>
+      <g class="edges" :class="{ 'is-directed': isDirected }" @mousedown.stop>
         <slot name="edges"></slot>
       </g>
       <g class="nodes" @mousedown.stop>
@@ -97,7 +130,11 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
+  canToggleDirected: {
+    type: Boolean,
+    default: false,
+  },
   /** Show arrow when drawing edge */
   isDirected: {
     type: Boolean,
@@ -160,5 +197,18 @@ defineProps({
   },
 })
 
+const emits = defineEmits(['update:isDirected'])
+
+const isDirected = useVModel(props, 'isDirected', emits)
+
 const { isMac } = usePlatform()
 </script>
+
+<style scoped>
+.edges.is-directed :slotted(line) {
+  marker-end: url('#arrow');
+  &:hover {
+    marker-end: url('#arrowHover');
+  }
+}
+</style>

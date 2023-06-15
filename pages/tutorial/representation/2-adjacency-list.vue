@@ -24,34 +24,11 @@
       :is-draggable="true"
     >
       <template #edges>
-        <defs>
-          <marker
-            id="arrow"
-            viewBox="0 0 10 10"
-            refX="12"
-            refY="4"
-            markerWidth="3"
-            markerHeight="3"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 0 L 8 4 L 0 8 z" />
-          </marker>
-          <marker
-            id="arrowHover"
-            viewBox="0 0 10 10"
-            refX="12"
-            refY="4"
-            markerWidth="3"
-            markerHeight="3"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 0 L 8 4 L 0 8 z" fill="#f87171" />
-          </marker>
-        </defs>
         <line
           v-for="(edge, i) in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
           class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
+          :class="{ 'is-directed': isDirected }"
           :x1="edgesCords[i].x1"
           :y1="edgesCords[i].y1"
           :x2="edgesCords[i].x2"

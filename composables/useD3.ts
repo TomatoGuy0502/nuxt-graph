@@ -326,6 +326,7 @@ function useD3EditEdge<
   })
 
   function beginDrawEdge(event: PointerEvent | MouseEvent, d: NodeDatum) {
+    if (event.button !== 0) return
     mousedownNode.value = d
     const [x, y] = d3.pointer(event)
     drawEdgeCords.x1 = d.x ?? x

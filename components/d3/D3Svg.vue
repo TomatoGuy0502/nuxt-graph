@@ -97,7 +97,7 @@
           <path d="M 0 0 L 8 4 L 0 8 z" />
         </marker>
         <marker
-          id="arrowHover"
+          id="arrowGray300"
           viewBox="0 0 10 10"
           refX="12"
           refY="4"
@@ -105,7 +105,18 @@
           markerHeight="3"
           orient="auto-start-reverse"
         >
-          <path d="M 0 0 L 8 4 L 0 8 z" fill="#f87171" />
+          <path d="M 0 0 L 8 4 L 0 8 z" class="fill-gray-300" />
+        </marker>
+        <marker
+          id="arrowRed400"
+          viewBox="0 0 10 10"
+          refX="12"
+          refY="4"
+          markerWidth="3"
+          markerHeight="3"
+          orient="auto-start-reverse"
+        >
+          <path d="M 0 0 L 8 4 L 0 8 z" class="fill-red-400" />
         </marker>
       </defs>
       <line
@@ -119,7 +130,7 @@
           isDirected && hasMouseDownNode ? 'url(#drawEdgeArrow)' : 'none'
         "
       ></line>
-      <g class="edges" :class="{ 'is-directed': isDirected }" @mousedown.stop>
+      <g class="edges" @mousedown.stop>
         <slot name="edges"></slot>
       </g>
       <g class="nodes" @mousedown.stop>
@@ -205,10 +216,10 @@ const { isMac } = usePlatform()
 </script>
 
 <style scoped>
-.edges.is-directed :slotted(line) {
+.edges :slotted(line.is-directed) {
   marker-end: url('#arrow');
   &:hover {
-    marker-end: url('#arrowHover');
+    marker-end: url('#arrowRed400');
   }
 }
 </style>

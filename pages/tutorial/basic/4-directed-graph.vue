@@ -16,41 +16,18 @@
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
       :is-draggable="true"
-      :is-directed="true"
+      :is-directed="isDirected"
     >
       <template #edges>
-        <defs>
-          <marker
-            id="arrow"
-            viewBox="0 0 10 10"
-            refX="12"
-            refY="5"
-            markerWidth="4"
-            markerHeight="4"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 0 L 10 5 L 0 10 z" />
-          </marker>
-          <marker
-            id="arrowHover"
-            viewBox="0 0 10 10"
-            refX="12"
-            refY="5"
-            markerWidth="4"
-            markerHeight="4"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#f87171" />
-          </marker>
-        </defs>
         <line
-          v-for="edge in data.edges"
+          v-for="(edge, i) in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
           class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
-          :x1="(edge.source as NodeDatum).x"
-          :y1="(edge.source as NodeDatum).y"
-          :x2="(edge.target as NodeDatum).x"
-          :y2="(edge.target as NodeDatum).y"
+          :class="{ 'is-directed': isDirected }"
+          :x1="edgesCords[i].x1"
+          :y1="edgesCords[i].y1"
+          :x2="edgesCords[i].x2"
+          :y2="edgesCords[i].y2"
           @contextmenu.prevent="removeEdge($event, edge)"
         ></line>
       </template>
@@ -107,7 +84,7 @@ const initData: GraphData = {
 }
 
 const svg = ref<HTMLDivElement | null>(null)
-const isDirected = ref(false)
+const isDirected = ref(true)
 
 const {
   clearData,
@@ -125,6 +102,7 @@ const {
   data,
   colors,
   enableDrag,
+  edgesCords,
 } = useD3(initData, svg, { linkDistance: 80, chargeStrength: -300 }, isDirected)
 
 enableDrag()
@@ -132,8 +110,6 @@ enableDrag()
 
 <style scoped>
 line {
-  stroke-linecap: round;
-  stroke-linejoin: round;
   marker-end: url('#arrow');
   &:hover {
     marker-end: url('#arrowHover');

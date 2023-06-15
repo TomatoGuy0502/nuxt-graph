@@ -28,6 +28,7 @@
           v-for="(edge, i) in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
           class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
+          :class="{ 'is-directed': isDirected }"
           :x1="edgesCords[i].x1"
           :y1="edgesCords[i].y1"
           :x2="edgesCords[i].x2"
@@ -67,6 +68,7 @@
     </D3Svg>
     <div class="flex flex-col gap-2 p-2 rounded-lg bg-base-300 w-fit">
       <h2 class="font-bold">Edge List</h2>
+      <!-- TODO: only show one edge when isDirected is false -->
       <ul class="flex font-mono flex-wrap">
         [
         <li
@@ -137,7 +139,10 @@ const {
   unhighlightEdge,
   hoverEdge,
   edgesCords,
+  enableDrag,
 } = useD3(initData, svg, {}, isDirected)
+
+enableDrag()
 
 // Edge List with order
 // const edgeList = computed(() => {

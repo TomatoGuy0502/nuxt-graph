@@ -46,6 +46,8 @@
     <template #svg>
       <D3Svg
         ref="svg"
+        v-model:is-directed="isDirected"
+        :can-toggle-directed="true"
         :has-mouse-down-node="!!mousedownNode"
         :draw-edge-cords="drawEdgeCords"
         :on-clear-data="clearData"
@@ -58,14 +60,14 @@
       >
         <template #edges>
           <line
-            v-for="edge in data.edges"
+            v-for="(edge, i) in data.edges"
             :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-            class="stroke-[5] hover:cursor-pointer hover:stroke-[6]"
+            class="stroke-[5] cursor-pointer stroke-gray-300"
             :class="getEdgeColor(edge)"
-            :x1="(edge.source as NodeDatum).x"
-            :y1="(edge.source as NodeDatum).y"
-            :x2="(edge.target as NodeDatum).x"
-            :y2="(edge.target as NodeDatum).y"
+            :x1="edgesCords[i].x1"
+            :y1="edgesCords[i].y1"
+            :x2="edgesCords[i].x2"
+            :y2="edgesCords[i].y2"
             @contextmenu.prevent="removeEdge($event, edge)"
             @mouseenter="highlightEdge($event, edge)"
             @mouseleave="unhighlightEdge()"
@@ -152,6 +154,7 @@ const initData: GraphData = {
   ],
 }
 const svg = ref<HTMLDivElement | null>(null)
+const isDirected = ref(false)
 
 const {
   clearData,
@@ -175,7 +178,8 @@ const {
   hoverEdge,
   highlightEdge,
   unhighlightEdge,
-} = useD3(initData, svg)
+  edgesCords,
+} = useD3(initData, svg, {}, isDirected)
 
 enableDrag()
 
@@ -244,17 +248,21 @@ const getNodeColor = (nodeIndex: number) => {
 }
 
 const getEdgeColor = (edge: EdgeDatum) => {
+  const classString = isDirected.value ? '[marker-end:url(#arrowGray300)]' : ''
   const sourceIndex = (edge.source as NodeDatum).index!
   const targetIndex = (edge.target as NodeDatum).index!
   if (
     visitedNodeIndices.value.has(sourceIndex) &&
     visitedNodeIndices.value.has(targetIndex) &&
     (walk.value.includes(`${sourceIndex},${targetIndex}`) ||
-      walk.value.includes(`${targetIndex},${sourceIndex}`))
+      (!isDirected.value &&
+        walk.value.includes(`${targetIndex},${sourceIndex}`)))
   ) {
-    return 'stroke-black'
+    // Visited edge
+    return `${classString} brightness-0`
   } else {
-    return 'stroke-gray-300'
+    // Unvisited edge
+    return `${classString} hover:brightness-75`
   }
 }
 
@@ -280,9 +288,4 @@ const nodeTitle = (nodeId: number, nodeIndex: number) => {
 }
 </script>
 
-<style scoped>
-line {
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-</style>
+<style scoped></style>

@@ -53,7 +53,9 @@
                   : 'outline-none',
               ]"
               :data-edge-id="walkString"
-              >{{ walkString.split(',').join('-') }}</code
+              >{{ nodeIds[~~walkString.split(',')[0]] }}-{{
+                nodeIds[~~walkString.split(',')[1]]
+              }}</code
             >
           </div>
           <code v-if="i !== walk.length - 1">➜</code>

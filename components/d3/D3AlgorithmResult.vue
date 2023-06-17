@@ -65,13 +65,8 @@
   </div>
 </template>
 
-<script
-  setup
-  lang="ts"
-  generic="NodeDatum extends NodeDatum, EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>"
->
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { NodeDatum } from '@/composables/useD3'
+<script setup lang="ts">
+import type { NodeDatum, EdgeDatum } from '@/composables/useD3'
 
 const props = defineProps({
   nodeIds: {

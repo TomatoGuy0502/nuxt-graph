@@ -82,10 +82,10 @@ export const useD3 = (
 
 function useD3Simulation({ data }: { data: GraphData }) {
   const simulation: Ref<d3.Simulation<NodeDatum, EdgeDatum> | undefined> = ref()
-  let forceLink: d3.ForceLink<d3.SimulationNodeDatum, EdgeDatum>
-  let forceX: d3.ForceX<d3.SimulationNodeDatum>
-  let forceY: d3.ForceY<d3.SimulationNodeDatum>
-  let forceManyBody: d3.ForceManyBody<d3.SimulationNodeDatum>
+  let forceLink: d3.ForceLink<NodeDatum, EdgeDatum>
+  let forceX: d3.ForceX<NodeDatum>
+  let forceY: d3.ForceY<NodeDatum>
+  let forceManyBody: d3.ForceManyBody<NodeDatum>
 
   /** Call this function to initialize simulation */
   function initSimulation(
@@ -104,7 +104,7 @@ function useD3Simulation({ data }: { data: GraphData }) {
     }: SimulationConfig = {}
   ) {
     forceLink = d3
-      .forceLink(data.edges)
+      .forceLink<NodeDatum, EdgeDatum>(data.edges)
       .distance(linkDistance)
       .iterations(linkIterations)
     if (linkStrength) forceLink.strength(linkStrength)

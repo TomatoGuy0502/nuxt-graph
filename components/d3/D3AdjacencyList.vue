@@ -1,10 +1,11 @@
 <template>
-  <ul class="flex flex-col font-mono overflow-auto">
+  <ul ref="$ulRef" class="flex flex-col font-mono overflow-auto relative">
     <li
       v-for="(row, sourceIndex) in adjacencyList"
       :key="sourceIndex"
       class="flex rounded transition w-fit"
       :class="{ 'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === sourceIndex }"
+      :data-index="sourceIndex"
     >
       <pre
         class="flex justify-center w-[22px] border-transparent border-r-[1px]"
@@ -55,4 +56,28 @@ const isHighlighted = (sourceNodeIndex: number, targetNodeIndex: number) => {
       hoverEdgeTargetIndex === sourceNodeIndex)
   )
 }
+
+const $ulRef = ref<HTMLUListElement | null>(null)
+
+watch(
+  () => props.hoverNode,
+  (hoverNode) => {
+    if (hoverNode) {
+      const nodeIndex = (hoverNode as NodeDatum).index
+      const $li = $ulRef.value!.querySelector<HTMLElement>(
+        `li[data-index="${nodeIndex}"]`
+      )!
+      const liCenterPosition =
+        $li.offsetTop -
+        ($ulRef.value!.getBoundingClientRect().height -
+          $li.getBoundingClientRect().height) /
+          2
+
+      $ulRef.value!.scrollTo({
+        top: liCenterPosition,
+        behavior: 'smooth',
+      })
+    }
+  }
+)
 </script>

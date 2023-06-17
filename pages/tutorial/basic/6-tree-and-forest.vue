@@ -31,13 +31,14 @@
             is Forest:
             <code class="font-normal"
               >{{ graphProperties.isForest }}
-              {{
-                `(${graphProperties.connectedComponents.length} ${
+              <span v-show="graphProperties.isForest"
+                >({{ graphProperties.connectedComponents.length }}
+                {{
                   graphProperties.connectedComponents.length > 1
                     ? 'trees'
                     : 'tree'
-                })`
-              }}
+                }})</span
+              >
             </code>
           </li>
           <!-- <li class="font-bold">

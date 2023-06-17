@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex flex-col font-mono overflow-auto">
+  <ul ref="ulRef" class="flex flex-col font-mono overflow-auto relative">
     <li v-if="!adjacencyMatrix.length">Add a node to see the matrix</li>
     <li
       v-if="adjacencyMatrix.length"
@@ -102,20 +102,31 @@ const isHeightlightedEdge = (
   )
 }
 
+const ulRef = ref<HTMLUListElement | null>(null)
+
 watch(
   () => props.hoverNode,
   (hoverNode) => {
     if (hoverNode) {
       const nodeIndex = (hoverNode as NodeDatum).index
-      document
-        .querySelector<HTMLElement>(
-          `code[data-index="${nodeIndex},${nodeIndex}"]`
-        )
-        ?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center',
-        })
+      const code = ulRef.value!.querySelector<HTMLElement>(
+        `code[data-index="${nodeIndex},${nodeIndex}"]`
+      )!
+      const codeTopPosition =
+        code.offsetTop -
+        (ulRef.value!.getBoundingClientRect().height -
+          code.getBoundingClientRect().height) /
+          2
+      const codeLeftPosition =
+        code.offsetLeft -
+        (ulRef.value!.getBoundingClientRect().width -
+          code.getBoundingClientRect().width) /
+          2
+      ulRef.value!.scrollTo({
+        top: codeTopPosition,
+        left: codeLeftPosition,
+        behavior: 'smooth',
+      })
     }
   }
 )

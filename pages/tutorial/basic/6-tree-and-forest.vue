@@ -89,22 +89,13 @@
 </template>
 
 <script setup lang="ts">
+import type { NodeDatum, GraphData } from '@/composables/useD3'
+
 definePageMeta({
   name: 'Tree and Forest',
   path: '/tutorial/basic/tree-and-forest',
   pageOrder: 6,
 })
-
-interface NodeDatum extends d3.SimulationNodeDatum {
-  id: number
-}
-
-interface EdgeDatum extends d3.SimulationLinkDatum<NodeDatum> {}
-
-interface GraphData {
-  nodes: NodeDatum[]
-  edges: EdgeDatum[]
-}
 
 const initData: GraphData = {
   nodes: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],

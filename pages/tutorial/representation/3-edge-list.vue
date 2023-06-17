@@ -91,22 +91,13 @@
 </template>
 
 <script setup lang="ts">
+import type { NodeDatum, EdgeDatum, GraphData } from '@/composables/useD3'
+
 definePageMeta({
   name: 'Edge List',
   path: '/tutorial/representation/edge-list',
   pageOrder: 3,
 })
-
-interface NodeDatum extends d3.SimulationNodeDatum {
-  id: number
-}
-
-interface EdgeDatum extends d3.SimulationLinkDatum<NodeDatum> {}
-
-interface GraphData {
-  nodes: NodeDatum[]
-  edges: EdgeDatum[]
-}
 
 const initData: GraphData = {
   nodes: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],

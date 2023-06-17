@@ -56,10 +56,10 @@
 <script
   setup
   lang="ts"
-  generic="NodeDatum extends BaseNodeDatum, EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>"
+  generic="NodeDatum extends NodeDatum, EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>"
 >
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { BaseNodeDatum } from '@/composables/useD3'
+import type { NodeDatum } from '@/composables/useD3'
 
 const props = defineProps({
   adjacencyMatrix: {

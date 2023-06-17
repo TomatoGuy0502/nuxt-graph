@@ -69,7 +69,7 @@
           <circle
             class="hover:brightness-75"
             :class="[isCtrlOrCmdPressed ? 'cursor-move' : 'cursor-cell']"
-            :style="{ fill: colors[node.depth % 10] }"
+            :style="{ fill: colors[node.depth! % 10] }"
             :cx="node.x"
             :cy="node.y"
             r="10"
@@ -98,23 +98,13 @@
 </template>
 
 <script setup lang="ts">
+import type { NodeDatum, EdgeDatum, GraphData } from '@/composables/useD3'
+
 definePageMeta({
   name: 'Rooted Tree',
   path: '/tutorial/basic/rooted-tree',
   pageOrder: 7,
 })
-
-interface NodeDatum extends d3.SimulationNodeDatum {
-  id: number
-  depth: number
-}
-
-interface EdgeDatum extends d3.SimulationLinkDatum<NodeDatum> {}
-
-interface GraphData {
-  nodes: NodeDatum[]
-  edges: EdgeDatum[]
-}
 
 const initData: GraphData = {
   nodes: [

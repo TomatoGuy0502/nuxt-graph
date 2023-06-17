@@ -57,22 +57,13 @@
 </template>
 
 <script setup lang="ts">
+import type { NodeDatum, GraphData } from '@/composables/useD3'
+
 definePageMeta({
   name: 'Directed Graph',
   path: '/tutorial/basic/directed-graph',
   pageOrder: 4,
 })
-
-interface NodeDatum extends d3.SimulationNodeDatum {
-  id: number
-}
-
-interface EdgeDatum extends d3.SimulationLinkDatum<NodeDatum> {}
-
-interface GraphData {
-  nodes: NodeDatum[]
-  edges: EdgeDatum[]
-}
 
 const initData: GraphData = {
   nodes: [{ id: 0 }, { id: 1 }, { id: 2 }],

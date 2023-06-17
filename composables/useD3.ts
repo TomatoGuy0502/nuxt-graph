@@ -3,9 +3,19 @@ import * as d3 from 'd3'
 import { almostEqual } from '@/utils'
 
 // TODO: Split use* into multiple files
-export interface BaseNodeDatum extends d3.SimulationNodeDatum {
+export interface NodeDatum extends d3.SimulationNodeDatum {
   id: number
   depth?: number
+  degree?: number
+}
+
+export interface EdgeDatum extends d3.SimulationLinkDatum<NodeDatum> {
+  weight?: number
+}
+
+export interface GraphData {
+  nodes: NodeDatum[]
+  edges: EdgeDatum[]
 }
 
 interface SimulationConfig {
@@ -24,14 +34,8 @@ interface SimulationConfig {
   isRootedTree?: boolean
 }
 
-export const useD3 = <
-  NodeDatum extends BaseNodeDatum,
-  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
->(
-  initData: {
-    nodes: NodeDatum[]
-    edges: EdgeDatum[]
-  },
+export const useD3 = (
+  initData: GraphData,
   svgRef: Ref<HTMLDivElement | null>,
   simulationConfig: SimulationConfig = {},
   isDirected = ref(false)
@@ -76,10 +80,7 @@ export const useD3 = <
   }
 }
 
-function useD3Simulation<
-  NodeDatum extends BaseNodeDatum,
-  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
->({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
+function useD3Simulation({ data }: { data: GraphData }) {
   const simulation: Ref<d3.Simulation<NodeDatum, EdgeDatum> | undefined> = ref()
   let forceLink: d3.ForceLink<d3.SimulationNodeDatum, EdgeDatum>
   let forceX: d3.ForceX<d3.SimulationNodeDatum>
@@ -159,15 +160,12 @@ function useD3Simulation<
   }
 }
 
-function useD3Drag<
-  NodeDatum extends BaseNodeDatum,
-  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
->({
+function useD3Drag({
   simulation,
   data,
 }: {
   simulation: Ref<d3.Simulation<NodeDatum, EdgeDatum> | undefined>
-  data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
+  data: GraphData
 }) {
   function _dragstarted(
     event: d3.D3DragEvent<SVGCircleElement, NodeDatum, NodeDatum>,
@@ -229,10 +227,7 @@ function useD3Drag<
   return { enableDrag }
 }
 
-function useD3EditNode<
-  NodeDatum extends BaseNodeDatum,
-  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
->({ data }: { data: { nodes: NodeDatum[]; edges: EdgeDatum[] } }) {
+function useD3EditNode({ data }: { data: GraphData }) {
   // Edit Node
   function addNode(event: PointerEvent | MouseEvent) {
     if (event.button !== 0) return
@@ -297,14 +292,11 @@ function useD3EditNode<
   }
 }
 
-function useD3EditEdge<
-  NodeDatum extends BaseNodeDatum,
-  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
->({
+function useD3EditEdge({
   data,
   isDirected = ref(false),
 }: {
-  data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
+  data: GraphData
   isDirected: Ref<boolean>
 }) {
   // Highlighted Edge
@@ -376,7 +368,7 @@ function useD3EditEdge<
       source: mousedownNode.value,
       target: d,
       weight: Math.floor(Math.random() * 10),
-    } as unknown as EdgeDatum)
+    } as EdgeDatum)
   }
   function hideDrawEdge() {
     mousedownNode.value = null
@@ -449,14 +441,11 @@ function useD3EditEdge<
   }
 }
 
-function useGraphRepresentation<
-  NodeDatum extends BaseNodeDatum,
-  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
->({
+function useGraphRepresentation({
   data,
   isDirected = ref(false),
 }: {
-  data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
+  data: GraphData
   isDirected: Ref<boolean>
 }) {
   const adjacencyMatrix = computed(() => {
@@ -492,14 +481,11 @@ function useGraphRepresentation<
   return { adjacencyMatrix, adjacencyList, edgeList }
 }
 
-function useGraphProperties<
-  NodeDatum extends BaseNodeDatum,
-  EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
->({
+function useGraphProperties({
   data,
   adjacencyList,
 }: {
-  data: { nodes: NodeDatum[]; edges: EdgeDatum[] }
+  data: GraphData
   adjacencyList: Ref<number[][]>
 }) {
   const graphProperties = computed(() => {

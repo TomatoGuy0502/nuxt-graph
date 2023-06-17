@@ -9,6 +9,9 @@
     <div class="flex gap-2 absolute left-4 top-4">
       <slot name="info"></slot>
     </div>
+    <div class="absolute w-full h-full select-none pointer-events-none">
+      <slot name="nodeTooltip"></slot>
+    </div>
     <div class="flex gap-2 absolute right-4 top-4">
       <label
         v-if="canToggleDirected"

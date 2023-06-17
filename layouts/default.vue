@@ -125,9 +125,9 @@ interface TutorialRoute {
 // Edit this array to add new tutorial routes
 const tutorialSectionNames = ['basic', 'representation', 'algorithm'] as const
 
-const tutorialRoutes = tutorialSectionNames.reduce((acc, curr) => {
-  acc[curr] = []
-  return acc
+const tutorialRoutes = tutorialSectionNames.reduce((routes, sectionName) => {
+  routes[sectionName] = []
+  return routes
 }, {} as { [key in (typeof tutorialSectionNames)[number]]: TutorialRoute[] })
 
 useRouter()
@@ -140,14 +140,13 @@ useRouter()
   .forEach((route) => {
     const routeName = route.name as string
     const routePath = route.path as string
-    if (routePath.startsWith('/tutorial')) {
-      const tutorialRouteName = routePath.split(
-        '/'
-      )[2] as (typeof tutorialSectionNames)[number]
-      tutorialRoutes[tutorialRouteName].push({
-        name: routeName,
-        path: routePath,
-      })
-    }
+    // '/tutorial/algorithm/depth-first-search' => 'algorithm'
+    const sectionName = routePath.split(
+      '/'
+    )[2] as (typeof tutorialSectionNames)[number]
+    tutorialRoutes[sectionName].push({
+      name: routeName,
+      path: routePath,
+    })
   })
 </script>

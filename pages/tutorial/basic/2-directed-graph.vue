@@ -15,38 +15,27 @@
       :on-svg-mousemove="updateDrawEdge"
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
+      :is-draggable="true"
+      :is-directed="isDirected"
     >
-      <template #info>
-        <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
-          <li class="font-bold">
-            Connected Components:
-            <code class="font-normal">{{
-              graphProperties.connectedComponents.length
-            }}</code>
-          </li>
-          <li class="font-bold">
-            Complete:
-            <code class="font-normal">{{ graphProperties.isComplete }}</code>
-          </li>
-        </ul>
-      </template>
       <template #edges>
         <line
-          v-for="edge in data.edges"
+          v-for="(edge, i) in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-          class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
-          :x1="(edge.source as NodeDatum).x"
-          :y1="(edge.source as NodeDatum).y"
-          :x2="(edge.target as NodeDatum).x"
-          :y2="(edge.target as NodeDatum).y"
+          class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
+          :class="{ 'is-directed': isDirected }"
+          :x1="edgesCords[i].x1"
+          :y1="edgesCords[i].y1"
+          :x2="edgesCords[i].x2"
+          :y2="edgesCords[i].y2"
           @contextmenu.prevent="removeEdge($event, edge)"
         ></line>
       </template>
       <template #nodes>
-        <g v-for="(node, i) in data.nodes" :key="node.id" class="node">
+        <g v-for="node in data.nodes" :key="node.id" class="node">
           <circle
             class="cursor-pointer hover:brightness-75"
-            :style="{ fill: colors[nodesColorIndex[i] % 10] }"
+            :style="{ fill: colors[node.id % 10] }"
             :cx="node.x"
             :cy="node.y"
             r="10"
@@ -59,8 +48,8 @@
             <title>Node ID: {{ node.id }}</title>
           </circle>
           <!-- <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
-              {{ node.id }}
-            </text> -->
+            {{ node.id }}
+          </text> -->
         </g>
       </template>
     </D3Svg>
@@ -71,20 +60,22 @@
 import type { NodeDatum, GraphData } from '@/composables/useD3'
 
 definePageMeta({
-  name: 'Connected and Complete Graph',
-  path: '/tutorial/basic/connected-and-complete-graph',
-  pageOrder: 3,
+  name: 'Directed Graph',
+  path: '/tutorial/basic/directed-graph',
+  pageOrder: 2,
 })
 
 const initData: GraphData = {
-  nodes: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+  nodes: [{ id: 0 }, { id: 1 }, { id: 2 }],
   edges: [
     { source: 0, target: 1 },
     { source: 0, target: 2 },
+    { source: 1, target: 0 },
   ],
 }
 
 const svg = ref<HTMLDivElement | null>(null)
+const isDirected = ref(true)
 
 const {
   clearData,
@@ -101,14 +92,9 @@ const {
   removeEdge,
   data,
   colors,
-  graphProperties,
-  nodesColorIndex,
-} = useD3(initData, svg)
-</script>
+  enableDrag,
+  edgesCords,
+} = useD3(initData, svg, { linkDistance: 80, chargeStrength: -300 }, isDirected)
 
-<style scoped>
-line {
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-</style>
+enableDrag()
+</script>

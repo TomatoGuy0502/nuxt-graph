@@ -7,6 +7,8 @@ export interface NodeDatum extends d3.SimulationNodeDatum {
   id: number
   depth?: number
   degree?: number
+  inDegree?: number
+  outDegree?: number
 }
 
 export interface EdgeDatum extends d3.SimulationLinkDatum<NodeDatum> {
@@ -373,6 +375,7 @@ function useD3EditEdge({
   function hideDrawEdge() {
     mousedownNode.value = null
   }
+  // TODO: When isDirected is false, remove both directions
   function removeEdge(_event: PointerEvent | MouseEvent, d: EdgeDatum) {
     if (hoverEdge.value === d) unhighlightEdge()
     data.edges.splice(data.edges.indexOf(d), 1)

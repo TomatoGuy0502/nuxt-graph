@@ -68,22 +68,21 @@
     </D3Svg>
     <div class="flex flex-col gap-2 p-2 rounded-lg bg-base-300 w-fit">
       <h2 class="font-bold">Edge List</h2>
-      <!-- TODO: only show one edge when isDirected is false -->
       <ul class="flex font-mono flex-wrap">
         [
         <li
-          v-for="(edge, i) in data.edges"
+          v-for="(edge, i) in sortedEdges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
           class="flex"
         >
           <code
             class="rounded px-0.5 transition"
-            :class="{ 'bg-base-300': hoverEdge === edge }"
+            :class="{ 'bg-gray-700': isHighlightedEdge(edge) }"
             >[{{ (edge.source as NodeDatum).id }},{{
               (edge.target as NodeDatum).id
             }}]</code
           >
-          <code v-if="i !== data.edges.length - 1">,</code>
+          <code v-if="i !== sortedEdges.length - 1">,</code>
         </li>
         ]
       </ul>
@@ -144,17 +143,53 @@ const {
 
 enableDrag()
 
-// Edge List with order
-// const edgeList = computed(() => {
-//   data.edges.map((edge) => {
-//     const source = edge.source as NodeDatum
-//     const target = edge.target as NodeDatum
-//     if (source.id > target.id) {
-//       edge.source = target
-//       edge.target = source
-//     }
-//   })
-// })
+// Only show one edge in edge list when isDirected is false
+const edges = computed(() => {
+  if (isDirected.value) return data.edges
+
+  const edgeSet = new Set<string>()
+  return data.edges.filter((edge) => {
+    const sourceId = (edge.source as NodeDatum).id
+    const targetId = (edge.target as NodeDatum).id
+    const key =
+      sourceId < targetId
+        ? `${sourceId}-${targetId}`
+        : `${targetId}-${sourceId}`
+    if (edgeSet.has(key)) return false
+    edgeSet.add(key)
+    return true
+  })
+})
+
+// Sort edges by source id then target id
+const sortedEdges = computed(() => {
+  return [...edges.value].sort((a, b) => {
+    const sourceA = (a.source as NodeDatum).id
+    const sourceB = (b.source as NodeDatum).id
+    if (sourceA !== sourceB) return sourceA - sourceB
+    const targetA = (a.target as NodeDatum).id
+    const targetB = (b.target as NodeDatum).id
+    return targetA - targetB
+  })
+})
+
+const isHighlightedEdge = (edge: EdgeDatum) => {
+  const hoverEdgeSourceNodeIndex = (
+    hoverEdge.value?.source as NodeDatum | undefined
+  )?.index
+  const hoverEdgeTargetNodeIndex = (
+    hoverEdge.value?.target as NodeDatum | undefined
+  )?.index
+  const sourceNodeIndex = (edge.source as NodeDatum).index
+  const targetNodeIndex = (edge.target as NodeDatum).index
+  return (
+    (hoverEdgeSourceNodeIndex === sourceNodeIndex &&
+      hoverEdgeTargetNodeIndex === targetNodeIndex) ||
+    (!isDirected.value &&
+      hoverEdgeSourceNodeIndex === targetNodeIndex &&
+      hoverEdgeTargetNodeIndex === sourceNodeIndex)
+  )
+}
 </script>
 
 <style scoped></style>

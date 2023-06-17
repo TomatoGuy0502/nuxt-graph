@@ -39,7 +39,7 @@
           class="flex justify-center items-center transition w-[22px] h-[24px]"
           :class="{
             'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === j,
-            'bg-gray-700 rounded border': isHeightlightedEdge(i, j),
+            'bg-gray-700 rounded border': isHighlightedEdge(i, j),
             'rounded-b': i === row.length - 1,
             'text-base-content/20': i === j,
           }"
@@ -84,7 +84,7 @@ const props = defineProps({
   },
 })
 
-const isHeightlightedEdge = (
+const isHighlightedEdge = (
   sourceNodeIndex: number,
   targetNodeIndex: number
 ) => {

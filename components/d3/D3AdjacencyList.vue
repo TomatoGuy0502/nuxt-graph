@@ -15,7 +15,7 @@
         <code
           class="flex justify-center items-center transition w-[22px] h-[24px]"
           :class="{
-            'bg-gray-700 rounded border': isHighlighted(
+            'bg-gray-700 rounded border': isHighlightedEdge(
               sourceIndex,
               neighborIndex
             ),
@@ -42,7 +42,10 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const isHighlighted = (sourceNodeIndex: number, targetNodeIndex: number) => {
+const isHighlightedEdge = (
+  sourceNodeIndex: number,
+  targetNodeIndex: number
+) => {
   const hoverEdge = props.hoverEdge as EdgeDatum | null
   const hoverEdgeSourceIndex = (hoverEdge?.source as NodeDatum | undefined)
     ?.index

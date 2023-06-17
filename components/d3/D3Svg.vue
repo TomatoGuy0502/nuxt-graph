@@ -10,7 +10,16 @@
       <slot name="info"></slot>
     </div>
     <div class="absolute w-full h-full select-none pointer-events-none">
-      <slot name="nodeTooltip"></slot>
+      <div
+        class="absolute rounded p-1 py-0.5 bg-base-300 transition text-sm"
+        :class="{ 'opacity-0 select-none pointer-events-none': !hoverNode }"
+        :style="{
+          top: `${(lastHoverNode?.y ?? 0) + 10}px`,
+          left: `${(lastHoverNode?.x ?? 0) + 10}px`,
+        }"
+      >
+        <slot name="nodeTooltip" :last-hover-node="lastHoverNode"></slot>
+      </div>
     </div>
     <div class="flex gap-2 absolute right-4 top-4">
       <label
@@ -144,6 +153,8 @@
 </template>
 
 <script setup lang="ts">
+import type { NodeDatum } from '@/composables/useD3'
+
 const props = defineProps({
   canToggleDirected: {
     type: Boolean,
@@ -209,7 +220,21 @@ const props = defineProps({
     type: Function as PropType<() => void>,
     default: () => {},
   },
+  hoverNode: {
+    type: Object as PropType<NodeDatum | null>,
+    default: null,
+  },
 })
+
+// Record the last hover node to prevent tooltip from flickering
+const lastHoverNode = ref<NodeDatum | null>(props.hoverNode)
+watch(
+  () => props.hoverNode,
+  (node) => {
+    if (!node) return
+    lastHoverNode.value = node
+  }
+)
 
 const emits = defineEmits(['update:isDirected'])
 

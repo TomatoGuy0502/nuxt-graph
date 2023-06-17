@@ -18,6 +18,7 @@
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
       :is-draggable="true"
+      :hover-node="hoverNode"
     >
       <template #edges>
         <line
@@ -52,23 +53,17 @@
           </text>
         </g>
       </template>
-      <template #nodeTooltip>
-        <div
-          class="absolute flex flex-col rounded p-1 py-0.5 bg-base-300 transition text-sm"
-          :class="{ 'opacity-0 select-none pointer-events-none': !hoverNode }"
-          :style="tooltipPosition"
-        >
-          <template v-if="isDirected">
-            <p>
-              <span class="font-bold">In-Degree</span>:
-              {{ lastHoverNode?.inDegree ?? 0 }}
-            </p>
-            <p>
-              <span class="font-bold">Out-Degree</span>:
-              {{ lastHoverNode?.outDegree ?? 0 }}
-            </p>
-          </template>
-          <p v-else>
+      <template #nodeTooltip="{ lastHoverNode }">
+        <div class="flex flex-col">
+          <p v-show="isDirected">
+            <span class="font-bold">In-Degree</span>:
+            {{ lastHoverNode?.inDegree ?? 0 }}
+          </p>
+          <p v-show="isDirected">
+            <span class="font-bold">Out-Degree</span>:
+            {{ lastHoverNode?.outDegree ?? 0 }}
+          </p>
+          <p v-show="!isDirected">
             <span class="font-bold">Degree</span>:
             {{ lastHoverNode?.degree ?? 0 }}
           </p>
@@ -155,15 +150,4 @@ watch(
   },
   { immediate: true }
 )
-
-const tooltipPosition = reactive({ top: '0px', left: '0px' })
-// Record the last hover node to prevent tooltip from flickering
-const lastHoverNode = ref<NodeDatum | null>(null)
-
-watch(hoverNode, (node) => {
-  if (!node) return
-  lastHoverNode.value = node
-  tooltipPosition.top = (node?.y ?? 0) + 10 + 'px'
-  tooltipPosition.left = (node?.x ?? 0) + 10 + 'px'
-})
 </script>

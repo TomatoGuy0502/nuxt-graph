@@ -82,11 +82,11 @@ const props = defineProps({
     required: true,
   },
   hoverNode: {
-    type: [Object, null] as PropType<NodeDatum | null>,
+    type: Object as PropType<NodeDatum | null>,
     required: true,
   },
   hoverEdge: {
-    type: [Object, null] as PropType<EdgeDatum | null>,
+    type: Object as PropType<EdgeDatum | null>,
     required: true,
   },
 })

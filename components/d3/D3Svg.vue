@@ -226,7 +226,7 @@ const props = defineProps({
     default: () => {},
   },
   hoverNode: {
-    type: Object as PropType<NodeDatum | null>,
+    type: [Object, null] as PropType<NodeDatum | null>,
     default: null,
   },
 })

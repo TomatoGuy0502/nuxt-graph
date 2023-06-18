@@ -375,10 +375,17 @@ function useD3EditEdge({
   function hideDrawEdge() {
     mousedownNode.value = null
   }
-  // TODO: When isDirected is false, remove both directions
   function removeEdge(_event: PointerEvent | MouseEvent, d: EdgeDatum) {
     if (hoverEdge.value === d) unhighlightEdge()
     data.edges.splice(data.edges.indexOf(d), 1)
+
+    if (isDirected.value) return
+    const anotherDirectionEdgeIndex = data.edges.findIndex(
+      (edge) => edge.source === d.target && edge.target === d.source
+    )
+    if (anotherDirectionEdgeIndex !== -1) {
+      data.edges.splice(anotherDirectionEdgeIndex, 1)
+    }
   }
 
   /** Calculate the edge cords for directed graph */

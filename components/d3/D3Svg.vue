@@ -6,9 +6,12 @@
       height: height ? height + 'px' : undefined,
     }"
   >
+    <!-- Information at the top left corner -->
     <div class="flex gap-2 absolute left-4 top-4">
       <slot name="info"></slot>
     </div>
+
+    <!-- Tooltip for nodes -->
     <div class="absolute w-full h-full select-none pointer-events-none">
       <div
         class="absolute rounded p-1 py-0.5 bg-base-300 transition text-sm"
@@ -21,6 +24,8 @@
         <slot name="nodeTooltip" :last-hover-node="lastHoverNode"></slot>
       </div>
     </div>
+
+    <!-- Buttons at the top right corner -->
     <div class="flex gap-2 absolute right-4 top-4">
       <label
         v-if="canToggleDirected"

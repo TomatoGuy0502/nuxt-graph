@@ -22,17 +22,18 @@
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
       :is-draggable="true"
+      :hover-node="hoverNode"
     >
       <template #edges>
         <line
-          v-for="(edge, i) in data.edges"
+          v-for="(edge, edgeIndex) in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
           class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
           :class="{ 'is-directed': isDirected }"
-          :x1="edgesCords[i].x1"
-          :y1="edgesCords[i].y1"
-          :x2="edgesCords[i].x2"
-          :y2="edgesCords[i].y2"
+          :x1="edgesCords[edgeIndex].x1"
+          :y1="edgesCords[edgeIndex].y1"
+          :x2="edgesCords[edgeIndex].x2"
+          :y2="edgesCords[edgeIndex].y2"
           @contextmenu.prevent="removeEdge($event, edge)"
           @mouseenter="highlightEdge($event, edge)"
           @mouseleave="unhighlightEdge()"
@@ -52,7 +53,6 @@
             @mouseenter="highlightNode($event, node)"
             @mouseleave="unhighlightNode()"
           >
-            <title>Node ID: {{ node.id }}</title>
           </circle>
           <text
             class="select-none pointer-events-none font-mono text-sm"
@@ -63,6 +63,12 @@
             {{ node.id }}
           </text>
         </g>
+      </template>
+      <template #nodeTooltip="{ hoverNodeInfo }">
+        <p>
+          <span class="font-bold">Node ID</span>:
+          {{ hoverNodeInfo?.id }}
+        </p>
       </template>
     </D3Svg>
     <div

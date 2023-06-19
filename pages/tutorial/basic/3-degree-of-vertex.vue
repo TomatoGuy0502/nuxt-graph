@@ -22,14 +22,14 @@
     >
       <template #edges>
         <line
-          v-for="(edge, i) in data.edges"
+          v-for="(edge, edgeIndex) in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
           class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
           :class="{ 'is-directed': isDirected }"
-          :x1="edgesCords[i].x1"
-          :y1="edgesCords[i].y1"
-          :x2="edgesCords[i].x2"
-          :y2="edgesCords[i].y2"
+          :x1="edgesCords[edgeIndex].x1"
+          :y1="edgesCords[edgeIndex].y1"
+          :x2="edgesCords[edgeIndex].x2"
+          :y2="edgesCords[edgeIndex].y2"
           @contextmenu.prevent="removeEdge($event, edge)"
         ></line>
       </template>
@@ -53,19 +53,19 @@
           </text>
         </g>
       </template>
-      <template #nodeTooltip="{ lastHoverNode }">
+      <template #nodeTooltip="{ hoverNodeInfo }">
         <div class="flex flex-col">
           <p v-show="isDirected">
             <span class="font-bold">In-Degree</span>:
-            {{ lastHoverNode?.inDegree ?? 0 }}
+            {{ hoverNodeInfo?.inDegree ?? 0 }}
           </p>
           <p v-show="isDirected">
             <span class="font-bold">Out-Degree</span>:
-            {{ lastHoverNode?.outDegree ?? 0 }}
+            {{ hoverNodeInfo?.outDegree ?? 0 }}
           </p>
           <p v-show="!isDirected">
             <span class="font-bold">Degree</span>:
-            {{ lastHoverNode?.degree ?? 0 }}
+            {{ hoverNodeInfo?.degree ?? 0 }}
           </p>
         </div>
       </template>

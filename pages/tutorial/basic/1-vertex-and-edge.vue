@@ -43,7 +43,6 @@
             @mouseenter="highlightNode($event, node)"
             @mouseleave="unhighlightNode()"
           >
-            <title>Node ID: {{ node.id }}</title>
           </circle>
           <!-- <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
               {{ node.id }}

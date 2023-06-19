@@ -15,6 +15,7 @@
       :on-svg-mousemove="updateDrawEdge"
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
+      :is-draggable="true"
     >
       <template #info>
         <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
@@ -56,7 +57,6 @@
             @mouseenter="highlightNode($event, node)"
             @mouseleave="unhighlightNode()"
           >
-            <title>Node ID: {{ node.id }}</title>
           </circle>
           <!-- <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
               {{ node.id }}
@@ -103,7 +103,10 @@ const {
   colors,
   graphProperties,
   nodesColorIndex,
+  enableDrag,
 } = useD3(initData, svg)
+
+enableDrag()
 </script>
 
 <style scoped>

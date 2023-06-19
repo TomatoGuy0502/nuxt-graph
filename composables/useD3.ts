@@ -199,7 +199,7 @@ function useD3Drag({
   function enableDrag(
     filter: (event: PointerEvent | MouseEvent, d: NodeDatum) => boolean = (
       event: PointerEvent | MouseEvent
-    ) => (event.metaKey || event.ctrlKey) && !event.button
+    ) => (event.metaKey || event.ctrlKey) && event.button === 0
   ) {
     if (!simulation.value) return
     const drag = d3

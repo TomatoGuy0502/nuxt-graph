@@ -21,7 +21,7 @@
           left: `${(lastHoverNode?.x ?? 0) + 10}px`,
         }"
       >
-        <slot name="nodeTooltip" :last-hover-node="lastHoverNode"></slot>
+        <slot name="nodeTooltip" :hover-node-info="lastHoverNode"></slot>
       </div>
     </div>
 

@@ -55,31 +55,36 @@
         :on-svg-mouseup="hideDrawEdge"
         :on-svg-mouseleave="hideDrawEdge"
         :is-draggable="true"
+        :hover-node="hoverNode"
         class="w-full h-full"
       >
         <template #edges>
           <line
-            v-for="(edge, i) in data.edges"
+            v-for="(edge, edgeIndex) in data.edges"
             :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
             class="stroke-[5] cursor-pointer stroke-gray-300"
             :class="getEdgeColor(edge)"
-            :x1="edgesCords[i].x1"
-            :y1="edgesCords[i].y1"
-            :x2="edgesCords[i].x2"
-            :y2="edgesCords[i].y2"
+            :x1="edgesCords[edgeIndex].x1"
+            :y1="edgesCords[edgeIndex].y1"
+            :x2="edgesCords[edgeIndex].x2"
+            :y2="edgesCords[edgeIndex].y2"
             @contextmenu.prevent="removeEdge($event, edge)"
             @mouseenter="highlightEdge($event, edge)"
             @mouseleave="unhighlightEdge()"
           ></line>
         </template>
         <template #nodes>
-          <g v-for="(node, i) in data.nodes" :key="node.id" class="node">
+          <g
+            v-for="(node, nodeIndex) in data.nodes"
+            :key="node.id"
+            class="node"
+          >
             <circle
               class="cursor-pointer hover:brightness-75"
               :class="{
-                'stroke-black stroke-[4]': node.index === visitingNodeIndex,
+                'stroke-black stroke-[4]': nodeIndex === visitingNodeIndex,
               }"
-              :style="{ fill: getNodeColor(i) }"
+              :style="{ fill: getNodeColor(nodeIndex) }"
               :cx="node.x"
               :cy="node.y"
               r="10"
@@ -89,12 +94,26 @@
               @mouseenter="highlightNode($event, node)"
               @mouseleave="unhighlightNode()"
             >
-              <title>{{ nodeTitle(node.id, i) }}</title>
             </circle>
             <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
               {{ node.id }}
             </text>
           </g>
+        </template>
+        <template #nodeTooltip="{ hoverNodeInfo }">
+          <div class="flex flex-col">
+            <p>
+              <span class="font-bold">Node ID: </span>
+              {{ hoverNodeInfo?.id }}
+            </p>
+            <p>
+              <span class="font-bold">Traversal Order: </span
+              >{{
+                traversal.findIndex((index) => index === hoverNodeInfo?.index) +
+                1
+              }}
+            </p>
+          </div>
         </template>
       </D3Svg>
     </template>
@@ -289,12 +308,6 @@ const generateRandomGraph = async (nodeCount = 6, edgeCount = 8) => {
     updateSimulation()
   }
   traversalStartNodeIndex.value = 0
-}
-
-const nodeTitle = (nodeId: number, nodeIndex: number) => {
-  return `Node ID: ${nodeId}\nTraversal Order: ${
-    traversal.value.findIndex((index) => index === nodeIndex) + 1
-  }`
 }
 </script>
 

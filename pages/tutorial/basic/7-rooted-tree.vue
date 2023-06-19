@@ -12,6 +12,7 @@
       :is-draggable="true"
       :svg-class="['cursor-default']"
       :on-clear-data="resetData"
+      :hover-node="hoverNode"
     >
       <template #hint>
         <li>Root vertex can't be deleted</li>
@@ -38,6 +39,7 @@
       </template>
       <template #nodes>
         <g class="node">
+          <!-- TODO: Prevent root node from being dragged -->
           <circle
             class="cursor-cell hover:brightness-75"
             :style="{ fill: colors[0] }"
@@ -49,11 +51,6 @@
             @mouseenter="highlightNode($event, data.nodes[0])"
             @mouseleave="unhighlightNode()"
           >
-            <title
-              v-text="
-                `Node ID: ${data.nodes[0].id} \nNode Depth: ${data.nodes[0].depth}`
-              "
-            ></title>
           </circle>
           <text
             class="pointer-events-none select-none"
@@ -78,9 +75,6 @@
             @mouseenter="highlightNode($event, node)"
             @mouseleave="unhighlightNode()"
           >
-            <title
-              v-text="`Node ID: ${node.id} \nNode Depth: ${node.depth}`"
-            ></title>
           </circle>
           <!-- <text
             class="select-none pointer-events-none"
@@ -92,6 +86,12 @@
             {{ node.id }}
           </text> -->
         </g>
+      </template>
+      <template #nodeTooltip="{ hoverNodeInfo }">
+        <p>
+          <span class="font-bold">Depth</span>:
+          {{ hoverNodeInfo?.depth ?? 0 }}
+        </p>
       </template>
     </D3Svg>
   </div>
@@ -129,6 +129,7 @@ const {
   removeEdge,
   data,
   colors,
+  hoverNode,
   enableDrag,
 } = useD3(initData, svg, {
   linkDistance: 30,

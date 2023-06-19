@@ -14,6 +14,7 @@
       :on-svg-mouseup="hideDrawEdge"
       :on-svg-mouseleave="hideDrawEdge"
       :is-draggable="true"
+      :hover-node="hoverNode"
       class="col-span-1 row-span-3"
     >
       <template #edges>
@@ -45,7 +46,6 @@
             @mouseenter="highlightNode($event, node)"
             @mouseleave="unhighlightNode()"
           >
-            <title>Node ID: {{ node.id }}</title>
           </circle>
           <text
             class="select-none pointer-events-none font-mono text-sm"
@@ -56,6 +56,24 @@
             {{ node.id }}
           </text>
         </g>
+      </template>
+      <template #nodeTooltip="{ hoverNodeInfo }">
+        <p>
+          <span class="font-bold">Node ID</span>:
+          {{ hoverNodeInfo?.id }}
+        </p>
+        <p v-show="isDirected">
+          <span class="font-bold">In-Degree</span>:
+          {{ hoverNodeInfo?.inDegree ?? 0 }}
+        </p>
+        <p v-show="isDirected">
+          <span class="font-bold">Out-Degree</span>:
+          {{ hoverNodeInfo?.outDegree ?? 0 }}
+        </p>
+        <p v-show="!isDirected">
+          <span class="font-bold">Degree</span>:
+          {{ hoverNodeInfo?.degree ?? 0 }}
+        </p>
       </template>
     </D3Svg>
     <div
@@ -131,6 +149,44 @@ const {
 } = useD3(initData, svg, {}, isDirected)
 
 enableDrag()
+
+// Only show one edge when isDirected is false
+const filteredEdges = computed(() => {
+  if (isDirected.value) return data.edges
+
+  const edgeSet = new Set<string>()
+  return data.edges.filter((edge) => {
+    const sourceId = (edge.source as NodeDatum).id
+    const targetId = (edge.target as NodeDatum).id
+    const key =
+      sourceId < targetId
+        ? `${sourceId}-${targetId}`
+        : `${targetId}-${sourceId}`
+    if (edgeSet.has(key)) return false
+    edgeSet.add(key)
+    return true
+  })
+})
+
+watch(
+  [() => filteredEdges.value.length, () => data.nodes.length],
+  () => {
+    data.nodes.forEach((node) => {
+      node.degree = 0
+      node.inDegree = 0
+      node.outDegree = 0
+    })
+    filteredEdges.value.forEach((edge) => {
+      const source = edge.source as NodeDatum
+      const target = edge.target as NodeDatum
+      source.degree = (source.degree ?? 0) + 1
+      source.outDegree = (source.outDegree ?? 0) + 1
+      target.degree = (target.degree ?? 0) + 1
+      target.inDegree = (target.inDegree ?? 0) + 1
+    })
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped></style>

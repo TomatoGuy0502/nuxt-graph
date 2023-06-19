@@ -60,7 +60,7 @@ export const useD3 = (
     isDirected,
   })
 
-  const { graphProperties, nodesColorIndex } = useGraphProperties({
+  const { graphProperties, nodesComponentColorIndex } = useGraphProperties({
     data,
     adjacencyList,
   })
@@ -78,7 +78,7 @@ export const useD3 = (
     adjacencyList,
     edgeList,
     graphProperties,
-    nodesColorIndex,
+    nodesComponentColorIndex,
   }
 }
 
@@ -547,7 +547,7 @@ function useGraphProperties({
   })
 
   /** Used to color nodes based on their connected components */
-  const nodesColorIndex = computed(() =>
+  const nodesComponentColorIndex = computed(() =>
     data.nodes.map((node) =>
       graphProperties.value.connectedComponents.findIndex((arr) =>
         arr.includes(node.index ?? -1)
@@ -555,5 +555,5 @@ function useGraphProperties({
     )
   )
 
-  return { graphProperties, nodesColorIndex }
+  return { graphProperties, nodesComponentColorIndex }
 }

@@ -67,7 +67,7 @@
         <g v-for="(node, i) in data.nodes" :key="node.id" class="node">
           <circle
             class="cursor-pointer hover:brightness-75"
-            :style="{ fill: colors[nodesColorIndex[i] % 10] }"
+            :style="{ fill: colors[nodesComponentColorIndex[i] % 10] }"
             :cx="node.x"
             :cy="node.y"
             r="10"
@@ -123,7 +123,7 @@ const {
   colors,
   enableDrag,
   graphProperties,
-  nodesColorIndex,
+  nodesComponentColorIndex,
 } = useD3(initData, svg)
 
 enableDrag()

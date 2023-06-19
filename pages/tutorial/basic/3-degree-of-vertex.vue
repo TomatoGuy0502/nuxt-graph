@@ -114,6 +114,7 @@ const {
 } = useD3(initData, svg, {}, isDirected)
 enableDrag()
 
+// Only show one edge when isDirected is false
 const filteredEdges = computed(() => {
   if (isDirected.value) return data.edges
 

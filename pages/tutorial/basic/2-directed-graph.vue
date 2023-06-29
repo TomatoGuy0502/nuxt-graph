@@ -1,9 +1,9 @@
 <template>
-  <div class="grid grid-cols-[1fr_1fr] gap-4 p-4 h-full overflow-y-auto">
+  <div class="grid grid-cols-[auto_1fr] gap-4 p-4 h-full overflow-y-auto">
     <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg">
       <ContentDoc
-        class="prose prose-sm xl:prose-base max-w-none"
-        path="basic/vertex-and-edge"
+        class="prose prose-sm xl:prose-base"
+        path="basic/directed-graph"
       />
     </div>
     <D3Svg

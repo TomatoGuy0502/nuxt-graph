@@ -1,9 +1,9 @@
 <template>
-  <div class="grid grid-cols-[1fr_1fr] gap-4 p-4 h-full overflow-y-auto">
+  <div class="grid grid-cols-[auto_1fr] gap-4 p-4 h-full overflow-y-auto">
     <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg">
       <ContentDoc
-        class="prose prose-sm xl:prose-base max-w-none"
-        path="basic/vertex-and-edge"
+        class="prose prose-sm xl:prose-base"
+        path="basic/degree-of-vertex"
       />
     </div>
     <D3Svg
@@ -20,6 +20,14 @@
       :is-draggable="true"
       :hover-node="hoverNode"
     >
+      <template #info>
+        <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+          <li class="font-bold">
+            Complete:
+            <code class="font-normal">{{ graphProperties.isComplete }}</code>
+          </li>
+        </ul>
+      </template>
       <template #edges>
         <line
           v-for="(edge, edgeIndex) in data.edges"
@@ -111,6 +119,7 @@ const {
   colors,
   edgesCords,
   enableDrag,
+  graphProperties,
 } = useD3(initData, svg, {}, isDirected)
 enableDrag()
 

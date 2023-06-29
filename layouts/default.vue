@@ -24,8 +24,11 @@
           <!-- <NuxtLink class="btn-ghost btn text-xl normal-case xl:hidden" to="/"
             >Graph Theory</NuxtLink
           > -->
-          <h1 class="block text-xl font-bold normal-case">
-            {{ $route.name }}
+          <h1 class="block text-3xl font-bold normal-case">
+            <template v-if="$route.path.startsWith('/tutorial')">
+              Tutorial
+            </template>
+            <template v-else> {{ $route.name }} </template>
           </h1>
         </div>
         <div class="flex-none">

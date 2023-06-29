@@ -1,9 +1,9 @@
 <template>
-  <div class="grid grid-cols-[1fr_1fr] gap-4 p-4 h-full overflow-y-auto">
+  <div class="grid grid-cols-[auto_1fr] gap-4 p-4 h-full overflow-y-auto">
     <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg">
       <ContentDoc
-        class="prose prose-sm xl:prose-base max-w-none"
-        path="basic/vertex-and-edge"
+        class="prose prose-sm xl:prose-base"
+        path="basic/connected-component"
       />
     </div>
     <D3Svg
@@ -20,14 +20,16 @@
       <template #info>
         <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
           <li class="font-bold">
+            Is Connected:
+            <code class="font-normal">{{
+              graphProperties.connectedComponents.length === 1
+            }}</code>
+          </li>
+          <li class="font-bold">
             Connected Components:
             <code class="font-normal">{{
               graphProperties.connectedComponents.length
             }}</code>
-          </li>
-          <li class="font-bold">
-            Complete:
-            <code class="font-normal">{{ graphProperties.isComplete }}</code>
           </li>
         </ul>
       </template>
@@ -71,8 +73,8 @@
 import type { NodeDatum, GraphData } from '@/composables/useD3'
 
 definePageMeta({
-  name: 'Connected and Complete Graph',
-  path: '/tutorial/basic/connected-and-complete-graph',
+  name: 'Connected Component',
+  path: '/tutorial/basic/connected-component',
   pageOrder: 4,
 })
 

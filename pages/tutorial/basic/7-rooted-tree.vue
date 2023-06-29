@@ -1,9 +1,9 @@
 <template>
-  <div class="grid grid-cols-[1fr_1fr] gap-4 p-4 h-full overflow-y-auto">
+  <div class="grid grid-cols-[auto_1fr] gap-4 p-4 h-full overflow-y-auto">
     <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg">
       <ContentDoc
-        class="prose prose-sm xl:prose-base max-w-none"
-        path="basic/vertex-and-edge"
+        class="prose prose-sm xl:prose-base"
+        path="basic/rooted-tree"
       />
     </div>
     <D3Svg
@@ -14,6 +14,18 @@
       :on-clear-data="resetData"
       :hover-node="hoverNode"
     >
+      <template #info>
+        <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+          <li class="font-bold">
+            Tree height:
+            <code class="font-normal">{{ treeHeight }}</code>
+          </li>
+          <li class="font-bold">
+            Number of leaves:
+            <code class="font-normal">{{ numberOfLeaves }}</code>
+          </li>
+        </ul>
+      </template>
       <template #hint>
         <li>Root vertex can't be deleted</li>
         <li><b>Hover</b> on vertex to see the details</li>
@@ -39,7 +51,7 @@
       </template>
       <template #nodes>
         <g class="node">
-          <!-- TODO: Prevent root node from being dragged -->
+          <!-- FIXME: Prevent root node from being dragged -->
           <circle
             class="cursor-cell hover:brightness-75"
             :style="{ fill: colors[0] }"
@@ -127,6 +139,7 @@ const {
   highlightNode,
   unhighlightNode,
   removeEdge,
+  adjacencyList,
   data,
   colors,
   hoverNode,
@@ -150,7 +163,6 @@ const { isMac } = usePlatform()
 
 const resetData = () => {
   clearData()
-  data.nodes.push({ id: 0, fx: 300, fy: 20, depth: 0 })
 }
 
 const removeEdgeAndSubTree = (
@@ -160,6 +172,19 @@ const removeEdgeAndSubTree = (
   removeEdge(_event, edge)
   removeSubTree(_event, edge.target as NodeDatum)
 }
+
+const treeHeight = computed(() => {
+  return data.nodes.reduce((maxDepth, node) => {
+    return Math.max(maxDepth, node.depth ?? 0)
+  }, 0)
+})
+
+const numberOfLeaves = computed(() => {
+  // If a node has only one edge connected to it, it is a leaf node (except the root node)
+  return data.nodes.slice(1).reduce((count, node) => {
+    return count + (adjacencyList.value[node.id]?.length === 1 ? 1 : 0)
+  }, 0)
+})
 </script>
 
 <style scoped>

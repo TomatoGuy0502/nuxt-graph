@@ -1,8 +1,8 @@
 <template>
-  <div class="grid grid-cols-[1fr_1fr] gap-4 p-4 h-full overflow-y-auto">
+  <div class="grid grid-cols-[auto_1fr] gap-4 p-4 h-full overflow-y-auto">
     <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg">
       <ContentDoc
-        class="prose prose-sm xl:prose-base max-w-none"
+        class="prose prose-sm xl:prose-base"
         path="basic/vertex-and-edge"
       />
     </div>
@@ -17,11 +17,23 @@
       :on-svg-mouseleave="hideDrawEdge"
       :is-draggable="true"
     >
+      <template #info>
+        <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+          <li class="font-bold">
+            Order (# of vertices):
+            <code class="font-normal">{{ data.nodes.length }}</code>
+          </li>
+          <li class="font-bold">
+            Size (# of edges):
+            <code class="font-normal">{{ data.edges.length }}</code>
+          </li>
+        </ul>
+      </template>
       <template #edges>
         <line
           v-for="edge in data.edges"
           :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-          class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
+          class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
           :x1="(edge.source as NodeDatum).x"
           :y1="(edge.source as NodeDatum).y"
           :x2="(edge.target as NodeDatum).x"
@@ -67,6 +79,8 @@ const initData: GraphData = {
   edges: [
     { source: 0, target: 1 },
     { source: 0, target: 2 },
+    { source: 0, target: 3 },
+    { source: 4, target: 5 },
   ],
 }
 

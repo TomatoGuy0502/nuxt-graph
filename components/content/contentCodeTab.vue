@@ -34,7 +34,7 @@ const props = defineProps({
     default: 0,
   },
   tabNames: {
-    type: Array,
+    type: Array as PropType<string[]>,
     default: () => [],
   },
 })

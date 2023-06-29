@@ -43,9 +43,18 @@ export const useD3 = (
   isDirected = ref(false)
 ) => {
   const data = reactive(initData) as typeof initData
+  const { width: svgWidth } = useElementSize(svgRef)
   function clearData() {
     data.nodes.length = 0
     data.edges.length = 0
+    if (simulationConfig.isRootedTree) {
+      data.nodes.push({
+        id: 0,
+        fx: svgWidth.value / 2,
+        fy: 20,
+        depth: 0,
+      })
+    }
   }
 
   const colors = d3.schemeTableau10
@@ -63,6 +72,7 @@ export const useD3 = (
   const { graphProperties, nodesComponentColorIndex } = useGraphProperties({
     data,
     adjacencyList,
+    isDirected,
   })
 
   return {
@@ -494,9 +504,11 @@ function useGraphRepresentation({
 function useGraphProperties({
   data,
   adjacencyList,
+  isDirected,
 }: {
   data: GraphData
   adjacencyList: Ref<number[][]>
+  isDirected: Ref<boolean>
 }) {
   const graphProperties = computed(() => {
     const visited = new Set()
@@ -534,7 +546,9 @@ function useGraphProperties({
     const numEdges = data.edges.length
     const isForest = !hasCycle
     const isTree = isForest && numEdges === numNodes - 1
-    const isComplete = numEdges === (numNodes * (numNodes - 1)) / 2
+    // FIXME: Complete graph for directed graph
+    const isComplete =
+      numEdges === (numNodes * (numNodes - 1)) / (isDirected.value ? 1 : 2)
 
     return {
       hasCycle,

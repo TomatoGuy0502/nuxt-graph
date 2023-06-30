@@ -28,6 +28,18 @@
     <!-- Buttons at the top right corner -->
     <div class="flex gap-2 absolute right-4 top-4">
       <label
+        v-if="canToggleShowingIndex"
+        class="flex items-center gap-2 p-1 px-2 rounded-lg bg-base-300 h-fit cursor-pointer select-none"
+      >
+        <h2 class="font-bold text-sm">ID</h2>
+        <input
+          v-model="isShowingIndex"
+          type="checkbox"
+          class="toggle toggle-success"
+        />
+        <h2 class="font-bold text-sm">Index</h2>
+      </label>
+      <label
         v-if="canToggleDirected"
         class="flex items-center gap-2 p-1 px-2 rounded-lg bg-base-300 h-fit cursor-pointer select-none"
       >
@@ -156,6 +168,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  canToggleShowingIndex: {
+    type: Boolean,
+    default: false,
+  },
+  /** Show id or index */
+  isShowingIndex: {
+    type: Boolean,
+    default: false,
+  },
   width: {
     type: Number,
     default: undefined,
@@ -227,9 +248,10 @@ watch(
   }
 )
 
-const emits = defineEmits(['update:isDirected'])
+const emits = defineEmits(['update:isDirected', 'update:isShowingIndex'])
 
 const isDirected = useVModel(props, 'isDirected', emits)
+const isShowingIndex = useVModel(props, 'isShowingIndex', emits)
 
 const { isMac } = usePlatform()
 </script>

@@ -2,6 +2,7 @@
   <div class="drawer 2xl:drawer-open h-screen">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col overflow-y-auto">
+      <!-- TODO: Extract to component -->
       <div class="navbar bg-base-100 p-4 gap-2">
         <div class="flex-none 2xl:hidden">
           <label for="my-drawer" class="btn-ghost btn-square btn">
@@ -25,10 +26,7 @@
             >Graph Theory</NuxtLink
           > -->
           <h1 class="block text-3xl font-bold normal-case">
-            <template v-if="$route.path.startsWith('/tutorial')">
-              Tutorial
-            </template>
-            <template v-else> {{ $route.name }} </template>
+            {{ navbarHeading }}
           </h1>
         </div>
         <div class="flex-none">
@@ -90,24 +88,27 @@
         <ul class="menu rounded-box bg-base-100">
           <li class="menu-title">Tutorial</li>
           <li
-            v-for="(section, i) in tutorialSectionNames"
+            v-for="(section, sectionNumber) in tutorialSectionNames"
             :key="section"
             class="w-full"
           >
             <details class="w-full" open>
               <summary class="text-sm font-bold capitalize">
-                {{ i + 1 }}. {{ section }}
+                {{ sectionNumber + 1 }}. {{ section }}
               </summary>
               <ul>
                 <li
-                  v-for="(route, ii) in tutorialRoutes[section]"
-                  :key="route.name"
+                  v-for="(chapterRoute, chapterNumber) in tutorialRoutes[
+                    section
+                  ]"
+                  :key="chapterRoute.name"
                 >
                   <NuxtLink
                     class="block whitespace-break-spaces"
-                    :to="route.path"
+                    :to="chapterRoute.path"
                     active-class="active"
-                    >{{ i + 1 }}-{{ ii + 1 }}. {{ route.name }}</NuxtLink
+                    >{{ sectionNumber + 1 }}-{{ chapterNumber + 1 }}.
+                    {{ chapterRoute.name }}</NuxtLink
                   >
                 </li>
               </ul>
@@ -152,4 +153,14 @@ useRouter()
       path: routePath,
     })
   })
+
+const route = useRoute()
+const navbarHeading = computed(() => {
+  if (route.path.startsWith('/tutorial')) {
+    const sectionName = route.path.split('/')[2] as
+      | (typeof tutorialSectionNames)[number]
+    return 'Tutorial - ' + sectionName[0].toUpperCase() + sectionName.slice(1)
+  }
+  return route.name
+})
 </script>

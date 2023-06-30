@@ -13,7 +13,7 @@
           :class="{
             'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === i,
           }"
-          >{{ nodeIds[i] }}</code
+          >{{ isShowingIndex ? i : nodeIds[i] }}</code
         >
         <code v-if="i !== row.length - 1" class="w-[10px]">,</code>
       </template>
@@ -30,7 +30,7 @@
           class="flex justify-center w-[22px] border-r-[1px] rounded-l transition"
           :class="{'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === i}"
         >
-          {{ nodeIds[i] }}
+          {{ isShowingIndex ? i : nodeIds[i] }}
         </span>
       </div>
       <code class="w-[10px]">[</code>
@@ -74,6 +74,10 @@ const props = defineProps({
     required: true,
   },
   isDirected: {
+    type: Boolean,
+    required: true,
+  },
+  isShowingIndex: {
     type: Boolean,
     required: true,
   },

@@ -1,19 +1,21 @@
 <template>
   <div
-    class="grid grid-cols-[1fr_1fr] grid-rows-[1fr_auto] gap-4 p-4 h-full overflow-y-auto"
+    class="grid grid-cols-[auto_1fr] grid-rows-[1fr_auto] gap-4 p-4 h-full overflow-y-auto"
   >
     <div
       class="h-full overflow-y-auto col-span-1 row-span-2 p-4 bg-base-200 rounded-lg"
     >
       <ContentDoc
-        class="prose prose-sm xl:prose-base max-w-none"
-        path="basic/vertex-and-edge"
+        class="prose prose-sm xl:prose-base"
+        path="representation/adjacency-list"
       />
     </div>
     <D3Svg
       ref="svg"
       v-model:is-directed="isDirected"
+      v-model:is-showing-index="isShowingIndex"
       :can-toggle-directed="true"
+      :can-toggle-showing-index="false"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -60,15 +62,21 @@
             :x="node.x"
             :y="node.y"
           >
-            {{ node.id }}
+            {{ isShowingIndex ? node.index : node.id }}
           </text>
         </g>
       </template>
       <template #nodeTooltip="{ hoverNodeInfo }">
-        <p>
-          <span class="font-bold">Node ID</span>:
-          {{ hoverNodeInfo?.id }}
-        </p>
+        <div class="flex flex-col">
+          <p>
+            <span class="font-bold">Node Index</span>:
+            {{ hoverNodeInfo?.index }}
+          </p>
+          <p>
+            <span class="font-bold">Node ID</span>:
+            {{ hoverNodeInfo?.id }}
+          </p>
+        </div>
       </template>
     </D3Svg>
     <div
@@ -81,6 +89,7 @@
         :adjacency-list="adjacencyList"
         :node-ids="data.nodes.map((node) => node.id)"
         :is-directed="isDirected"
+        :is-showing-index="isShowingIndex"
         class="max-h-[264px] max-w-[360px]"
       />
     </div>
@@ -132,6 +141,8 @@ const {
 } = useD3(initData, svg, {}, isDirected)
 
 enableDrag()
+
+const isShowingIndex = ref(true)
 </script>
 
 <style scoped></style>

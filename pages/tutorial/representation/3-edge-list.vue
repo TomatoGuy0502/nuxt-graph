@@ -1,19 +1,21 @@
 <template>
   <div
-    class="grid grid-cols-[1fr_1fr] grid-rows-[1fr_auto] gap-4 p-4 h-full overflow-y-auto"
+    class="grid grid-cols-[auto_1fr] grid-rows-[1fr_auto] gap-4 p-4 h-full overflow-y-auto"
   >
     <div
       class="h-full overflow-y-auto col-span-1 row-span-2 p-4 bg-base-200 rounded-lg"
     >
       <ContentDoc
-        class="prose prose-sm xl:prose-base max-w-none"
-        path="basic/vertex-and-edge"
+        class="prose prose-sm xl:prose-base"
+        path="representation/edge-list"
       />
     </div>
     <D3Svg
       ref="svg"
       v-model:is-directed="isDirected"
+      v-model:is-showing-index="isShowingIndex"
       :can-toggle-directed="true"
+      :can-toggle-showing-index="false"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -61,15 +63,21 @@
             :x="node.x"
             :y="node.y"
           >
-            {{ node.id }}
+            {{ isShowingIndex ? node.index : node.id }}
           </text>
         </g>
       </template>
       <template #nodeTooltip="{ hoverNodeInfo }">
-        <p>
-          <span class="font-bold">Node ID</span>:
-          {{ hoverNodeInfo?.id }}
-        </p>
+        <div class="flex flex-col">
+          <p>
+            <span class="font-bold">Node Index</span>:
+            {{ hoverNodeInfo?.index }}
+          </p>
+          <p>
+            <span class="font-bold">Node ID</span>:
+            {{ hoverNodeInfo?.id }}
+          </p>
+        </div>
       </template>
     </D3Svg>
     <div class="flex flex-col gap-2 p-2 rounded-lg bg-base-300 w-fit">
@@ -84,8 +92,14 @@
           <code
             class="rounded px-0.5 transition"
             :class="{ 'bg-gray-700': isHighlightedEdge(edge) }"
-            >[{{ (edge.source as NodeDatum).id }},{{
-              (edge.target as NodeDatum).id
+            >[{{
+              isShowingIndex
+                ? (edge.source as NodeDatum).index
+                : (edge.source as NodeDatum).id
+            }},{{
+              isShowingIndex
+                ? (edge.target as NodeDatum).index
+                : (edge.target as NodeDatum).id
             }}]</code
           >
           <code v-if="i !== sortedEdges.length - 1">,</code>
@@ -188,6 +202,8 @@ const isHighlightedEdge = (edge: EdgeDatum) => {
       hoverEdgeTargetNodeIndex === sourceNodeIndex)
   )
 }
+
+const isShowingIndex = ref(true)
 </script>
 
 <style scoped></style>

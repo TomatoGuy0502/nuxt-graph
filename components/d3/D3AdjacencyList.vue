@@ -9,7 +9,7 @@
     >
       <pre
         class="flex justify-center w-[22px] border-transparent border-r-[1px]"
-        >{{ nodeIds[sourceIndex] }}</pre
+        >{{ isShowingIndex ? sourceIndex : nodeIds[sourceIndex] }}</pre
       >
       [<template v-for="(neighborIndex, j) in row" :key="neighborIndex">
         <code
@@ -20,7 +20,7 @@
               neighborIndex
             ),
           }"
-          >{{ nodeIds[neighborIndex] }}</code
+          >{{ isShowingIndex ? neighborIndex : nodeIds[neighborIndex] }}</code
         >
         <code v-if="j !== row.length - 1">,</code></template
       >]
@@ -39,6 +39,7 @@ interface Props {
   hoverEdge: EdgeDatum | null
   nodeIds: number[]
   isDirected: boolean
+  isShowingIndex: boolean
 }
 const props = defineProps<Props>()
 

@@ -546,9 +546,9 @@ function useGraphProperties({
     const numEdges = data.edges.length
     const isForest = !hasCycle
     const isTree = isForest && numEdges === numNodes - 1
-    // FIXME: Complete graph for directed graph
-    const isComplete =
-      numEdges === (numNodes * (numNodes - 1)) / (isDirected.value ? 1 : 2)
+    const isComplete = isDirected.value
+      ? numEdges === numNodes * (numNodes - 1)
+      : adjacencyList.value.flat().length === numNodes * (numNodes - 1)
 
     return {
       hasCycle,

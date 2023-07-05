@@ -20,33 +20,33 @@
       <div class="w-[10px]"></div>
     </li>
     <li
-      v-for="(row, i) in adjacencyMatrix"
-      :key="i"
+      v-for="(row, sourceIndex) in adjacencyMatrix"
+      :key="sourceIndex"
       class="flex rounded transition w-fit"
-      :class="{ 'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === i }"
+      :class="{ 'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === sourceIndex }"
     >
       <div class="sticky left-0 bg-base-300">
         <span
           class="flex justify-center w-[22px] border-r-[1px] rounded-l transition"
-          :class="{'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === i}"
+          :class="{'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === sourceIndex}"
         >
-          {{ isShowingIndex ? i : nodeIds[i] }}
+          {{ isShowingIndex ? sourceIndex : nodeIds[sourceIndex] }}
         </span>
       </div>
       <code class="w-[10px]">[</code>
-      <template v-for="(n, j) in row" :key="j">
+      <template v-for="(isConnected, targetIndex) in row" :key="targetIndex">
         <code
           class="flex justify-center items-center transition w-[22px] h-[24px]"
           :class="{
-            'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === j,
-            'bg-gray-700 rounded border': isHighlightedEdge(i, j),
-            'rounded-b': i === row.length - 1,
-            'text-base-content/20': i === j,
+            'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === targetIndex,
+            'bg-gray-700 rounded border': isHighlightedEdge(sourceIndex, targetIndex),
+            'rounded-b': sourceIndex === row.length - 1,
+            'text-base-content/20': sourceIndex === targetIndex,
           }"
-          :data-index="`${i},${j}`"
-          >{{ n }}</code
+          :data-index="`${sourceIndex},${targetIndex}`"
+          >{{ isConnected }}</code
         >
-        <code v-if="j !== row.length - 1" class="w-[10px]">,</code>
+        <code v-if="targetIndex !== row.length - 1" class="w-[10px]">,</code>
       </template>
       <code class="w-[10px] pr-1">]</code>
     </li>

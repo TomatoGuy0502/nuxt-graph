@@ -1,68 +1,71 @@
 <template>
-  <div class="grid grid-cols-[auto_1fr] gap-4 p-4 h-full overflow-y-auto">
-    <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg">
+  <NuxtLayout name="basic">
+    <template #content>
       <ContentDoc
         class="prose prose-sm xl:prose-base"
         path="basic/vertex-and-edge"
       />
-    </div>
-    <D3Svg
-      ref="svg"
-      :has-mouse-down-node="!!mousedownNode"
-      :draw-edge-cords="drawEdgeCords"
-      :on-clear-data="clearData"
-      :on-svg-mousedown="addNode"
-      :on-svg-mousemove="updateDrawEdge"
-      :on-svg-mouseup="hideDrawEdge"
-      :on-svg-mouseleave="hideDrawEdge"
-      :is-draggable="true"
-    >
-      <template #info>
-        <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
-          <li class="font-bold">
-            Order (# of vertices):
-            <code class="font-normal">{{ data.nodes.length }}</code>
-          </li>
-          <li class="font-bold">
-            Size (# of edges):
-            <code class="font-normal">{{ data.edges.length }}</code>
-          </li>
-        </ul>
-      </template>
-      <template #edges>
-        <line
-          v-for="edge in data.edges"
-          :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-          class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
-          :x1="(edge.source as NodeDatum).x"
-          :y1="(edge.source as NodeDatum).y"
-          :x2="(edge.target as NodeDatum).x"
-          :y2="(edge.target as NodeDatum).y"
-          @contextmenu.prevent="removeEdge($event, edge)"
-        ></line>
-      </template>
-      <template #nodes>
-        <g v-for="node in data.nodes" :key="node.id" class="node">
-          <circle
-            class="cursor-pointer hover:brightness-75"
-            :style="{ fill: colors[node.id % 10] }"
-            :cx="node.x"
-            :cy="node.y"
-            r="10"
-            @contextmenu.prevent="removeNode($event, node)"
-            @mousedown.exact="beginDrawEdge($event, node)"
-            @mouseup.exact="endDrawEdge($event, node)"
-            @mouseenter="highlightNode($event, node)"
-            @mouseleave="unhighlightNode()"
-          >
-          </circle>
-          <!-- <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
-              {{ node.id }}
-            </text> -->
-        </g>
-      </template>
-    </D3Svg>
-  </div>
+    </template>
+    <template #svg>
+      <D3Svg
+        ref="svg"
+        class="flex-1"
+        :has-mouse-down-node="!!mousedownNode"
+        :draw-edge-cords="drawEdgeCords"
+        :on-clear-data="clearData"
+        :on-svg-mousedown="addNode"
+        :on-svg-mousemove="updateDrawEdge"
+        :on-svg-mouseup="hideDrawEdge"
+        :on-svg-mouseleave="hideDrawEdge"
+        :is-draggable="true"
+      >
+        <template #info>
+          <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+            <li class="font-bold">
+              Order (# of vertices):
+              <code class="font-normal">{{ data.nodes.length }}</code>
+            </li>
+            <li class="font-bold">
+              Size (# of edges):
+              <code class="font-normal">{{ data.edges.length }}</code>
+            </li>
+          </ul>
+        </template>
+        <template #edges>
+          <line
+            v-for="edge in data.edges"
+            :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
+            class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
+            :x1="(edge.source as NodeDatum).x"
+            :y1="(edge.source as NodeDatum).y"
+            :x2="(edge.target as NodeDatum).x"
+            :y2="(edge.target as NodeDatum).y"
+            @contextmenu.prevent="removeEdge($event, edge)"
+          ></line>
+        </template>
+        <template #nodes>
+          <g v-for="node in data.nodes" :key="node.id" class="node">
+            <circle
+              class="cursor-pointer hover:brightness-75"
+              :style="{ fill: colors[node.id % 10] }"
+              :cx="node.x"
+              :cy="node.y"
+              r="10"
+              @contextmenu.prevent="removeNode($event, node)"
+              @mousedown.exact="beginDrawEdge($event, node)"
+              @mouseup.exact="endDrawEdge($event, node)"
+              @mouseenter="highlightNode($event, node)"
+              @mouseleave="unhighlightNode()"
+            >
+            </circle>
+            <!-- <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
+                {{ node.id }}
+              </text> -->
+          </g>
+        </template>
+      </D3Svg>
+    </template>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">

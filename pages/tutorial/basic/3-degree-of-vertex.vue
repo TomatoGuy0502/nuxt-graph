@@ -1,84 +1,87 @@
 <template>
-  <div class="grid grid-cols-[auto_1fr] gap-4 p-4 h-full overflow-y-auto">
-    <div class="h-full overflow-y-auto p-4 bg-base-200 rounded-lg">
+  <NuxtLayout name="basic">
+    <template #content>
       <ContentDoc
         class="prose prose-sm xl:prose-base"
         path="basic/degree-of-vertex"
       />
-    </div>
-    <D3Svg
-      ref="svg"
-      v-model:is-directed="isDirected"
-      :can-toggle-directed="true"
-      :has-mouse-down-node="!!mousedownNode"
-      :draw-edge-cords="drawEdgeCords"
-      :on-clear-data="clearData"
-      :on-svg-mousedown="addNode"
-      :on-svg-mousemove="updateDrawEdge"
-      :on-svg-mouseup="hideDrawEdge"
-      :on-svg-mouseleave="hideDrawEdge"
-      :is-draggable="true"
-      :hover-node="hoverNode"
-    >
-      <template #info>
-        <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
-          <li class="font-bold">
-            Complete:
-            <code class="font-normal">{{ graphProperties.isComplete }}</code>
-          </li>
-        </ul>
-      </template>
-      <template #edges>
-        <line
-          v-for="(edge, edgeIndex) in data.edges"
-          :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-          class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
-          :class="{ 'is-directed': isDirected }"
-          :x1="edgesCords[edgeIndex].x1"
-          :y1="edgesCords[edgeIndex].y1"
-          :x2="edgesCords[edgeIndex].x2"
-          :y2="edgesCords[edgeIndex].y2"
-          @contextmenu.prevent="removeEdge($event, edge)"
-        ></line>
-      </template>
-      <template #nodes>
-        <g v-for="node in data.nodes" :key="node.id" class="node">
-          <circle
-            class="cursor-pointer hover:brightness-75"
-            :style="{ fill: colors[node.id % 10] }"
-            :cx="node.x"
-            :cy="node.y"
-            r="10"
-            @contextmenu.prevent="removeNode($event, node)"
-            @mousedown.exact="beginDrawEdge($event, node)"
-            @mouseup.exact="endDrawEdge($event, node)"
-            @mouseenter="highlightNode($event, node)"
-            @mouseleave="unhighlightNode()"
-          >
-          </circle>
-          <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
-            {{ node.degree }}
-          </text>
-        </g>
-      </template>
-      <template #nodeTooltip="{ hoverNodeInfo }">
-        <div class="flex flex-col">
-          <p v-show="isDirected">
-            <span class="font-bold">In-Degree</span>:
-            {{ hoverNodeInfo?.inDegree ?? 0 }}
-          </p>
-          <p v-show="isDirected">
-            <span class="font-bold">Out-Degree</span>:
-            {{ hoverNodeInfo?.outDegree ?? 0 }}
-          </p>
-          <p v-show="!isDirected">
-            <span class="font-bold">Degree</span>:
-            {{ hoverNodeInfo?.degree ?? 0 }}
-          </p>
-        </div>
-      </template>
-    </D3Svg>
-  </div>
+    </template>
+    <template #svg>
+      <D3Svg
+        ref="svg"
+        v-model:is-directed="isDirected"
+        class="flex-1"
+        :can-toggle-directed="true"
+        :has-mouse-down-node="!!mousedownNode"
+        :draw-edge-cords="drawEdgeCords"
+        :on-clear-data="clearData"
+        :on-svg-mousedown="addNode"
+        :on-svg-mousemove="updateDrawEdge"
+        :on-svg-mouseup="hideDrawEdge"
+        :on-svg-mouseleave="hideDrawEdge"
+        :is-draggable="true"
+        :hover-node="hoverNode"
+      >
+        <template #info>
+          <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+            <li class="font-bold">
+              Complete:
+              <code class="font-normal">{{ graphProperties.isComplete }}</code>
+            </li>
+          </ul>
+        </template>
+        <template #edges>
+          <line
+            v-for="(edge, edgeIndex) in data.edges"
+            :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
+            class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
+            :class="{ 'is-directed': isDirected }"
+            :x1="edgesCords[edgeIndex].x1"
+            :y1="edgesCords[edgeIndex].y1"
+            :x2="edgesCords[edgeIndex].x2"
+            :y2="edgesCords[edgeIndex].y2"
+            @contextmenu.prevent="removeEdge($event, edge)"
+          ></line>
+        </template>
+        <template #nodes>
+          <g v-for="node in data.nodes" :key="node.id" class="node">
+            <circle
+              class="cursor-pointer hover:brightness-75"
+              :style="{ fill: colors[node.id % 10] }"
+              :cx="node.x"
+              :cy="node.y"
+              r="10"
+              @contextmenu.prevent="removeNode($event, node)"
+              @mousedown.exact="beginDrawEdge($event, node)"
+              @mouseup.exact="endDrawEdge($event, node)"
+              @mouseenter="highlightNode($event, node)"
+              @mouseleave="unhighlightNode()"
+            >
+            </circle>
+            <text class="select-none" dx="12" dy="6" :x="node.x" :y="node.y">
+              {{ node.degree }}
+            </text>
+          </g>
+        </template>
+        <template #nodeTooltip="{ hoverNodeInfo }">
+          <div class="flex flex-col">
+            <p v-show="isDirected">
+              <span class="font-bold">In-Degree</span>:
+              {{ hoverNodeInfo?.inDegree ?? 0 }}
+            </p>
+            <p v-show="isDirected">
+              <span class="font-bold">Out-Degree</span>:
+              {{ hoverNodeInfo?.outDegree ?? 0 }}
+            </p>
+            <p v-show="!isDirected">
+              <span class="font-bold">Degree</span>:
+              {{ hoverNodeInfo?.degree ?? 0 }}
+            </p>
+          </div>
+        </template>
+      </D3Svg>
+    </template>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">

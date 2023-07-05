@@ -3,7 +3,7 @@
     <template #content>
       <ContentDoc
         class="prose prose-sm xl:prose-base"
-        path="basic/weighted-graph"
+        path="basic/connected-component"
       />
     </template>
     <template #svg>
@@ -19,50 +19,45 @@
         :on-svg-mouseleave="hideDrawEdge"
         :is-draggable="true"
       >
+        <template #info>
+          <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+            <li class="font-bold">
+              Is Connected:
+              <code class="font-normal">{{
+                graphProperties.connectedComponents.length === 1
+              }}</code>
+            </li>
+            <li class="font-bold">
+              Connected Components:
+              <code class="font-normal">{{
+                graphProperties.connectedComponents.length
+              }}</code>
+            </li>
+          </ul>
+        </template>
         <template #edges>
-          <g
+          <line
             v-for="edge in data.edges"
             :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-          >
-            <line
-              class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
-              :x1="(edge.source as NodeDatum).x"
-              :y1="(edge.source as NodeDatum).y"
-              :x2="(edge.target as NodeDatum).x"
-              :y2="(edge.target as NodeDatum).y"
-              @contextmenu.prevent="removeEdge($event, edge)"
-            ></line>
-            <rect
-              class="pointer-events-none fill-gray-300"
-              width="20"
-              height="20"
-              rx="2"
-              :x="(((edge.source as NodeDatum).x as number) + ((edge.target as NodeDatum).x as number)) / 2 - 10"
-              :y="(((edge.source as NodeDatum).y as number) + ((edge.target as NodeDatum).y as number)) / 2 - 10"
-            />
-            <text
-              class="pointer-events-none select-none font-mono"
-              dx="-4.5"
-              dy="0"
-              alignment-baseline="central"
-              :x="(((edge.source as NodeDatum).x as number) + ((edge.target as NodeDatum).x as number)) / 2"
-              :y="(((edge.source as NodeDatum).y as number) + ((edge.target as NodeDatum).y as number)) / 2"
-            >
-              {{ edge.weight }}
-            </text>
-          </g>
+            class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
+            :x1="(edge.source as NodeDatum).x"
+            :y1="(edge.source as NodeDatum).y"
+            :x2="(edge.target as NodeDatum).x"
+            :y2="(edge.target as NodeDatum).y"
+            @contextmenu.prevent="removeEdge($event, edge)"
+          ></line>
         </template>
         <template #nodes>
-          <g v-for="node in data.nodes" :key="node.id" class="node">
+          <g v-for="(node, i) in data.nodes" :key="node.id" class="node">
             <circle
               class="cursor-pointer hover:brightness-75"
-              :style="{ fill: colors[node.id % 10] }"
+              :style="{ fill: colors[nodesComponentColorIndex[i] % 10] }"
               :cx="node.x"
               :cy="node.y"
               r="10"
               @contextmenu.prevent="removeNode($event, node)"
               @mousedown.exact="beginDrawEdge($event, node)"
-              @mouseup.exact="endDrawEdgeWithRandomWeight($event, node)"
+              @mouseup.exact="endDrawEdge($event, node)"
               @mouseenter="highlightNode($event, node)"
               @mouseleave="unhighlightNode()"
             >
@@ -81,16 +76,16 @@
 import type { NodeDatum, GraphData } from '@/composables/useD3'
 
 definePageMeta({
-  name: 'Weighted Graph',
-  path: '/tutorial/basic/weighted-graph',
-  pageOrder: 5,
+  name: 'Connected Component',
+  path: '/tutorial/basic/connected-component',
+  pageOrder: 4,
 })
 
 const initData: GraphData = {
   nodes: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
   edges: [
-    { source: 0, target: 1, weight: 3 },
-    { source: 0, target: 2, weight: 3 },
+    { source: 0, target: 1 },
+    { source: 0, target: 2 },
   ],
 }
 
@@ -106,13 +101,15 @@ const {
   drawEdgeCords,
   beginDrawEdge,
   updateDrawEdge,
-  endDrawEdgeWithRandomWeight,
+  endDrawEdge,
   hideDrawEdge,
   removeEdge,
   data,
   colors,
+  graphProperties,
+  nodesComponentColorIndex,
   enableDrag,
-} = useD3(initData, svg, { linkDistance: 70, chargeStrength: -200 })
+} = useD3(initData, svg)
 
 enableDrag()
 </script>

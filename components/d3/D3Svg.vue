@@ -12,10 +12,10 @@
     </div>
 
     <!-- Tooltip for nodes -->
-    <div class="absolute w-full h-full select-none pointer-events-none">
+    <div class="absolute inset-0 select-none pointer-events-none">
       <div
         class="absolute rounded p-1 py-0.5 bg-base-300 transition text-sm"
-        :class="{ 'opacity-0 select-none pointer-events-none': !hoverNode }"
+        :class="{ 'opacity-0': !hoverNode }"
         :style="{
           top: `${(lastHoverNode?.y ?? 0) + 10}px`,
           left: `${(lastHoverNode?.x ?? 0) + 10}px`,

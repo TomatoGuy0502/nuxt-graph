@@ -1,8 +1,7 @@
+import { GraphData } from '~/composables/useD3'
+
 export function generateRandomGraphData(nodeCount: number, edgeCount: number) {
-  const initData: {
-    nodes: { id: number }[]
-    edges: { source: number; target: number }[]
-  } = {
+  const newData: GraphData = {
     nodes: [...Array(nodeCount)].map((_, i) => ({ id: i })),
     edges: [],
   }
@@ -23,17 +22,16 @@ export function generateRandomGraphData(nodeCount: number, edgeCount: number) {
       edgeCombinations.has(edgeCombination2)
     )
       continue
-    initData.edges.push({ source, target })
+    newData.edges.push({ source, target })
     edgeCombinations.add(edgeCombination1)
     edgeCount--
   }
 
-  // 隨機取得索引
   function getRandomIndex(max: number) {
     return Math.floor(Math.random() * max)
   }
 
-  return initData
+  return newData
 }
 
 export function almostEqual(a: number, b: number, epsilon = 0.01) {

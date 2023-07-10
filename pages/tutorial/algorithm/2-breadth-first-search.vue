@@ -126,7 +126,7 @@
         @play="play"
         @go-next-step="goNextStep"
         @go-prev-step="goPrevStep"
-        @generate-random-graph="generateRandomGraph(20, 20)"
+        @generate-random-graph="onGenerateRandomGraph(10, 12)"
       />
       <p>
         queue:
@@ -152,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import type { NodeDatum, EdgeDatum, GraphData } from '@/composables/useD3'
+import type { NodeDatum, GraphData } from '@/composables/useD3'
 
 definePageMeta({
   name: 'Breadth-First Search',
@@ -178,7 +178,7 @@ const isDirected = ref(false)
 
 const {
   clearData,
-  updateSimulation,
+  generateRandomGraph,
   addNode,
   removeNode,
   highlightNode,
@@ -203,6 +203,7 @@ const {
 
 enableDrag()
 
+/** Traversal start node index, -1 when no node */
 const traversalStartNodeIndex = ref<number>(0)
 watch(
   () => data.nodes.length,
@@ -268,45 +269,15 @@ const {
   }
 })
 
-const getNodeColor = (nodeIndex: number) => {
-  if (visitedNodeIndices.value.has(nodeIndex)) {
-    return colors[1]
-  } else {
-    return colors[0]
-  }
-}
+const { getNodeColor, getEdgeColor } = useAlgorithmColors({
+  visitedNodeIndices,
+  colors,
+  isDirected,
+  walk,
+})
 
-const getEdgeColor = (edge: EdgeDatum) => {
-  const classString = isDirected.value ? '[marker-end:url(#arrowGray300)]' : ''
-  const sourceIndex = (edge.source as NodeDatum).index!
-  const targetIndex = (edge.target as NodeDatum).index!
-  if (
-    visitedNodeIndices.value.has(sourceIndex) &&
-    visitedNodeIndices.value.has(targetIndex) &&
-    (walk.value.includes(`${sourceIndex},${targetIndex}`) ||
-      (!isDirected.value &&
-        walk.value.includes(`${targetIndex},${sourceIndex}`)))
-  ) {
-    // Visited edge
-    return `${classString} brightness-0`
-  } else {
-    // Unvisited edge
-    return `${classString} hover:brightness-75`
-  }
-}
-
-const generateRandomGraph = async (nodeCount = 6, edgeCount = 8) => {
-  data.nodes.length = 0
-  data.edges.length = 0
-  await nextTick()
-  const newData = generateRandomGraphData(nodeCount, edgeCount) as GraphData
-  const oldNumNodes = data.nodes.length
-  const oldNumEdges = data.edges.length
-  data.nodes = newData.nodes
-  data.edges = newData.edges
-  if (oldNumNodes === nodeCount && oldNumEdges === edgeCount) {
-    updateSimulation()
-  }
+const onGenerateRandomGraph = (nodeCount = 6, edgeCount = 8) => {
+  generateRandomGraph(nodeCount, edgeCount)
   traversalStartNodeIndex.value = 0
 }
 </script>

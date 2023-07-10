@@ -57,6 +57,12 @@ export const useD3 = (
     }
   }
 
+  const generateRandomGraph = (nodeCount = 6, edgeCount = 8) => {
+    const newData = generateRandomGraphData(nodeCount, edgeCount)
+    data.nodes = newData.nodes
+    data.edges = newData.edges
+  }
+
   const colors = d3.schemeTableau10
 
   const { simulation, initSimulation, updateSimulation } = useD3Simulation({
@@ -77,6 +83,7 @@ export const useD3 = (
 
   return {
     clearData,
+    generateRandomGraph,
     initSimulation,
     updateSimulation,
     ...useD3EditNode({ data }),
@@ -142,7 +149,15 @@ function useD3Simulation({ data }: { data: GraphData }) {
       updateSimulation()
     })
 
-    watch([() => data.nodes.length, () => data.edges.length], updateSimulation)
+    watch(
+      [
+        () => data.nodes,
+        () => data.nodes.length,
+        () => data.edges,
+        () => data.edges.length,
+      ],
+      updateSimulation
+    )
 
     watch([svgWidth, svgHeight], onResize)
     function onResize() {
@@ -226,7 +241,7 @@ function useD3Drag({
         .call(drag)
     })
     watch(
-      () => data.nodes.length,
+      [() => data.nodes.length, () => data.nodes],
       () => {
         d3.selectAll<SVGCircleElement, NodeDatum>('.node circle')
           .data(data.nodes)

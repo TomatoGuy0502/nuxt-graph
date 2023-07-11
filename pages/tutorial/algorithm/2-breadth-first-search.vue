@@ -178,7 +178,7 @@ const isDirected = ref(false)
 
 const {
   clearData,
-  generateRandomGraph,
+  generateRandomData,
   addNode,
   removeNode,
   highlightNode,
@@ -277,7 +277,7 @@ const { getNodeColor, getEdgeColor } = useAlgorithmColors({
 })
 
 const onGenerateRandomGraph = (nodeCount = 6, edgeCount = 8) => {
-  generateRandomGraph(nodeCount, edgeCount)
+  generateRandomData(nodeCount, edgeCount)
   traversalStartNodeIndex.value = 0
 }
 </script>

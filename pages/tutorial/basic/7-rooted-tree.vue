@@ -167,7 +167,7 @@ const { isCtrlOrCmdPressed } = useCtrl()
 const { isMac } = usePlatform()
 
 const resetData = () => {
-  clearData()
+  clearData({ keepRoot: true })
 }
 
 const removeEdgeAndSubTree = (

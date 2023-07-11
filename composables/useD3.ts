@@ -2,7 +2,6 @@ import { ref, reactive, onMounted, watch, computed } from 'vue'
 import * as d3 from 'd3'
 import { almostEqual } from '@/utils'
 
-// TODO: Split use* into multiple files
 export interface NodeDatum extends d3.SimulationNodeDatum {
   id: number
   depth?: number
@@ -42,28 +41,9 @@ export const useD3 = (
   simulationConfig: SimulationConfig = {},
   isDirected = ref(false)
 ) => {
-  const data = reactive(initData) as typeof initData
-  const { width: svgWidth } = useElementSize(svgRef)
-  function clearData() {
-    data.nodes.length = 0
-    data.edges.length = 0
-    if (simulationConfig.isRootedTree) {
-      data.nodes.push({
-        id: 0,
-        fx: svgWidth.value / 2,
-        fy: 20,
-        depth: 0,
-      })
-    }
-  }
-
-  const generateRandomGraph = (nodeCount = 6, edgeCount = 8) => {
-    const newData = generateRandomGraphData(nodeCount, edgeCount)
-    data.nodes = newData.nodes
-    data.edges = newData.edges
-  }
-
   const colors = d3.schemeTableau10
+
+  const { data, clearData, generateRandomData } = useData(initData)
 
   const { simulation, initSimulation, updateSimulation } = useD3Simulation({
     data,
@@ -83,7 +63,7 @@ export const useD3 = (
 
   return {
     clearData,
-    generateRandomGraph,
+    generateRandomData,
     initSimulation,
     updateSimulation,
     ...useD3EditNode({ data }),
@@ -97,6 +77,23 @@ export const useD3 = (
     graphProperties,
     nodesComponentColorIndex,
   }
+}
+
+function useData(initData: GraphData) {
+  const data: GraphData = reactive(initData)
+
+  function clearData({ keepRoot } = { keepRoot: false }) {
+    data.nodes.length = keepRoot ? 1 : 0
+    data.edges.length = 0
+  }
+
+  const generateRandomData = (nodeCount = 6, edgeCount = 8) => {
+    const { nodes, edges } = generateRandomGraphData(nodeCount, edgeCount)
+    data.nodes = nodes
+    data.edges = edges
+  }
+
+  return { data, clearData, generateRandomData }
 }
 
 function useD3Simulation({ data }: { data: GraphData }) {
@@ -139,15 +136,6 @@ function useD3Simulation({ data }: { data: GraphData }) {
       .force('x', forceX)
       .force('y', forceY)
       .stop()
-
-    onMounted(() => {
-      forceX.x(svgWidth.value * forceXRatioOfWidth)
-      forceY.y(svgHeight.value * forceYRatioOfHeight)
-      forceManyBody.distanceMax(
-        Math.min(svgWidth.value, svgHeight.value) * chargeDistanceMaxRatio
-      )
-      updateSimulation()
-    })
 
     watch(
       [

@@ -5,7 +5,9 @@
     <D3Svg
       ref="svg"
       v-model:is-directed="isDirected"
+      v-model:is-showing-index="isShowingIndex"
       :can-toggle-directed="true"
+      :can-toggle-showing-index="true"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
       :on-clear-data="clearData"
@@ -122,6 +124,7 @@ const initData: GraphData = {
 
 const svg = ref<HTMLDivElement | null>(null)
 const isDirected = ref(false)
+const isShowingIndex = ref(false)
 
 const {
   clearData,

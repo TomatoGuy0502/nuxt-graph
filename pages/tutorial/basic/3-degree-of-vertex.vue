@@ -30,6 +30,9 @@
             </li>
           </ul>
         </template>
+        <template #hint-start>
+          <li><b>Hover</b> on vertex to see the details</li>
+        </template>
         <template #edges>
           <line
             v-for="(edge, edgeIndex) in data.edges"

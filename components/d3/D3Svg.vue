@@ -50,7 +50,10 @@
           class="toggle toggle-success"
         />
       </label>
-      <button class="btn btn-sm" @click="onClearData">Clear</button>
+      <slot name="extra-buttons"></slot>
+      <button class="btn btn-sm" @click="onClearData">
+        <slot name="clear-button">Clear</slot>
+      </button>
       <div class="dropdown dropdown-hover dropdown-end">
         <D3SvgDropdownButton />
         <div
@@ -62,7 +65,7 @@
             <ul class="list-disc list-inside">
               <slot name="hint-start"></slot>
               <slot name="hint">
-                <li><b>Hover</b> on vertex to see the details</li>
+                <!-- <li><b>Hover</b> on vertex to see the details</li> -->
                 <li><b>Left click</b> on empty space to add vertex</li>
                 <li><b>Drag</b> from one vertex to another to add edge</li>
                 <li><b>Right click</b> on vertex/edge to delete it</li>
@@ -158,6 +161,7 @@
 <script setup lang="ts">
 import type { NodeDatum } from '@/composables/useD3'
 
+// TODO: Change on- to emit()
 const props = defineProps({
   canToggleDirected: {
     type: Boolean,

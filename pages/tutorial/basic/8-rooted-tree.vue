@@ -29,7 +29,6 @@
           </ul>
         </template>
         <template #hint>
-          <li>Root vertex can't be deleted</li>
           <li><b>Hover</b> on vertex to see the details</li>
           <li><b>Left click</b> on vertex to add a child</li>
           <li><b>Right click</b> on vertex/edge to delete it</li>

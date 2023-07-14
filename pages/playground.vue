@@ -88,6 +88,7 @@
         :hover-edge="hoverEdge"
         :node-ids="data.nodes.map((node) => node.id)"
         :is-directed="isDirected"
+        :is-showing-index="isShowingIndex"
         class="max-h-[264px] max-w-[360px]"
       />
     </div>
@@ -101,6 +102,7 @@
         :adjacency-list="adjacencyList"
         :node-ids="data.nodes.map((node) => node.id)"
         :is-directed="isDirected"
+        :is-showing-index="isShowingIndex"
         class="max-h-[264px] max-w-[360px]"
       />
     </div>

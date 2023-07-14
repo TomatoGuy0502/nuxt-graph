@@ -117,6 +117,9 @@ const navbarHeading = computed(() => {
       | (typeof tutorialSectionNames)[number]
     return 'Tutorial - ' + sectionName[0].toUpperCase() + sectionName.slice(1)
   }
+  if (route.name === 'index') {
+    return 'Welcome to Graph Theory'
+  }
   return route.name
 })
 </script>

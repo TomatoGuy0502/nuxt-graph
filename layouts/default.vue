@@ -12,9 +12,12 @@
         class="flex h-screen w-80 flex-col gap-4 border-r-2 border-base-300 bg-base-200 p-4 text-base-content"
       >
         <NuxtLink
-          class="btn-ghost btn hidden text-xl normal-case lg:inline-flex"
+          class="btn-ghost btn hidden text-xl font-bold normal-case lg:inline-flex"
           to="/"
-          >Graph Theory</NuxtLink
+          ><span
+            class="bg-gradient-to-r from-success to-info bg-clip-text text-transparent"
+            >Graph Theory</span
+          ></NuxtLink
         >
         <ul class="menu gap-2 p-0">
           <li>

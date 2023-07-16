@@ -2,7 +2,7 @@
   <NuxtLayout name="basic">
     <template #content>
       <ContentDoc
-        class="prose prose-sm xl:prose-base"
+        class="prose-sm prose xl:prose-base"
         path="basic/weighted-graph"
       />
     </template>
@@ -22,7 +22,9 @@
         <template #edges>
           <g
             v-for="edge in data.edges"
-            :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
+            :key="`${(edge.source as NodeDatum).id}-${
+              (edge.target as NodeDatum).id
+            }`"
           >
             <line
               class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
@@ -37,16 +39,34 @@
               width="20"
               height="20"
               rx="2"
-              :x="(((edge.source as NodeDatum).x as number) + ((edge.target as NodeDatum).x as number)) / 2 - 10"
-              :y="(((edge.source as NodeDatum).y as number) + ((edge.target as NodeDatum).y as number)) / 2 - 10"
+              :x="
+                (((edge.source as NodeDatum).x as number) +
+                  ((edge.target as NodeDatum).x as number)) /
+                  2 -
+                10
+              "
+              :y="
+                (((edge.source as NodeDatum).y as number) +
+                  ((edge.target as NodeDatum).y as number)) /
+                  2 -
+                10
+              "
             />
             <text
               class="pointer-events-none select-none font-mono"
               dx="-4.5"
               dy="0"
               alignment-baseline="central"
-              :x="(((edge.source as NodeDatum).x as number) + ((edge.target as NodeDatum).x as number)) / 2"
-              :y="(((edge.source as NodeDatum).y as number) + ((edge.target as NodeDatum).y as number)) / 2"
+              :x="
+                (((edge.source as NodeDatum).x as number) +
+                  ((edge.target as NodeDatum).x as number)) /
+                2
+              "
+              :y="
+                (((edge.source as NodeDatum).y as number) +
+                  ((edge.target as NodeDatum).y as number)) /
+                2
+              "
             >
               {{ edge.weight }}
             </text>

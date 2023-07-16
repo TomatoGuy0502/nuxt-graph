@@ -2,7 +2,7 @@
   <NuxtLayout name="basic">
     <template #content>
       <ContentDoc
-        class="prose prose-sm xl:prose-base w-full"
+        class="prose-sm prose w-full xl:prose-base"
         path="basic/rooted-tree"
       />
     </template>
@@ -17,7 +17,7 @@
         :hover-node="hoverNode"
       >
         <template #info>
-          <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+          <ul class="flex flex-col gap-2 rounded-lg bg-base-100 p-4">
             <li class="font-bold">
               Tree height:
               <code class="font-normal">{{ treeHeight }}</code>
@@ -41,7 +41,9 @@
         <template #edges>
           <line
             v-for="edge in data.edges"
-            :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
+            :key="`${(edge.source as NodeDatum).id}-${
+              (edge.target as NodeDatum).id
+            }`"
             class="stroke-black stroke-[4] hover:cursor-pointer hover:stroke-red-400"
             :x1="(edge.source as NodeDatum).x"
             :y1="(edge.source as NodeDatum).y"

@@ -2,7 +2,7 @@
   <NuxtLayout name="basic">
     <template #content>
       <ContentDoc
-        class="prose prose-sm xl:prose-base"
+        class="prose-sm prose xl:prose-base"
         path="basic/vertex-and-edge"
       />
     </template>
@@ -20,7 +20,7 @@
         :is-draggable="true"
       >
         <template #info>
-          <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
+          <ul class="flex flex-col gap-2 rounded-lg bg-base-100 p-4">
             <li class="font-bold">
               Order (# of vertices):
               <code class="font-normal">{{ data.nodes.length }}</code>
@@ -34,7 +34,9 @@
         <template #edges>
           <line
             v-for="edge in data.edges"
-            :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
+            :key="`${(edge.source as NodeDatum).id}-${
+              (edge.target as NodeDatum).id
+            }`"
             class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
             :x1="(edge.source as NodeDatum).x"
             :y1="(edge.source as NodeDatum).y"

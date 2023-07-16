@@ -1,10 +1,10 @@
 <template>
   <NuxtLayout name="algorithm">
     <template #content>
-      <div class="tabs px-4 pt-2 bg-base-300">
-        <div class="tab tab-lifted hidden"></div>
+      <div class="tabs bg-base-300 px-4 pt-2">
+        <div class="tab-lifted tab hidden"></div>
         <button
-          class="tab tab-lifted font-medium"
+          class="tab-lifted tab font-medium"
           :class="[
             activeTab === 0
               ? 'tab-active [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))] [--tab-color:hsl(var(--bc))]'
@@ -15,7 +15,7 @@
           Introduction
         </button>
         <button
-          class="tab tab-lifted font-medium [--tab-border-color:transparent]"
+          class="tab-lifted tab font-medium [--tab-border-color:transparent]"
           :class="[
             activeTab === 1
               ? 'tab-active [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))] [--tab-color:hsl(var(--bc))]'
@@ -25,18 +25,18 @@
         >
           Code Example
         </button>
-        <div class="tab tab-lifted hidden"></div>
+        <div class="tab-lifted tab hidden"></div>
       </div>
       <div class="overflow-y-auto p-4">
         <div v-show="activeTab === 0">
           <ContentDoc
-            class="prose prose-sm xl:prose-base max-w-none"
+            class="prose-sm prose max-w-none xl:prose-base"
             path="algorithm/depth-first-search"
           />
         </div>
         <div v-show="activeTab === 1">
           <ContentDoc
-            class="prose prose-sm xl:prose-base max-w-none"
+            class="prose-sm prose max-w-none xl:prose-base"
             path="algorithm/depth-first-search.code"
             :head="false"
           />
@@ -57,7 +57,7 @@
         :on-svg-mouseleave="hideDrawEdge"
         :is-draggable="true"
         :hover-node="hoverNode"
-        class="w-full h-full"
+        class="h-full w-full"
       >
         <template #hint-start>
           <li><b>Hover</b> on vertex to see the details</li>
@@ -65,8 +65,10 @@
         <template #edges>
           <line
             v-for="(edge, edgeIndex) in data.edges"
-            :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
-            class="stroke-[5] cursor-pointer stroke-gray-300"
+            :key="`${(edge.source as NodeDatum).id}-${
+              (edge.target as NodeDatum).id
+            }`"
+            class="cursor-pointer stroke-gray-300 stroke-[5]"
             :class="getEdgeColor(edge)"
             :x1="edgesCords[edgeIndex].x1"
             :y1="edgesCords[edgeIndex].y1"

@@ -2,7 +2,7 @@
   <NuxtLayout name="basic">
     <template #content>
       <ContentDoc
-        class="prose prose-sm xl:prose-base"
+        class="prose-sm prose xl:prose-base"
         path="basic/directed-graph"
       />
     </template>
@@ -23,7 +23,9 @@
         <template #edges>
           <line
             v-for="(edge, edgeIndex) in data.edges"
-            :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
+            :key="`${(edge.source as NodeDatum).id}-${
+              (edge.target as NodeDatum).id
+            }`"
             class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
             :class="{ 'is-directed': isDirected }"
             :x1="edgesCords[edgeIndex].x1"

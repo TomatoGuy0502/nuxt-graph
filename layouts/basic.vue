@@ -1,6 +1,6 @@
 <template>
-  <div class="flex gap-4 p-4 h-full overflow-y-auto">
-    <div class="h-full overflow-y-scroll p-4 bg-base-200 rounded-lg">
+  <div class="flex h-full gap-4 overflow-y-auto p-4">
+    <div class="h-full overflow-y-scroll rounded-lg bg-base-200 p-4">
       <slot name="content"></slot>
     </div>
     <slot name="svg"></slot>

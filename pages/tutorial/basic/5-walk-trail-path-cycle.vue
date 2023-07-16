@@ -2,7 +2,7 @@
   <NuxtLayout name="basic">
     <template #content>
       <ContentDoc
-        class="prose prose-sm xl:prose-base"
+        class="prose-sm prose xl:prose-base"
         path="basic/walk-trail-path-cycle"
       />
     </template>
@@ -20,14 +20,14 @@
         :is-draggable="true"
       >
         <template #extra-buttons>
-          <button class="btn btn-sm" @click="walk.length = 0">
+          <button class="btn-sm btn" @click="walk.length = 0">
             Clear Walk
           </button>
         </template>
         <template #clear-button>Reset</template>
         <template #info>
-          <ul class="flex flex-col gap-2 p-4 rounded-lg bg-base-100">
-            <li class="font-bold max-w-[180px]">
+          <ul class="flex flex-col gap-2 rounded-lg bg-base-100 p-4">
+            <li class="max-w-[180px] font-bold">
               Walk:
               <code v-if="walk.length" class="font-normal">{{
                 walk.join(' → ')
@@ -54,7 +54,9 @@
         <template #edges>
           <line
             v-for="(edge, edgeIndex) in data.edges"
-            :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
+            :key="`${(edge.source as NodeDatum).id}-${
+              (edge.target as NodeDatum).id
+            }`"
             class="stroke-[5] hover:cursor-pointer hover:brightness-75"
             :class="getEdgeColor(edge)"
             :x1="edgesCords[edgeIndex].x1"

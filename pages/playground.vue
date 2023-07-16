@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid grid-cols-[1fr_1fr] grid-rows-[auto_auto_1fr] gap-4 p-4 h-full overflow-y-auto"
+    class="grid h-full grid-cols-[1fr_1fr] grid-rows-[auto_auto_1fr] gap-4 overflow-y-auto p-4"
   >
     <D3Svg
       ref="svg"
@@ -22,7 +22,9 @@
       <template #edges>
         <line
           v-for="(edge, i) in data.edges"
-          :key="`${(edge.source as NodeDatum).id}-${(edge.target as NodeDatum).id}`"
+          :key="`${(edge.source as NodeDatum).id}-${
+            (edge.target as NodeDatum).id
+          }`"
           class="stroke-black stroke-[5] hover:cursor-pointer hover:stroke-red-400"
           :class="{ 'is-directed': isDirected }"
           :x1="edgesCords[i].x1"
@@ -50,7 +52,7 @@
           >
           </circle>
           <text
-            class="select-none pointer-events-none font-mono text-sm"
+            class="pointer-events-none select-none font-mono text-sm"
             style="alignment-baseline: central; text-anchor: middle"
             :x="node.x"
             :y="node.y"
@@ -79,7 +81,7 @@
       </template>
     </D3Svg>
     <div
-      class="flex flex-col gap-2 p-2 rounded-lg bg-base-300 overflow-x-auto w-fit h-fit"
+      class="flex h-fit w-fit flex-col gap-2 overflow-x-auto rounded-lg bg-base-300 p-2"
     >
       <h2 class="font-bold">Adjacency Matrix</h2>
       <D3AdjacencyMatrix
@@ -93,7 +95,7 @@
       />
     </div>
     <div
-      class="flex flex-col gap-2 p-2 rounded-lg bg-base-300 overflow-x-auto w-fit h-fit"
+      class="flex h-fit w-fit flex-col gap-2 overflow-x-auto rounded-lg bg-base-300 p-2"
     >
       <h2 class="font-bold">Adjacency List</h2>
       <D3AdjacencyList

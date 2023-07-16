@@ -1,19 +1,19 @@
 <template>
   <div
-    class="grid grid-cols-[3fr_2fr_auto] grid-rows-[auto_1fr_auto] gap-4 p-4 h-full overflow-y-auto"
+    class="grid h-full grid-cols-[3fr_2fr_auto] grid-rows-[auto_1fr_auto] gap-4 overflow-y-auto p-4"
   >
     <div
-      class="flex flex-col h-full overflow-y-auto col-start-1 col-span-1 row-start-1 row-span-3 bg-base-200 rounded-lg"
+      class="col-span-1 col-start-1 row-span-3 row-start-1 flex h-full flex-col overflow-y-auto rounded-lg bg-base-200"
     >
       <slot name="content" />
     </div>
-    <div class="col-start-2 col-span-1 row-start-1 row-span-2">
+    <div class="col-span-1 col-start-2 row-span-2 row-start-1">
       <slot name="svg"></slot>
     </div>
-    <div class="col-start-3 col-span-1 row-start-1 row-span-1">
+    <div class="col-span-1 col-start-3 row-span-1 row-start-1">
       <slot name="control"></slot>
     </div>
-    <div class="col-start-2 col-span-2 row-start-3 row-span-1">
+    <div class="col-span-2 col-start-2 row-span-1 row-start-3">
       <slot name="result"></slot>
     </div>
   </div>

@@ -23,12 +23,18 @@
       v-for="(row, sourceIndex) in adjacencyMatrix"
       :key="sourceIndex"
       class="flex rounded transition w-fit"
-      :class="{ 'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === sourceIndex }"
+      :class="{
+        'bg-gray-700':
+          (hoverNode as NodeDatum | undefined)?.index === sourceIndex,
+      }"
     >
       <div class="sticky left-0 bg-base-300">
         <span
           class="flex justify-center w-[22px] border-r-[1px] rounded-l transition"
-          :class="{'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === sourceIndex}"
+          :class="{
+            'bg-gray-700':
+              (hoverNode as NodeDatum | undefined)?.index === sourceIndex,
+          }"
         >
           {{ isShowingIndex ? sourceIndex : nodeIds[sourceIndex] }}
         </span>
@@ -38,8 +44,12 @@
         <code
           class="flex justify-center items-center transition w-[22px] h-[24px]"
           :class="{
-            'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === targetIndex,
-            'bg-gray-700 rounded border': isHighlightedEdge(sourceIndex, targetIndex),
+            'bg-gray-700':
+              (hoverNode as NodeDatum | undefined)?.index === targetIndex,
+            'bg-gray-700 rounded border': isHighlightedEdge(
+              sourceIndex,
+              targetIndex
+            ),
             'rounded-b': sourceIndex === row.length - 1,
             'text-base-content/20': sourceIndex === targetIndex,
           }"

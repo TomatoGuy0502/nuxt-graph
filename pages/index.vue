@@ -1,15 +1,15 @@
 <template>
   <div
-    class="relative w-full h-full flex items-center justify-center p-6 sm:p-12"
+    class="relative flex h-full w-full items-center justify-center p-6 sm:p-12"
   >
     <div class="absolute inset-0 bg-[url(~/assets/svg/grid.svg)]"></div>
     <div class="relative flex flex-col items-center text-center">
       <p
-        class="rounded-full border border-base-content/80 px-3 py-1 mb-6 text-sm text-base-content/80"
+        class="mb-6 rounded-full border border-base-content/80 px-3 py-1 text-sm text-base-content/80"
       >
         The current version is for research experimental purposes
       </p>
-      <h1 class="mb-2 font-black text-6xl">
+      <h1 class="mb-2 text-6xl font-black">
         <span
           class="bg-gradient-to-r from-success to-info bg-clip-text text-transparent"
           >Graph Theory</span
@@ -22,7 +22,7 @@
         exercises.
       </p>
       <NuxtLink
-        class="btn btn-outline btn-success border-2 normal-case"
+        class="btn-success btn-outline btn border-2 normal-case"
         :to="{ name: 'Vertex and Edge' }"
       >
         Get Started

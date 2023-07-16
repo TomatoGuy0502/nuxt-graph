@@ -4,7 +4,10 @@
       v-for="(row, sourceIndex) in adjacencyList"
       :key="sourceIndex"
       class="flex rounded transition w-fit"
-      :class="{ 'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === sourceIndex }"
+      :class="{
+        'bg-gray-700':
+          (hoverNode as NodeDatum | undefined)?.index === sourceIndex,
+      }"
       :data-index="sourceIndex"
     >
       <pre

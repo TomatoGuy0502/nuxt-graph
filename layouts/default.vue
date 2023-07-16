@@ -1,5 +1,5 @@
 <template>
-  <div class="drawer 2xl:drawer-open h-screen">
+  <div class="drawer h-screen 2xl:drawer-open">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col overflow-y-auto">
       <TheNavbar>{{ navbarHeading }}</TheNavbar>
@@ -88,10 +88,13 @@ interface TutorialRoute {
 // Edit this array to add new tutorial routes
 const tutorialSectionNames = ['basic', 'representation', 'algorithm'] as const
 
-const tutorialRoutes = tutorialSectionNames.reduce((routes, sectionName) => {
-  routes[sectionName] = []
-  return routes
-}, {} as { [key in (typeof tutorialSectionNames)[number]]: TutorialRoute[] })
+const tutorialRoutes = tutorialSectionNames.reduce(
+  (routes, sectionName) => {
+    routes[sectionName] = []
+    return routes
+  },
+  {} as { [key in (typeof tutorialSectionNames)[number]]: TutorialRoute[] }
+)
 
 useRouter()
   .options.routes.filter((route) => route.path.startsWith('/tutorial'))
@@ -116,8 +119,9 @@ useRouter()
 const route = useRoute()
 const navbarHeading = computed(() => {
   if (route.path.startsWith('/tutorial')) {
-    const sectionName = route.path.split('/')[2] as
-      | (typeof tutorialSectionNames)[number]
+    const sectionName = route.path.split(
+      '/'
+    )[2] as (typeof tutorialSectionNames)[number]
     return 'Tutorial - ' + sectionName[0].toUpperCase() + sectionName.slice(1)
   }
   if (route.name === 'index') {

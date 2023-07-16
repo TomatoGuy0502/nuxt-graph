@@ -1,13 +1,13 @@
 <template>
   <div
-    class="not-prose flex items-center rounded-lg p-2 py-3 border gap-2 bg-success/10 border-success/30 text-success/80 my-5"
+    class="not-prose my-5 flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 p-2 py-3 text-success/80"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       stroke-width="1.5"
-      class="stroke-current shrink-0 w-6 h-6"
+      class="h-6 w-6 shrink-0 stroke-current"
     >
       <path
         stroke-linecap="round"

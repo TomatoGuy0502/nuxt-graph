@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex font-mono flex-wrap">
+  <ul class="flex flex-wrap font-mono">
     [
     <li
       v-for="(edge, i) in sortedCurrentEdges"

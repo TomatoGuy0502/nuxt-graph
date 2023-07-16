@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="tabs w-fit -mb-6">
+    <div class="tabs -mb-6 w-fit">
       <button
         v-for="(tabName, i) in tabNames"
         :key="tabName"
-        class="tab tab-lifted font-medium"
+        class="tab-lifted tab font-medium"
         :class="[
           activeTab === i
             ? 'tab-active [--tab-bg:var(--tw-prose-pre-bg)] [--tab-border-color:var(--tw-prose-pre-bg)] [--tab-color:hsl(var(--bc))]'
@@ -14,7 +14,7 @@
       >
         {{ tabName }}
       </button>
-      <div class="tab tab-lifted hidden"></div>
+      <div class="tab-lifted tab hidden"></div>
     </div>
     <div
       v-for="(tabName, i) in tabNames"

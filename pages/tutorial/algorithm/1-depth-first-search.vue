@@ -7,7 +7,7 @@
           class="tab-lifted tab font-medium"
           :class="[
             activeTab === 0
-              ? 'tab-active [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))] [--tab-color:hsl(var(--bc))]'
+              ? 'tab-active [--tab-color:hsl(var(--bc))] [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))]'
               : '[--tab-border-color:transparent]',
           ]"
           @click="activeTab = 0"
@@ -18,7 +18,7 @@
           class="tab-lifted tab font-medium [--tab-border-color:transparent]"
           :class="[
             activeTab === 1
-              ? 'tab-active [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))] [--tab-color:hsl(var(--bc))]'
+              ? 'tab-active [--tab-color:hsl(var(--bc))] [--tab-bg:hsl(var(--b2))] [--tab-border-color:hsl(var(--b2))]'
               : '[--tab-border-color:transparent]',
           ]"
           @click="activeTab = 1"

@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col gap-2 p-4 rounded-lg bg-base-300">
+  <div class="flex flex-col gap-2 rounded-lg bg-base-300 p-4">
     <h2 class="font-bold">Traversal Node</h2>
     <div
-      class="flex overflow-x-auto p-2 pt-4 min-h-[56px] rounded-lg bg-base-100"
+      class="flex min-h-[56px] overflow-x-auto rounded-lg bg-base-100 p-2 pt-4"
     >
       <ol class="flex">
         <li
@@ -12,11 +12,11 @@
         >
           <div class="indicator">
             <span
-              class="indicator-item indicator-center badge badge-xs text-opacity-60 bg-transparent border-none"
+              class="indicator-center badge badge-xs indicator-item border-none bg-transparent text-opacity-60"
               >{{ i + 1 }}</span
             >
             <code
-              class="p-1 px-1.5 rounded transition-all"
+              class="rounded p-1 px-1.5 transition-all"
               :class="[
                 (hoverNode as NodeDatum | null)?.index === nodeIndex
                   ? 'outline outline-1'
@@ -32,7 +32,7 @@
     </div>
     <h2 class="font-bold">Traversal Edge</h2>
     <div
-      class="flex overflow-x-auto p-2 pt-4 min-h-[56px] rounded-lg bg-base-100"
+      class="flex min-h-[56px] overflow-x-auto rounded-lg bg-base-100 p-2 pt-4"
     >
       <ol class="flex">
         <li
@@ -42,11 +42,11 @@
         >
           <div class="indicator">
             <span
-              class="indicator-item indicator-center badge badge-xs text-opacity-60 bg-transparent border-none"
+              class="indicator-center badge badge-xs indicator-item border-none bg-transparent text-opacity-60"
               >{{ i + 1 }}</span
             >
             <code
-              class="p-1 px-1.5 rounded transition-all whitespace-nowrap"
+              class="whitespace-nowrap rounded p-1 px-1.5 transition-all"
               :class="[
                 isWalkEqualsHoverEdge(walkString)
                   ? 'outline outline-1'

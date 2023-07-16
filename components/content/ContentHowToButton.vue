@@ -1,7 +1,7 @@
 <template>
   <span
     tabindex="0"
-    class="inline-grid align-sub place-items-center bg-base-200 text-base-content h-8 w-8 rounded-lg border-none"
+    class="inline-grid h-8 w-8 place-items-center rounded-lg border-none bg-base-200 align-sub text-base-content"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -9,7 +9,7 @@
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
-      class="w-5 h-5"
+      class="h-5 w-5"
     >
       <path
         stroke-linecap="round"

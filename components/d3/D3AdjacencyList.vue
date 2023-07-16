@@ -1,9 +1,9 @@
 <template>
-  <ul ref="$ulRef" class="flex flex-col font-mono overflow-auto relative">
+  <ul ref="$ulRef" class="relative flex flex-col overflow-auto font-mono">
     <li
       v-for="(row, sourceIndex) in adjacencyList"
       :key="sourceIndex"
-      class="flex rounded transition w-fit"
+      class="flex w-fit rounded transition"
       :class="{
         'bg-gray-700':
           (hoverNode as NodeDatum | undefined)?.index === sourceIndex,
@@ -11,14 +11,14 @@
       :data-index="sourceIndex"
     >
       <pre
-        class="flex justify-center w-[22px] border-transparent border-r-[1px]"
+        class="flex w-[22px] justify-center border-r-[1px] border-transparent"
         >{{ isShowingIndex ? sourceIndex : nodeIds[sourceIndex] }}</pre
       >
       [<template v-for="(neighborIndex, j) in row" :key="neighborIndex">
         <code
-          class="flex justify-center items-center transition w-[22px] h-[24px]"
+          class="flex h-[24px] w-[22px] items-center justify-center transition"
           :class="{
-            'bg-gray-700 rounded border': isHighlightedEdge(
+            'rounded border bg-gray-700': isHighlightedEdge(
               sourceIndex,
               neighborIndex
             ),

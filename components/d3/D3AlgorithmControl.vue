@@ -1,5 +1,5 @@
 <template>
-  <div class="form-control w-72 gap-4 p-4 rounded-lg bg-base-300">
+  <div class="form-control w-72 gap-4 rounded-lg bg-base-300 p-4">
     <div class="form-control">
       <label class="label py-0">
         <span class="label-text font-bold">Start Node ID</span>
@@ -15,7 +15,7 @@
     </div>
     <div class="join">
       <button
-        class="join-item btn w-1/2 normal-case btn-outline"
+        class="btn-outline join-item btn w-1/2 normal-case"
         :class="{ 'btn-disabled': isPlaying }"
         :disabled="isPlaying || visitingTraversalIndex === null"
         @click="$emit('goPrevStep')"
@@ -23,7 +23,7 @@
         Prev Step
       </button>
       <button
-        class="join-item btn w-1/2 normal-case btn-outline"
+        class="btn-outline join-item btn w-1/2 normal-case"
         :class="{ 'btn-disabled': isPlaying }"
         :disabled="isPlaying"
         @click="$emit('goNextStep')"

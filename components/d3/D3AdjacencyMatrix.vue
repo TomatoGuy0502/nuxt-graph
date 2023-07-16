@@ -1,15 +1,15 @@
 <template>
-  <ul ref="ulRef" class="flex flex-col font-mono overflow-auto relative">
+  <ul ref="ulRef" class="relative flex flex-col overflow-auto font-mono">
     <li v-if="!adjacencyMatrix.length">Add a node to see the matrix</li>
     <li
       v-if="adjacencyMatrix.length"
-      class="flex bg-base-300 sticky top-0 border-b-[1px] z-[1] w-fit"
+      class="sticky top-0 z-[1] flex w-fit border-b-[1px] bg-base-300"
     >
-      <div class="w-[22px] bg-base-300 sticky left-0 border-r-[1px]"></div>
+      <div class="sticky left-0 w-[22px] border-r-[1px] bg-base-300"></div>
       <div class="w-[10px]"></div>
       <template v-for="(row, i) in adjacencyMatrix" :key="i">
         <code
-          class="rounded-t transition flex justify-center w-[22px]"
+          class="flex w-[22px] justify-center rounded-t transition"
           :class="{
             'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === i,
           }"
@@ -22,7 +22,7 @@
     <li
       v-for="(row, sourceIndex) in adjacencyMatrix"
       :key="sourceIndex"
-      class="flex rounded transition w-fit"
+      class="flex w-fit rounded transition"
       :class="{
         'bg-gray-700':
           (hoverNode as NodeDatum | undefined)?.index === sourceIndex,
@@ -30,7 +30,7 @@
     >
       <div class="sticky left-0 bg-base-300">
         <span
-          class="flex justify-center w-[22px] border-r-[1px] rounded-l transition"
+          class="flex w-[22px] justify-center rounded-l border-r-[1px] transition"
           :class="{
             'bg-gray-700':
               (hoverNode as NodeDatum | undefined)?.index === sourceIndex,
@@ -42,11 +42,11 @@
       <code class="w-[10px]">[</code>
       <template v-for="(isConnected, targetIndex) in row" :key="targetIndex">
         <code
-          class="flex justify-center items-center transition w-[22px] h-[24px]"
+          class="flex h-[24px] w-[22px] items-center justify-center transition"
           :class="{
             'bg-gray-700':
               (hoverNode as NodeDatum | undefined)?.index === targetIndex,
-            'bg-gray-700 rounded border': isHighlightedEdge(
+            'rounded border bg-gray-700': isHighlightedEdge(
               sourceIndex,
               targetIndex
             ),

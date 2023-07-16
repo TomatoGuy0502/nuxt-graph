@@ -7,14 +7,14 @@
     }"
   >
     <!-- Information at the top left corner -->
-    <div class="flex gap-2 absolute left-4 top-4">
+    <div class="absolute left-4 top-4 flex gap-2">
       <slot name="info"></slot>
     </div>
 
     <!-- Tooltip for nodes -->
-    <div class="absolute inset-0 select-none pointer-events-none">
+    <div class="pointer-events-none absolute inset-0 select-none">
       <div
-        class="absolute rounded p-1 py-0.5 bg-base-300 transition text-sm"
+        class="absolute rounded bg-base-300 p-1 py-0.5 text-sm transition"
         :class="{ 'opacity-0': !hoverNode }"
         :style="{
           top: `${(lastHoverNode?.y ?? 0) + 10}px`,
@@ -26,43 +26,43 @@
     </div>
 
     <!-- Buttons at the top right corner -->
-    <div class="flex gap-2 absolute right-4 top-4">
+    <div class="absolute right-4 top-4 flex gap-2">
       <label
         v-if="canToggleShowingIndex"
-        class="flex items-center gap-2 p-1 px-2 rounded-lg bg-base-300 h-fit cursor-pointer select-none"
+        class="flex h-fit cursor-pointer select-none items-center gap-2 rounded-lg bg-base-300 p-1 px-2"
       >
-        <h2 class="font-bold text-sm">ID</h2>
+        <h2 class="text-sm font-bold">ID</h2>
         <input
           v-model="isShowingIndex"
           type="checkbox"
-          class="toggle toggle-success"
+          class="toggle-success toggle"
         />
-        <h2 class="font-bold text-sm">Index</h2>
+        <h2 class="text-sm font-bold">Index</h2>
       </label>
       <label
         v-if="canToggleDirected"
-        class="flex items-center gap-2 p-1 px-2 rounded-lg bg-base-300 h-fit cursor-pointer select-none"
+        class="flex h-fit cursor-pointer select-none items-center gap-2 rounded-lg bg-base-300 p-1 px-2"
       >
-        <h2 class="font-bold text-sm">Directed Graph</h2>
+        <h2 class="text-sm font-bold">Directed Graph</h2>
         <input
           v-model="isDirected"
           type="checkbox"
-          class="toggle toggle-success"
+          class="toggle-success toggle"
         />
       </label>
       <slot name="extra-buttons"></slot>
-      <button class="btn btn-sm" @click="onClearData">
+      <button class="btn-sm btn" @click="onClearData">
         <slot name="clear-button">Clear</slot>
       </button>
-      <div class="dropdown dropdown-hover dropdown-end">
+      <div class="dropdown-end dropdown-hover dropdown">
         <D3SvgDropdownButton />
         <div
           tabindex="0"
-          class="dropdown-content card card-compact w-[360px] bg-base-100 shadow-xl"
+          class="card dropdown-content card-compact w-[360px] bg-base-100 shadow-xl"
         >
           <div class="card-body">
             <h2 class="card-title">How To Interact?</h2>
-            <ul class="list-disc list-inside">
+            <ul class="list-inside list-disc">
               <slot name="hint-start"></slot>
               <slot name="hint">
                 <!-- <li><b>Hover</b> on vertex to see the details</li> -->
@@ -83,7 +83,7 @@
     </div>
 
     <svg
-      class="bg-gray-100 select-none rounded-lg h-full w-full"
+      class="h-full w-full select-none rounded-lg bg-gray-100"
       :class="svgClass"
       @mousedown="onSvgMousedown($event)"
       @mousemove="onSvgMousemove($event)"

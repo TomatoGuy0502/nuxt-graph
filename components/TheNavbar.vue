@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar bg-base-100 p-4 gap-2">
+  <div class="navbar gap-2 bg-base-100 p-4">
     <div class="flex-none 2xl:hidden">
       <label for="my-drawer" class="btn-ghost btn-square btn">
         <svg

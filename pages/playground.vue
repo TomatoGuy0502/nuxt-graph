@@ -10,14 +10,14 @@
       :can-toggle-showing-index="true"
       :has-mouse-down-node="!!mousedownNode"
       :draw-edge-cords="drawEdgeCords"
-      :on-clear-data="clearData"
-      :on-svg-mousedown="addNode"
-      :on-svg-mousemove="updateDrawEdge"
-      :on-svg-mouseup="hideDrawEdge"
-      :on-svg-mouseleave="hideDrawEdge"
       :is-draggable="true"
       :hover-node="hoverNode"
       class="col-span-1 row-span-3"
+      @clear-data="clearData"
+      @svg-mousedown="addNode"
+      @svg-mousemove="updateDrawEdge"
+      @svg-mouseup="hideDrawEdge"
+      @svg-mouseleave="hideDrawEdge"
     >
       <template #edges>
         <line
@@ -57,7 +57,7 @@
             :x="node.x"
             :y="node.y"
           >
-            {{ node.id }}
+            {{ isShowingIndex ? node.index : node.id }}
           </text>
         </g>
       </template>
@@ -65,6 +65,10 @@
         <p>
           <span class="font-bold">Node ID</span>:
           {{ hoverNodeInfo?.id }}
+        </p>
+        <p>
+          <span class="font-bold">Node Index</span>:
+          {{ hoverNodeInfo?.index }}
         </p>
         <p v-show="isDirected">
           <span class="font-bold">In-Degree</span>:

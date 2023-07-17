@@ -12,12 +12,12 @@
         class="flex-1"
         :has-mouse-down-node="!!mousedownNode"
         :draw-edge-cords="drawEdgeCords"
-        :on-clear-data="resetData"
-        :on-svg-mousedown="addNode"
-        :on-svg-mousemove="updateDrawEdge"
-        :on-svg-mouseup="hideDrawEdge"
-        :on-svg-mouseleave="hideDrawEdge"
         :is-draggable="true"
+        @clear-data="resetData"
+        @svg-mousedown="addNode"
+        @svg-mousemove="updateDrawEdge"
+        @svg-mouseup="hideDrawEdge"
+        @svg-mouseleave="hideDrawEdge"
       >
         <template #extra-buttons>
           <button class="btn-sm btn" @click="walk.length = 0">

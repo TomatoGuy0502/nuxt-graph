@@ -12,13 +12,13 @@
         class="flex-1"
         :has-mouse-down-node="!!mousedownNode"
         :draw-edge-cords="drawEdgeCords"
-        :on-clear-data="clearData"
-        :on-svg-mousedown="addNode"
-        :on-svg-mousemove="updateDrawEdge"
-        :on-svg-mouseup="hideDrawEdge"
-        :on-svg-mouseleave="hideDrawEdge"
         :is-draggable="true"
         :is-directed="isDirected"
+        @clear-data="clearData"
+        @svg-mousedown="addNode"
+        @svg-mousemove="updateDrawEdge"
+        @svg-mouseup="hideDrawEdge"
+        @svg-mouseleave="hideDrawEdge"
       >
         <template #edges>
           <line

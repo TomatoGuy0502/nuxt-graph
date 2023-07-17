@@ -51,7 +51,7 @@
         />
       </label>
       <slot name="extra-buttons"></slot>
-      <button class="btn-sm btn" @click="onClearData">
+      <button class="btn-sm btn" @click="$emit('clearData')">
         <slot name="clear-button">Clear</slot>
       </button>
       <div class="dropdown-end dropdown-hover dropdown">
@@ -85,10 +85,10 @@
     <svg
       class="h-full w-full select-none rounded-lg bg-gray-100"
       :class="svgClass"
-      @mousedown="onSvgMousedown($event)"
-      @mousemove="onSvgMousemove($event)"
-      @mouseup="onSvgMouseup()"
-      @mouseleave="onSvgMouseleave()"
+      @mousedown="$emit('svgMousedown', $event)"
+      @mousemove="$emit('svgMousemove', $event)"
+      @mouseup="$emit('svgMouseup')"
+      @mouseleave="$emit('svgMouseleave')"
       @contextmenu.prevent
     >
       <defs>
@@ -161,7 +161,6 @@
 <script setup lang="ts">
 import type { NodeDatum } from '@/composables/useD3'
 
-// TODO: Change on- to emit()
 const props = defineProps({
   canToggleDirected: {
     type: Boolean,
@@ -216,26 +215,6 @@ const props = defineProps({
       y2: 0,
     }),
   },
-  onClearData: {
-    type: Function as PropType<() => void>,
-    default: () => {},
-  },
-  onSvgMousedown: {
-    type: Function as PropType<(event: PointerEvent | MouseEvent) => void>,
-    default: (_event: PointerEvent | MouseEvent) => {},
-  },
-  onSvgMousemove: {
-    type: Function as PropType<(event: PointerEvent | MouseEvent) => void>,
-    default: (_event: PointerEvent | MouseEvent) => {},
-  },
-  onSvgMouseup: {
-    type: Function as PropType<() => void>,
-    default: () => {},
-  },
-  onSvgMouseleave: {
-    type: Function as PropType<() => void>,
-    default: () => {},
-  },
   hoverNode: {
     type: [Object, null] as PropType<NodeDatum | null>,
     default: null,
@@ -252,7 +231,15 @@ watch(
   }
 )
 
-const emits = defineEmits(['update:isDirected', 'update:isShowingIndex'])
+const emits = defineEmits<{
+  'update:isDirected': [value: boolean]
+  'update:isShowingIndex': [value: boolean]
+  clearData: []
+  svgMousedown: [event: PointerEvent | MouseEvent]
+  svgMousemove: [event: PointerEvent | MouseEvent]
+  svgMouseup: []
+  svgMouseleave: []
+}>()
 
 const isDirected = useVModel(props, 'isDirected', emits)
 const isShowingIndex = useVModel(props, 'isShowingIndex', emits)

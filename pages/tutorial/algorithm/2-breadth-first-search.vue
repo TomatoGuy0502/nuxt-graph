@@ -49,14 +49,14 @@
         :can-toggle-directed="true"
         :has-mouse-down-node="!!mousedownNode"
         :draw-edge-cords="drawEdgeCords"
-        :on-clear-data="clearData"
-        :on-svg-mousedown="addNode"
-        :on-svg-mousemove="updateDrawEdge"
-        :on-svg-mouseup="hideDrawEdge"
-        :on-svg-mouseleave="hideDrawEdge"
         :is-draggable="true"
         :hover-node="hoverNode"
         class="h-full w-full"
+        @clear-data="clearData"
+        @svg-mousedown="addNode"
+        @svg-mousemove="updateDrawEdge"
+        @svg-mouseup="hideDrawEdge"
+        @svg-mouseleave="hideDrawEdge"
       >
         <template #hint-start>
           <li><b>Hover</b> on vertex to see the details</li>

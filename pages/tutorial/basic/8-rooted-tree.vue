@@ -13,8 +13,8 @@
         :height="600"
         :is-draggable="true"
         :svg-class="['cursor-default']"
-        :on-clear-data="resetData"
         :hover-node="hoverNode"
+        @clear-data="resetData"
       >
         <template #info>
           <ul class="flex flex-col gap-2 rounded-lg bg-base-100 p-4">

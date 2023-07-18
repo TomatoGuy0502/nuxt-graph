@@ -11,6 +11,7 @@
         ref="svg"
         v-model:is-directed="isDirected"
         v-model:is-showing-index="isShowingIndex"
+        class="flex-1"
         :can-toggle-directed="true"
         :can-toggle-showing-index="false"
         :has-mouse-down-node="!!mousedownNode"

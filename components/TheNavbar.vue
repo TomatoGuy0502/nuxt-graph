@@ -1,6 +1,6 @@
 <template>
   <div class="navbar gap-2 bg-base-100 p-4">
-    <div class="flex-none 2xl:hidden">
+    <div class="flex-none min-[1640px]:hidden">
       <label for="my-drawer" class="btn-ghost btn-square btn">
         <svg
           xmlns="http://www.w3.org/2000/svg"

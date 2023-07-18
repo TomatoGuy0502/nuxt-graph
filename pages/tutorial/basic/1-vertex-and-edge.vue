@@ -20,7 +20,7 @@
         @svg-mouseleave="hideDrawEdge"
       >
         <template #info>
-          <ul class="flex flex-col gap-2 rounded-lg bg-base-100 p-4">
+          <ul class="flex flex-col gap-2 rounded-lg bg-base-300 p-4">
             <li class="font-bold">
               Order (# of vertices):
               <code class="font-normal">{{ data.nodes.length }}</code>

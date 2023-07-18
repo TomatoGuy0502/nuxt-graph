@@ -9,7 +9,7 @@
       >
         The current version is for research experimental purposes
       </p>
-      <h1 class="mb-2 text-6xl font-black">
+      <h1 class="mb-4 text-6xl font-black">
         <span
           class="bg-gradient-to-r from-success to-info bg-clip-text text-transparent"
           >Graph Theory</span

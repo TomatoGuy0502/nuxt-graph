@@ -30,13 +30,13 @@
       <div class="overflow-y-auto p-4">
         <div v-show="activeTab === 0">
           <ContentDoc
-            class="prose-sm prose max-w-none xl:prose-base"
+            class="prose-sm prose xl:prose-base"
             path="algorithm/depth-first-search"
           />
         </div>
         <div v-show="activeTab === 1">
           <ContentDoc
-            class="prose-sm prose max-w-none xl:prose-base"
+            class="prose-sm prose xl:prose-base"
             path="algorithm/depth-first-search.code"
             :head="false"
           />
@@ -52,7 +52,7 @@
         :draw-edge-cords="drawEdgeCords"
         :is-draggable="true"
         :hover-node="hoverNode"
-        class="h-full w-full"
+        class="flex-1"
         @clear-data="clearData"
         @svg-mousedown="addNode"
         @svg-mousemove="updateDrawEdge"
@@ -61,6 +61,25 @@
       >
         <template #hint-start>
           <li><b>Hover</b> on vertex to see the details</li>
+        </template>
+        <!-- TODO: Move to D3Svg -->
+        <template #extra-buttons>
+          <button class="btn btn-sm" @click="onGenerateRandomGraph(10, 12)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              class="w-5 h-5"
+            >
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m18 20l3-3m0 0l-3-3m3 3h-4a5 5 0 0 1-5-5a5 5 0 0 0-5-5H3m15-3l3 3m0 0l-3 3m3-3h-4a4.978 4.978 0 0 0-3 1M3 17h4a4.978 4.978 0 0 0 3-1"
+              />
+            </svg>
+          </button>
         </template>
         <template #edges>
           <line

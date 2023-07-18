@@ -26,7 +26,7 @@
         </template>
         <template #clear-button>Reset</template>
         <template #info>
-          <ul class="flex flex-col gap-2 rounded-lg bg-base-100 p-4">
+          <ul class="flex flex-col gap-2 rounded-lg bg-base-300 p-4">
             <li class="max-w-[180px] font-bold">
               Walk:
               <code v-if="walk.length" class="font-normal">{{

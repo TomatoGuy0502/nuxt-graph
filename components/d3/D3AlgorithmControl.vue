@@ -1,19 +1,21 @@
 <template>
-  <div class="form-control w-72 gap-4 rounded-lg bg-base-300 p-4">
-    <div class="form-control">
-      <label class="label py-0">
-        <span class="label-text font-bold">Start Node ID</span>
-      </label>
+  <div class="flex items-center gap-4 rounded-lg bg-base-300 p-4">
+    <div class="input-group w-fit flex-grow-0">
+      <label
+        class="flex items-center bg-base-100 px-2 whitespace-nowrap text-sm font-medium"
+        >Start Node ID</label
+      >
       <select
+        id="select-start-node-id"
         v-model="traversalStartNodeIndex"
-        class="select-bordered select select-sm flex-1 bg-base-100 transition hover:bg-base-200 focus:outline-none"
+        class="select-bordered select flex-1 bg-base-100 min-w-[68px] transition hover:bg-base-200 focus:outline-none"
       >
         <option v-for="(nodeId, i) in nodeIds" :key="nodeId" :value="i">
           {{ nodeId }}
         </option>
       </select>
     </div>
-    <div class="join">
+    <div class="join flex-auto">
       <button
         class="btn-outline join-item btn w-1/2 normal-case"
         :class="{ 'btn-disabled': isPlaying }"
@@ -36,7 +38,7 @@
       </button>
     </div>
     <button
-      class="join-item btn gap-0.5 normal-case"
+      class="join-item btn gap-0.5 normal-case w-[120px]"
       :class="[isPlaying ? 'btn-error' : 'btn-success']"
       @click="$emit('play')"
     >
@@ -71,9 +73,9 @@
         Auto Play</template
       >
     </button>
-    <button class="btn normal-case" @click="$emit('generateRandomGraph')">
+    <!-- <button class="btn normal-case" @click="$emit('generateRandomGraph')">
       Generate Random Graph
-    </button>
+    </button> -->
   </div>
 </template>
 

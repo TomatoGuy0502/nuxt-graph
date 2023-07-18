@@ -17,7 +17,7 @@
         @clear-data="resetData"
       >
         <template #info>
-          <ul class="flex flex-col gap-2 rounded-lg bg-base-100 p-4">
+          <ul class="flex flex-col gap-2 rounded-lg bg-base-300 p-4">
             <li class="font-bold">
               Tree height:
               <code class="font-normal">{{ treeHeight }}</code>

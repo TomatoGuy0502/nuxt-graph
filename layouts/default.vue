@@ -1,6 +1,5 @@
 <template>
   <div class="drawer h-screen min-[1640px]:drawer-open">
-    <!-- FIXME: It's broken when screen height is too small -->
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col overflow-y-auto">
       <TheNavbar>{{ navbarHeading }}</TheNavbar>
@@ -45,7 +44,7 @@
             </NuxtLink>
           </li>
         </ul>
-        <ul class="menu rounded-box bg-base-100">
+        <ul class="menu rounded-box bg-base-100 flex-nowrap overflow-y-auto">
           <li class="menu-title">Tutorial</li>
           <li
             v-for="(section, sectionNumber) in tutorialSectionNames"

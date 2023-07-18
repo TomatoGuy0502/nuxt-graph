@@ -51,6 +51,26 @@
         />
       </label>
       <slot name="extra-buttons"></slot>
+      <button
+        v-if="showGenerateRandomGraphBtn"
+        class="btn btn-sm"
+        @click="$emit('generateRandomGraph')"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          class="w-5 h-5"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m18 20l3-3m0 0l-3-3m3 3h-4a5 5 0 0 1-5-5a5 5 0 0 0-5-5H3m15-3l3 3m0 0l-3 3m3-3h-4a4.978 4.978 0 0 0-3 1M3 17h4a4.978 4.978 0 0 0 3-1"
+          />
+        </svg>
+      </button>
       <button class="btn-sm btn" @click="$emit('clearData')">
         <slot name="clear-button">Clear</slot>
       </button>
@@ -180,6 +200,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  showGenerateRandomGraphBtn: {
+    type: Boolean,
+    default: false,
+  },
   width: {
     type: Number,
     default: undefined,
@@ -235,6 +259,7 @@ const emits = defineEmits<{
   'update:isDirected': [value: boolean]
   'update:isShowingIndex': [value: boolean]
   clearData: []
+  generateRandomGraph: []
   svgMousedown: [event: PointerEvent | MouseEvent]
   svgMousemove: [event: PointerEvent | MouseEvent]
   svgMouseup: []

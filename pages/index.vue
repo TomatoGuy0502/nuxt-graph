@@ -3,6 +3,7 @@
     class="relative flex h-full w-full items-center justify-center p-6 sm:p-12"
   >
     <div class="absolute inset-0 bg-[url(~/assets/svg/grid.svg)]"></div>
+    <i class="i-heroicons-cube-transparent text-[40px]" />
     <div class="relative flex flex-col items-center text-center">
       <p
         class="mb-6 rounded-full border border-base-content/80 px-3 py-1 text-sm text-base-content/80"

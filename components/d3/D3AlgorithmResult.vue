@@ -1,8 +1,24 @@
 <template>
   <div class="flex flex-col gap-2 rounded-lg bg-base-300 p-4">
-    <h2 class="font-bold">Traversal Node</h2>
+    <h2 class="font-bold inline-flex items-center gap-2 justify-between">
+      Traversal Vertex
+      <i
+        v-show="showTraversalResult"
+        class="i-heroicons-eye text-xl cursor-pointer"
+        @click="showTraversalResult = false"
+      />
+      <i
+        v-show="!showTraversalResult"
+        class="i-heroicons-eye-slash text-xl cursor-pointer"
+        @click="showTraversalResult = true"
+      />
+    </h2>
     <div
-      class="flex min-h-[56px] overflow-x-auto rounded-lg bg-base-100 p-2 pt-4"
+      class="relative flex min-h-[56px] overflow-x-auto rounded-lg bg-base-100 p-2 pt-4 after:absolute after:inset-0 after:z-10 after:transition after:pointer-events-none"
+      :class="{
+        'after:backdrop-blur-sm after:pointer-events-auto':
+          !showTraversalResult,
+      }"
     >
       <ol class="flex">
         <li
@@ -32,7 +48,11 @@
     </div>
     <h2 class="font-bold">Traversal Edge</h2>
     <div
-      class="flex min-h-[56px] overflow-x-auto rounded-lg bg-base-100 p-2 pt-4"
+      class="relative flex min-h-[56px] overflow-x-auto rounded-lg bg-base-100 p-2 pt-4 after:absolute after:inset-0 after:z-10 after:transition after:pointer-events-none"
+      :class="{
+        'after:backdrop-blur-sm after:pointer-events-auto':
+          !showTraversalResult,
+      }"
     >
       <ol class="flex">
         <li
@@ -150,4 +170,6 @@ watch(
     }
   }
 )
+
+const showTraversalResult = ref(true)
 </script>

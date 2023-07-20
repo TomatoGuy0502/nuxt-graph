@@ -19,18 +19,6 @@
         @svg-mouseup="hideDrawEdge"
         @svg-mouseleave="hideDrawEdge"
       >
-        <template #info>
-          <ul class="flex flex-col gap-2 rounded-lg bg-base-300 p-4">
-            <li class="font-bold">
-              Order (# of vertices):
-              <code class="font-normal">{{ data.nodes.length }}</code>
-            </li>
-            <li class="font-bold">
-              Size (# of edges):
-              <code class="font-normal">{{ data.edges.length }}</code>
-            </li>
-          </ul>
-        </template>
         <template #edges>
           <line
             v-for="edge in data.edges"

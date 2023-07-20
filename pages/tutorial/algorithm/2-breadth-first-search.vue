@@ -54,7 +54,7 @@
         :is-draggable="true"
         :hover-node="hoverNode"
         class="flex-1"
-        @clear-data="clearData"
+        @clear-data="resetData"
         @svg-mousedown="addNode"
         @svg-mousemove="updateDrawEdge"
         @svg-mouseup="hideDrawEdge"
@@ -71,6 +71,7 @@
             </TransitionGroup>
           </div>
         </template>
+        <template #clear-button-text>Reset</template>
         <template #hint-start>
           <li><b>Hover</b> on vertex to see the details</li>
         </template>
@@ -171,13 +172,28 @@ definePageMeta({
 const activeTab = ref(0)
 
 const initData: GraphData = {
-  nodes: [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+  nodes: [
+    { id: 0 },
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+    { id: 5 },
+    { id: 6 },
+    { id: 7 },
+    { id: 8 },
+    { id: 9 },
+  ],
   edges: [
     { source: 0, target: 1 },
     { source: 0, target: 2 },
     { source: 1, target: 3 },
     { source: 1, target: 4 },
-    { source: 2, target: 5 },
+    { source: 2, target: 8 },
+    { source: 2, target: 9 },
+    { source: 3, target: 5 },
+    { source: 3, target: 7 },
+    { source: 5, target: 6 },
   ],
 }
 
@@ -185,7 +201,6 @@ const svg = ref<HTMLDivElement | null>(null)
 const isDirected = ref(false)
 
 const {
-  clearData,
   generateRandomData,
   addNode,
   removeNode,
@@ -298,6 +313,32 @@ const currentQueueByNodeId = computed(() => {
     ]?.map((i) => data.nodes[i].id) || []
   )
 })
+
+const resetData = () => {
+  data.nodes = [
+    { id: 0 },
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+    { id: 5 },
+    { id: 6 },
+    { id: 7 },
+    { id: 8 },
+    { id: 9 },
+  ]
+  data.edges = [
+    { source: 0, target: 1 },
+    { source: 0, target: 2 },
+    { source: 1, target: 3 },
+    { source: 1, target: 4 },
+    { source: 2, target: 8 },
+    { source: 2, target: 9 },
+    { source: 3, target: 5 },
+    { source: 3, target: 7 },
+    { source: 5, target: 6 },
+  ]
+}
 </script>
 
 <style scoped>

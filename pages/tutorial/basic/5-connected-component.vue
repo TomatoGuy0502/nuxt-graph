@@ -80,7 +80,7 @@ import type { NodeDatum, GraphData } from '@/composables/useD3'
 definePageMeta({
   name: 'Connected Component',
   path: '/tutorial/basic/connected-component',
-  pageOrder: 4,
+  pageOrder: 5,
 })
 
 const initData: GraphData = {

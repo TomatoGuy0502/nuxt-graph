@@ -22,14 +22,6 @@
         @svg-mouseup="hideDrawEdge"
         @svg-mouseleave="hideDrawEdge"
       >
-        <template #info>
-          <ul class="flex flex-col gap-2 rounded-lg bg-base-300 p-4">
-            <li class="font-bold">
-              Complete:
-              <code class="font-normal">{{ graphProperties.isComplete }}</code>
-            </li>
-          </ul>
-        </template>
         <template #hint-start>
           <li><b>Hover</b> on vertex to see the details</li>
         </template>
@@ -95,7 +87,7 @@ import type { NodeDatum, GraphData } from '@/composables/useD3'
 definePageMeta({
   name: 'Degree of Vertex',
   path: '/tutorial/basic/degree-of-vertex',
-  pageOrder: 3,
+  pageOrder: 4,
 })
 
 const initData: GraphData = {
@@ -127,7 +119,6 @@ const {
   colors,
   edgesCords,
   enableDrag,
-  graphProperties,
 } = useD3(initData, svg, {}, isDirected)
 enableDrag()
 

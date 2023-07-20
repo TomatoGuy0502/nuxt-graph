@@ -66,7 +66,7 @@ import type { NodeDatum, GraphData } from '@/composables/useD3'
 definePageMeta({
   name: 'Directed Graph',
   path: '/tutorial/basic/directed-graph',
-  pageOrder: 2,
+  pageOrder: 3,
 })
 
 const initData: GraphData = {

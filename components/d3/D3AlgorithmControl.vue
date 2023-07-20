@@ -3,7 +3,7 @@
     <div class="input-group w-fit flex-grow-0">
       <label
         class="flex items-center bg-base-100 px-2 whitespace-nowrap text-sm font-medium"
-        >Start Node ID</label
+        >Start Vertex</label
       >
       <select
         id="select-start-node-id"

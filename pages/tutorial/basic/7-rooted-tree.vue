@@ -28,6 +28,7 @@
             </li>
           </ul>
         </template>
+        <template #clear-button-text>Reset</template>
         <template #hint>
           <li><b>Hover</b> on vertex to see the details</li>
           <li><b>Left click</b> on vertex to add a child</li>

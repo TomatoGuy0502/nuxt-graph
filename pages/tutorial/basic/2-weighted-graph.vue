@@ -103,7 +103,7 @@ import type { NodeDatum, GraphData } from '@/composables/useD3'
 definePageMeta({
   name: 'Weighted Graph',
   path: '/tutorial/basic/weighted-graph',
-  pageOrder: 5,
+  pageOrder: 2,
 })
 
 const initData: GraphData = {

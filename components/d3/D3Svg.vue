@@ -59,7 +59,7 @@
         <i class="i-tabler-arrows-shuffle text-xl" />
       </button>
       <button class="btn-sm btn" @click="$emit('clearData')">
-        <slot name="clear-button">Clear</slot>
+        <slot name="clear-button-text">Clear</slot>
       </button>
       <div class="dropdown-end dropdown-hover dropdown">
         <D3SvgDropdownButton />

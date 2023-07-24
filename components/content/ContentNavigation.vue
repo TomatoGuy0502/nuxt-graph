@@ -3,6 +3,7 @@
     <NuxtLink
       v-if="prevLink"
       :to="prevLink"
+      data-test="prev-link"
       class="btn no-animation flex-col btn-ghost normal-case font-normal items-start"
     >
       <span class="text-sm flex items-center gap-1">
@@ -13,6 +14,7 @@
     <NuxtLink
       v-if="nextLink"
       :to="nextLink"
+      data-test="next-link"
       class="btn no-animation flex-col btn-ghost normal-case font-normal items-end col-start-2"
     >
       <span class="text-sm flex items-center gap-1">

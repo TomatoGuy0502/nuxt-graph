@@ -8,6 +8,7 @@
       <select
         id="select-start-node-id"
         v-model="traversalStartNodeIndex"
+        data-test="start-node-id-select"
         class="select-bordered select flex-1 bg-base-100 min-w-[68px] transition hover:bg-base-200 focus:outline-none"
       >
         <option v-for="(nodeId, i) in nodeIds" :key="nodeId" :value="i">
@@ -18,6 +19,7 @@
     <div class="join flex-auto">
       <button
         class="btn-outline join-item btn w-1/2 normal-case"
+        data-test="prev-step-button"
         :class="{ 'btn-disabled': isPlaying }"
         :disabled="isPlaying || visitingTraversalIndex === null"
         @click="$emit('goPrevStep')"
@@ -26,6 +28,7 @@
       </button>
       <button
         class="btn-outline join-item btn w-1/2 normal-case"
+        data-test="next-step-button"
         :class="{ 'btn-disabled': isPlaying }"
         :disabled="isPlaying"
         @click="$emit('goNextStep')"
@@ -39,6 +42,7 @@
     </div>
     <button
       class="join-item btn gap-0.5 normal-case w-[120px]"
+      data-test="play-button"
       :class="[isPlaying ? 'btn-error' : 'btn-success']"
       @click="$emit('play')"
     >

@@ -15,6 +15,7 @@
     <div class="pointer-events-none absolute inset-0 select-none">
       <div
         class="absolute rounded bg-base-300 p-1 py-0.5 text-sm transition"
+        data-test="node-tooltip"
         :class="{ 'opacity-0': !hoverNode }"
         :style="{
           top: `${(lastHoverNode?.y ?? 0) + 10}px`,
@@ -29,6 +30,7 @@
     <div class="absolute right-4 top-4 flex gap-2">
       <label
         v-if="canToggleShowingIndex"
+        data-test="toggle-showing-index-button"
         class="flex h-fit cursor-pointer select-none items-center gap-2 rounded-lg bg-base-300 p-1 px-2"
       >
         <h2 class="text-sm font-bold">ID</h2>
@@ -41,6 +43,7 @@
       </label>
       <label
         v-if="canToggleDirected"
+        data-test="toggle-directed-button"
         class="flex h-fit cursor-pointer select-none items-center gap-2 rounded-lg bg-base-300 p-1 px-2"
       >
         <h2 class="text-sm font-bold">Directed Graph</h2>
@@ -53,39 +56,31 @@
       <slot name="extra-buttons"></slot>
       <button
         v-if="showGenerateRandomGraphBtn"
+        data-test="generate-random-graph-button"
         class="btn btn-sm"
         @click="$emit('generateRandomGraph')"
       >
         <i class="i-tabler-arrows-shuffle text-xl" />
       </button>
-      <button class="btn-sm btn" @click="$emit('clearData')">
+      <button
+        data-test="clear-data-button"
+        class="btn-sm btn"
+        @click="$emit('clearData')"
+      >
         <slot name="clear-button-text">Clear</slot>
       </button>
       <div class="dropdown-end dropdown-hover dropdown">
-        <D3SvgDropdownButton />
-        <div
-          tabindex="0"
-          class="card dropdown-content card-compact w-[360px] bg-base-100 shadow-xl"
-        >
-          <div class="card-body">
-            <h2 class="card-title">How To Interact?</h2>
-            <ul class="list-inside list-disc">
-              <slot name="hint-start"></slot>
-              <slot name="hint">
-                <!-- <li><b>Hover</b> on vertex to see the details</li> -->
-                <li><b>Left click</b> on empty space to add vertex</li>
-                <li><b>Drag</b> from one vertex to another to add edge</li>
-                <li><b>Right click</b> on vertex/edge to delete it</li>
-                <li v-if="isDraggable">
-                  <kbd v-if="isMac" class="kbd kbd-sm">⌘</kbd>
-                  <kbd v-else class="kbd kbd-sm">ctrl</kbd> + <b>Drag</b> on
-                  vertex to move it
-                </li>
-              </slot>
-              <slot name="hint-end"></slot>
-            </ul>
-          </div>
-        </div>
+        <D3SvgDropdownHint :is-draggable="isDraggable">
+          <template #hint-start>
+            <slot name="hint-start"></slot>
+          </template>
+          <template #hint>
+            <slot name="hint"></slot>
+          </template>
+          <template #hint-end>
+            <slot name="hint-end"></slot>
+          </template>
+        </D3SvgDropdownHint>
       </div>
     </div>
 
@@ -145,7 +140,8 @@
         </marker>
       </defs>
       <line
-        class="draw-edge cursor-cell stroke-[3]"
+        data-test="draw-edge-line"
+        class="cursor-cell stroke-[3]"
         :class="[hasMouseDownNode ? 'stroke-current' : 'stroke-none']"
         :x1="drawEdgeCords.x1"
         :y1="drawEdgeCords.y1"
@@ -255,8 +251,6 @@ const emits = defineEmits<{
 
 const isDirected = useVModel(props, 'isDirected', emits)
 const isShowingIndex = useVModel(props, 'isShowingIndex', emits)
-
-const { isMac } = usePlatform()
 </script>
 
 <style scoped>

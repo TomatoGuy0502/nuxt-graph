@@ -15,6 +15,7 @@
     </h2>
     <div
       class="relative flex min-h-[56px] overflow-x-auto rounded-lg bg-base-100 p-2 pt-4 after:absolute after:inset-0 after:z-10 after:transition after:pointer-events-none"
+      data-test="traversal-vertex-result"
       :class="{
         'after:backdrop-blur-sm after:pointer-events-auto':
           !showTraversalResult,
@@ -49,6 +50,7 @@
     <h2 class="font-bold">Traversal Edge</h2>
     <div
       class="relative flex min-h-[56px] overflow-x-auto rounded-lg bg-base-100 p-2 pt-4 after:absolute after:inset-0 after:z-10 after:transition after:pointer-events-none"
+      data-test="traversal-edge-result"
       :class="{
         'after:backdrop-blur-sm after:pointer-events-auto':
           !showTraversalResult,

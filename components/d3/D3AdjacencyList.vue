@@ -17,6 +17,7 @@
       [<template v-for="(neighborIndex, j) in row" :key="neighborIndex">
         <code
           class="flex h-[24px] w-[22px] items-center justify-center transition"
+          :data-test="`edge-${sourceIndex},${neighborIndex}`"
           :class="{
             'rounded border bg-gray-700': isHighlightedEdge(
               sourceIndex,

@@ -3,6 +3,7 @@
     <li v-if="!adjacencyMatrix.length">Add a node to see the matrix</li>
     <li
       v-if="adjacencyMatrix.length"
+      data-test="header-top"
       class="sticky top-0 z-[1] flex w-fit border-b-[1px] bg-base-300"
     >
       <div class="sticky left-0 w-[22px] border-r-[1px] bg-base-300"></div>
@@ -10,6 +11,7 @@
       <template v-for="(row, i) in adjacencyMatrix" :key="i">
         <code
           class="flex w-[22px] justify-center rounded-t transition"
+          :data-test="`header-top-${i}`"
           :class="{
             'bg-gray-700': (hoverNode as NodeDatum | undefined)?.index === i,
           }"
@@ -23,6 +25,7 @@
       v-for="(row, sourceIndex) in adjacencyMatrix"
       :key="sourceIndex"
       class="flex w-fit rounded transition"
+      :data-test="`row-${sourceIndex}`"
       :class="{
         'bg-gray-700':
           (hoverNode as NodeDatum | undefined)?.index === sourceIndex,
@@ -31,6 +34,7 @@
       <div class="sticky left-0 bg-base-300">
         <span
           class="flex w-[22px] justify-center rounded-l border-r-[1px] transition"
+          :data-test="`header-left-${sourceIndex}`"
           :class="{
             'bg-gray-700':
               (hoverNode as NodeDatum | undefined)?.index === sourceIndex,

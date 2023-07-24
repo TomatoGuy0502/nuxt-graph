@@ -4,6 +4,7 @@
       <button
         v-for="(tabName, i) in tabNames"
         :key="tabName"
+        :data-test="`tab-button-${tabName}`"
         class="tab-lifted tab font-medium"
         :class="[
           activeTab === i
@@ -20,6 +21,7 @@
       v-for="(tabName, i) in tabNames"
       v-show="activeTab === i"
       :key="tabName"
+      :data-test="`tab-content-${tabName}`"
       :class="{ 'first-active': i === 0 }"
     >
       <slot :name="tabName" />

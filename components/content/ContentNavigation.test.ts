@@ -1,16 +1,23 @@
 // @vitest-environment jsdom
-import { mount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import ContentNavigation from './ContentNavigation.vue'
 
 describe('ContentNavigation.vue', () => {
   it('should render prevLink and nextLink', () => {
-    const wrapper = mount(ContentNavigation, {
+    const wrapper = shallowMount(ContentNavigation, {
       props: {
         prevLink: '/vertex-and-edge',
         prevTitle: 'Vertex and Edge',
         nextLink: '/degree-of-vertex',
         nextTitle: 'Degree of vertex',
+      },
+      global: {
+        stubs: {
+          NuxtLink: {
+            template: `<a><slot /></a>`,
+          },
+        },
       },
     })
     const getPrevLink = () => wrapper.get('[data-test="prev-link"]')
@@ -27,6 +34,13 @@ describe('ContentNavigation.vue', () => {
         prevLink: '/vertex-and-edge',
         prevTitle: 'Vertex and Edge',
         nextTitle: 'Degree of vertex',
+      },
+      global: {
+        stubs: {
+          NuxtLink: {
+            template: `<a><slot /></a>`,
+          },
+        },
       },
     })
     const getPrevLink = () => wrapper.get('[data-test="prev-link"]')

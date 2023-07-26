@@ -57,7 +57,31 @@ describe('default layout', () => {
     expect(wrapper.html()).toContain('<div>Default</div>')
   })
 
+  it('should render navbar heading for index page', () => {
+    vi.stubGlobal('useRoute', () => ({
+      path: '/',
+      name: 'index',
+    }))
+    const wrapper = mount(defaultLayout, {
+      global: {
+        stubs: {
+          NuxtLink: {
+            template: `<a><slot /></a>`,
+          },
+        },
+      },
+    })
+
+    expect(wrapper.get('[data-test="navbar"]').text()).toContain(
+      'Welcome to Graph Theory'
+    )
+  })
+
   it('should render navbar heading based on current route', () => {
+    vi.stubGlobal('useRoute', () => ({
+      path: '/tutorial/representation/adjacency-matrix',
+      name: 'Adjacency Matrix',
+    }))
     const wrapper = mount(defaultLayout, {
       global: {
         stubs: {
@@ -71,6 +95,24 @@ describe('default layout', () => {
     expect(wrapper.get('[data-test="navbar"]').text()).toContain(
       'Tutorial - Representation'
     )
+  })
+
+  it('should render navbar heading for all other pages', () => {
+    vi.stubGlobal('useRoute', () => ({
+      path: '/some-url',
+      name: 'Some URL',
+    }))
+    const wrapper = mount(defaultLayout, {
+      global: {
+        stubs: {
+          NuxtLink: {
+            template: `<a><slot /></a>`,
+          },
+        },
+      },
+    })
+
+    expect(wrapper.get('[data-test="navbar"]').text()).toContain('Some URL')
   })
 
   it('should render links for each section', () => {

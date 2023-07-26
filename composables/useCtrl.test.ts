@@ -41,4 +41,20 @@ describe('useCtrl', () => {
     wrapper.trigger('keyup', { key: 'Control' })
     expect(wrapper.vm.isCtrlOrCmdPressed).toBe(false)
   })
+
+  it('should remove event listeners when component is unmounted', async () => {
+    vi.stubGlobal('navigator', { userAgent: 'Intel Mac OS X' })
+
+    const wrapper = mount(TestComponent, {
+      attachTo: document.body,
+    })
+
+    await wrapper.trigger('keydown', { key: 'Meta' })
+    expect(wrapper.vm.isCtrlOrCmdPressed).toBe(true)
+
+    wrapper.unmount()
+
+    await wrapper.trigger('keyup', { key: 'Meta' })
+    expect(wrapper.vm.isCtrlOrCmdPressed).toBe(true)
+  })
 })

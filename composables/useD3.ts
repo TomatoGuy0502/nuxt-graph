@@ -1,6 +1,6 @@
 import { ref, reactive, onMounted, watch, computed } from 'vue'
 import * as d3 from 'd3'
-import { almostEqual } from '@/utils'
+// import { almostEqual } from '@/utils'
 
 export interface NodeDatum extends d3.SimulationNodeDatum {
   id: number
@@ -79,7 +79,7 @@ export const useD3 = (
   }
 }
 
-function useData(initData: GraphData) {
+export function useData(initData: GraphData) {
   const data: GraphData = reactive(initData)
 
   function clearData({ keepRoot } = { keepRoot: false }) {
@@ -96,7 +96,7 @@ function useData(initData: GraphData) {
   return { data, clearData, generateRandomData }
 }
 
-function useD3Simulation({ data }: { data: GraphData }) {
+export function useD3Simulation({ data }: { data: GraphData }) {
   const simulation: Ref<d3.Simulation<NodeDatum, EdgeDatum> | undefined> = ref()
   let forceLink: d3.ForceLink<NodeDatum, EdgeDatum>
   let forceX: d3.ForceX<NodeDatum>
@@ -175,7 +175,7 @@ function useD3Simulation({ data }: { data: GraphData }) {
   }
 }
 
-function useD3Drag({
+export function useD3Drag({
   simulation,
   data,
 }: {
@@ -242,7 +242,7 @@ function useD3Drag({
   return { enableDrag }
 }
 
-function useD3EditNode({ data }: { data: GraphData }) {
+export function useD3EditNode({ data }: { data: GraphData }) {
   // Edit Node
   function addNode(event: PointerEvent | MouseEvent) {
     if (event.button !== 0) return
@@ -307,7 +307,7 @@ function useD3EditNode({ data }: { data: GraphData }) {
   }
 }
 
-function useD3EditEdge({
+export function useD3EditEdge({
   data,
   isDirected = ref(false),
 }: {
@@ -349,7 +349,11 @@ function useD3EditEdge({
     drawEdgeCords.x2 = x
     drawEdgeCords.y2 = y
   }
-  function endDrawEdge(_event: PointerEvent | MouseEvent, d: NodeDatum) {
+  function endDrawEdge(
+    _event: PointerEvent | MouseEvent,
+    d: NodeDatum,
+    { withWeight } = { withWeight: false }
+  ) {
     if (!mousedownNode.value || d === mousedownNode.value) return
     if (
       data.edges.some((edge) => {
@@ -364,26 +368,9 @@ function useD3EditEdge({
       })
     )
       return
-    data.edges.push({ source: mousedownNode.value, target: d } as EdgeDatum)
-  }
-  function endDrawEdgeWithRandomWeight(
-    _event: PointerEvent | MouseEvent,
-    d: NodeDatum
-  ) {
-    if (!mousedownNode.value || d === mousedownNode.value) return
-    if (
-      data.edges.some(
-        (edge) =>
-          (edge.source === d && edge.target === mousedownNode.value) ||
-          (edge.source === mousedownNode.value && edge.target === d)
-      )
-    )
-      return
-    data.edges.push({
-      source: mousedownNode.value,
-      target: d,
-      weight: Math.floor(Math.random() * 10),
-    } as EdgeDatum)
+    const newEdge = { source: mousedownNode.value, target: d } as EdgeDatum
+    if (withWeight) newEdge.weight = Math.floor(Math.random() * 10)
+    data.edges.push(newEdge)
   }
   function hideDrawEdge() {
     mousedownNode.value = null
@@ -426,10 +413,14 @@ function useD3EditEdge({
       // If the edge is vertical or horizontal, just change x or y
       if (almostEqual(x1, x2) || almostEqual(y1, y2)) {
         return {
-          x1: x1 + translate * Number(!almostEqual(y1, y2)),
-          y1: y1 + translate * Number(!almostEqual(x1, x2)),
-          x2: x2 + translate * Number(!almostEqual(y1, y2)),
-          y2: y2 + translate * Number(!almostEqual(x1, x2)),
+          x1:
+            x1 + translate * Number(!almostEqual(y1, y2)) * (y2 > y1 ? -1 : 1),
+          y1:
+            y1 + translate * Number(!almostEqual(x1, x2)) * (x2 > x1 ? 1 : -1),
+          x2:
+            x2 + translate * Number(!almostEqual(y1, y2)) * (y2 > y1 ? -1 : 1),
+          y2:
+            y2 + translate * Number(!almostEqual(x1, x2)) * (x2 > x1 ? 1 : -1),
         }
       }
 
@@ -457,14 +448,13 @@ function useD3EditEdge({
     beginDrawEdge,
     updateDrawEdge,
     endDrawEdge,
-    endDrawEdgeWithRandomWeight,
     hideDrawEdge,
     removeEdge,
     edgesCords,
   }
 }
 
-function useGraphRepresentation({
+export function useGraphRepresentation({
   data,
   isDirected = ref(false),
 }: {
@@ -504,7 +494,7 @@ function useGraphRepresentation({
   return { adjacencyMatrix, adjacencyList, edgeList }
 }
 
-function useGraphProperties({
+export function useGraphProperties({
   data,
   adjacencyList,
   isDirected,

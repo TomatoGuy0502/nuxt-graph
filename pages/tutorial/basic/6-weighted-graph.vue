@@ -82,7 +82,7 @@
               r="10"
               @contextmenu.prevent="removeNode($event, node)"
               @mousedown.exact="beginDrawEdge($event, node)"
-              @mouseup.exact="endDrawEdgeWithRandomWeight($event, node)"
+              @mouseup.exact="endDrawEdge($event, node, { withWeight: true })"
               @mouseenter="highlightNode($event, node)"
               @mouseleave="unhighlightNode()"
             >
@@ -126,7 +126,7 @@ const {
   drawEdgeCords,
   beginDrawEdge,
   updateDrawEdge,
-  endDrawEdgeWithRandomWeight,
+  endDrawEdge,
   hideDrawEdge,
   removeEdge,
   data,

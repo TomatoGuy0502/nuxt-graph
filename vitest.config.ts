@@ -10,7 +10,7 @@ export default defineConfig({
     Vue(),
     AutoImport({
       imports: ['vue', '@vueuse/core'],
-      dirs: ['./composables/**'],
+      dirs: ['./composables/**', './utils/*.ts'],
       dts: true,
     }),
     Components({
@@ -21,6 +21,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '~/': `${process.cwd()}/`,
+      '@/': `${process.cwd()}/`,
     },
   },
   test: {},

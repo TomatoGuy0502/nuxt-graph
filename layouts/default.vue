@@ -2,7 +2,7 @@
   <div class="drawer h-screen min-[1640px]:drawer-open">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col overflow-y-auto">
-      <TheNavbar>{{ navbarHeading }}</TheNavbar>
+      <TheNavbar data-test="navbar">{{ navbarHeading }}</TheNavbar>
       <!-- Page content goes here -->
       <slot></slot>
     </div>
@@ -36,6 +36,7 @@
           <li
             v-for="(section, sectionNumber) in tutorialSectionNames"
             :key="section"
+            :data-test="`tutorial-section-${section}`"
             class="w-full"
           >
             <details class="w-full" open>

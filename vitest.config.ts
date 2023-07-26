@@ -18,5 +18,10 @@ export default defineConfig({
       dts: true,
     }),
   ],
+  resolve: {
+    alias: {
+      '~/': `${process.cwd()}/`,
+    },
+  },
   test: {},
 })

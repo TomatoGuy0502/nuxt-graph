@@ -21,7 +21,7 @@ export const useAlgorithmColors = ({
 
   const getEdgeColor = (edge: EdgeDatum) => {
     const classString = isDirected.value
-      ? '[marker-end:url(#arrowGray300)]'
+      ? '[marker-end:url(#arrowGray300)] '
       : ''
     const sourceIndex = (edge.source as NodeDatum).index!
     const targetIndex = (edge.target as NodeDatum).index!
@@ -33,10 +33,10 @@ export const useAlgorithmColors = ({
           walk.value.includes(`${targetIndex},${sourceIndex}`)))
     ) {
       // Visited edge
-      return `${classString} brightness-0`
+      return `${classString}brightness-0`
     } else {
       // Unvisited edge
-      return `${classString} hover:brightness-75`
+      return `${classString}hover:brightness-75`
     }
   }
 

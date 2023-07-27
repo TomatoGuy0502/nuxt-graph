@@ -118,6 +118,10 @@
 <script setup lang="ts">
 import type { NodeDatum, GraphData } from '@/composables/useD3'
 
+useHead({
+  title: 'Playground',
+})
+
 definePageMeta({
   name: 'Playground',
 })

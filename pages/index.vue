@@ -30,3 +30,16 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+useHead({
+  title: 'Graph Theory',
+  meta: [
+    {
+      name: 'description',
+      content:
+        'Graph Theory made simple! Learn Graph Theory basic knowledge, representations, and algorithms with interactive lessons and hands-on exercises.',
+    },
+  ],
+})
+</script>

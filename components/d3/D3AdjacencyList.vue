@@ -35,7 +35,10 @@
 <script
   setup
   lang="ts"
-  generic="NodeDatum extends d3.SimulationNodeDatum, EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>"
+  generic="
+    NodeDatum extends d3.SimulationNodeDatum,
+    EdgeDatum extends d3.SimulationLinkDatum<NodeDatum>
+  "
 >
 interface Props {
   adjacencyList: number[][]

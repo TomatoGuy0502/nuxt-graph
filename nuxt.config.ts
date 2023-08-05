@@ -11,7 +11,6 @@ export default defineNuxtConfig({
         /* module options */
       },
     ],
-    '@pinia/nuxt',
     '@nuxt/devtools',
     '@vueuse/nuxt',
     '@nuxt/content',

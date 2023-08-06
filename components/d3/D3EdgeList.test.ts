@@ -1,9 +1,11 @@
 // @vitest-environment jsdom
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { vi, describe, expect, it } from 'vitest'
 import D3EdgeList from './D3EdgeList.vue'
 
 describe('D3EdgeList.vue', () => {
+  vi.stubGlobal('useState', () => ref(0))
+
   it('should render sorted edge list', () => {
     const wrapper = mount(D3EdgeList, {
       props: {

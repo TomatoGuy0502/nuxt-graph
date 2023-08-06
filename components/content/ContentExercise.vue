@@ -5,6 +5,7 @@
         v-for="i in numberOfExercises"
         :key="i"
         class="flex items-start gap-2"
+        :data-test="`exercise-${i}`"
       >
         <span class="font-mono leading-6 mt-1">{{ i }}.</span>
         <label

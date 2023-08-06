@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     ContentAlert: typeof import('./components/content/ContentAlert.vue')['default']
     ContentCodeTab: typeof import('./components/content/ContentCodeTab.vue')['default']
+    ContentExercise: typeof import('./components/content/ContentExercise.vue')['default']
     ContentHelp: typeof import('./components/content/ContentHelp.vue')['default']
     ContentHowToButton: typeof import('./components/content/ContentHowToButton.vue')['default']
     ContentNavigation: typeof import('./components/content/ContentNavigation.vue')['default']

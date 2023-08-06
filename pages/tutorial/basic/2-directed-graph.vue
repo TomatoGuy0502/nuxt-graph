@@ -101,4 +101,13 @@ const {
 } = useD3(initData, svg, { linkDistance: 80, chargeStrength: -300 }, isDirected)
 
 enableDrag()
+
+const { finishedExercise } = useExercise()
+watchEffect(() => {
+  const nodesLength = data.nodes.length
+  const edgesLength = data.edges.length
+  if (edgesLength === nodesLength * (nodesLength - 1)) {
+    finishedExercise.value = 1
+  }
+})
 </script>

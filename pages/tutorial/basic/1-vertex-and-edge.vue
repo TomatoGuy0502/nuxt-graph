@@ -110,6 +110,24 @@ const {
 } = useD3(initData, svg)
 
 enableDrag()
+
+const { finishedExercise } = useExercise()
+watchEffect(() => {
+  if (
+    finishedExercise.value === 0 &&
+    data.nodes.length === 4 &&
+    data.edges.length === 4
+  ) {
+    finishedExercise.value = 1
+  }
+  if (
+    finishedExercise.value === 1 &&
+    data.nodes.length === 5 &&
+    data.edges.length === 7
+  ) {
+    finishedExercise.value = 2
+  }
+})
 </script>
 
 <style scoped>

@@ -269,4 +269,20 @@ const getEdgeColor = (edge: EdgeDatum) => {
   }
   return 'stroke-gray-300'
 }
+
+const { finishedExercise } = useExercise()
+watchEffect(() => {
+  if (finishedExercise.value === 0 && walk.length === 5) {
+    finishedExercise.value = 1
+  }
+  if (finishedExercise.value === 1 && isTrail.value && !isPath.value) {
+    finishedExercise.value = 2
+  }
+  if (finishedExercise.value === 2 && isPath.value && walk.length === 7) {
+    finishedExercise.value = 3
+  }
+  if (finishedExercise.value === 3 && isCycle.value && walk.length === 7) {
+    finishedExercise.value = 4
+  }
+})
 </script>

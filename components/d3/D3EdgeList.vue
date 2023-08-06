@@ -93,4 +93,39 @@ const isHighlightedEdge = (edge: EdgeDatum) => {
       hoverEdgeTargetNodeIndex === sourceNodeIndex)
   )
 }
+
+const { finishedExercise } = useExercise()
+const exercise1Ans = [
+  [0, 1],
+  [0, 2],
+  [0, 3],
+  [1, 4],
+  [2, 4],
+]
+const exercise2Ans = [
+  [0, 1],
+  [0, 2],
+  [1, 3],
+  [2, 0],
+  [3, 1],
+  [4, 0],
+]
+watch(sortedCurrentEdges, () => {
+  const edgeList = sortedCurrentEdges.value.map((edge) => [
+    (edge.source as NodeDatum).index,
+    (edge.target as NodeDatum).index,
+  ])
+  if (
+    finishedExercise.value === 0 &&
+    JSON.stringify(edgeList) === JSON.stringify(exercise1Ans)
+  ) {
+    finishedExercise.value = 1
+  }
+  if (
+    finishedExercise.value === 1 &&
+    JSON.stringify(edgeList) === JSON.stringify(exercise2Ans)
+  ) {
+    finishedExercise.value = 2
+  }
+})
 </script>

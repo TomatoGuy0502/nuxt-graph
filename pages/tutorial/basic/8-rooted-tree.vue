@@ -188,8 +188,18 @@ const treeHeight = computed(() => {
 const numberOfLeaves = computed(() => {
   // If a node has only one edge connected to it, it is a leaf node (except the root node)
   return data.nodes.slice(1).reduce((count, node) => {
-    return count + (adjacencyList.value[node.id]?.length === 1 ? 1 : 0)
+    return count + (adjacencyList.value[node.index!]?.length === 1 ? 1 : 0)
   }, 0)
+})
+
+const { finishedExercise } = useExercise()
+watchEffect(() => {
+  if (finishedExercise.value === 0 && treeHeight.value === 4) {
+    finishedExercise.value = 1
+  }
+  if (finishedExercise.value === 1 && numberOfLeaves.value === 6) {
+    finishedExercise.value = 2
+  }
 })
 </script>
 

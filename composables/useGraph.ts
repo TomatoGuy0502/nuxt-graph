@@ -1,5 +1,13 @@
 import { NodeDatum, GraphData } from './useD3'
 
+export interface GraphProperties {
+  hasCycle: boolean
+  connectedComponents: number[][]
+  isTree: boolean
+  isForest: boolean
+  isComplete: boolean
+}
+
 export function useGraphRepresentation({
   data,
   isDirected = ref(false),

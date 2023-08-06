@@ -168,4 +168,43 @@ watch(
   },
   { immediate: true }
 )
+
+const { finishedExercise } = useExercise()
+watchEffect(() => {
+  const nodesLength = data.nodes.length
+  const edgesLength = data.edges.length
+  if (
+    finishedExercise.value === 0 &&
+    isDirected?.value === false &&
+    nodesLength === 4
+  ) {
+    const degrees = data.nodes
+      .map((node) => node.degree!)
+      .sort((a, b) => b - a)
+      .join(',')
+    if (degrees === '3,2,2,1') {
+      finishedExercise.value = 1
+    }
+  }
+  if (
+    finishedExercise.value === 1 &&
+    isDirected?.value === false &&
+    nodesLength === 4
+  ) {
+    if (edgesLength === 6) {
+      finishedExercise.value = 2
+    }
+  }
+  if (
+    finishedExercise.value === 2 &&
+    isDirected?.value === true &&
+    nodesLength === 5
+  ) {
+    if (
+      data.nodes.some((node) => node.inDegree === 4 && node.outDegree === 2)
+    ) {
+      finishedExercise.value = 3
+    }
+  }
+})
 </script>

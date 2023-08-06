@@ -116,7 +116,7 @@ const {
 enableDrag()
 
 const { finishedExercise } = useExercise()
-watchEffect(() => {
+const stopExercise = watchEffect(() => {
   if (
     finishedExercise.value === 0 &&
     graphProperties.value.connectedComponents.length === 1
@@ -129,6 +129,7 @@ watchEffect(() => {
     graphProperties.value.connectedComponents.length === 3
   ) {
     finishedExercise.value = 2
+    stopExercise()
   }
 })
 </script>

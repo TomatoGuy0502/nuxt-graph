@@ -110,7 +110,7 @@ const exercise2Ans = [
   [3, 1],
   [4, 0],
 ]
-watch(sortedCurrentEdges, () => {
+const stopExercise = watch(sortedCurrentEdges, () => {
   const edgeList = sortedCurrentEdges.value.map((edge) => [
     (edge.source as NodeDatum).index,
     (edge.target as NodeDatum).index,
@@ -126,6 +126,7 @@ watch(sortedCurrentEdges, () => {
     JSON.stringify(edgeList) === JSON.stringify(exercise2Ans)
   ) {
     finishedExercise.value = 2
+    stopExercise()
   }
 })
 </script>

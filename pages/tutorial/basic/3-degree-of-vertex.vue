@@ -170,7 +170,7 @@ watch(
 )
 
 const { finishedExercise } = useExercise()
-watchEffect(() => {
+const stopExercise = watchEffect(() => {
   const nodesLength = data.nodes.length
   const edgesLength = data.edges.length
   if (
@@ -204,6 +204,7 @@ watchEffect(() => {
       data.nodes.some((node) => node.inDegree === 4 && node.outDegree === 2)
     ) {
       finishedExercise.value = 3
+      stopExercise()
     }
   }
 })

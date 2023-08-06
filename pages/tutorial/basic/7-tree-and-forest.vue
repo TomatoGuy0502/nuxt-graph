@@ -134,7 +134,7 @@ const {
 enableDrag()
 
 const { finishedExercise } = useExercise()
-watchEffect(() => {
+const stopExercise = watchEffect(() => {
   if (finishedExercise.value === 0 && graphProperties.value.isTree) {
     finishedExercise.value = 1
   }
@@ -147,6 +147,7 @@ watchEffect(() => {
   }
   if (finishedExercise.value === 2 && graphProperties.value.hasCycle) {
     finishedExercise.value = 3
+    stopExercise()
   }
 })
 </script>

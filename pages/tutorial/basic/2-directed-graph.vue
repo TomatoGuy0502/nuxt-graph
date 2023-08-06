@@ -103,11 +103,12 @@ const {
 enableDrag()
 
 const { finishedExercise } = useExercise()
-watchEffect(() => {
+const stopExercise = watchEffect(() => {
   const nodesLength = data.nodes.length
   const edgesLength = data.edges.length
   if (edgesLength === nodesLength * (nodesLength - 1)) {
     finishedExercise.value = 1
+    stopExercise()
   }
 })
 </script>

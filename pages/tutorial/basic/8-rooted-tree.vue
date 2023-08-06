@@ -193,12 +193,13 @@ const numberOfLeaves = computed(() => {
 })
 
 const { finishedExercise } = useExercise()
-watchEffect(() => {
+const stopExercise = watchEffect(() => {
   if (finishedExercise.value === 0 && treeHeight.value === 4) {
     finishedExercise.value = 1
   }
   if (finishedExercise.value === 1 && numberOfLeaves.value === 6) {
     finishedExercise.value = 2
+    stopExercise()
   }
 })
 </script>

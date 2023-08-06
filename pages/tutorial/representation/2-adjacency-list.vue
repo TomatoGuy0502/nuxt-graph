@@ -155,7 +155,7 @@ const exercise1Ans = [
   [2, 3],
 ]
 const exercise2Ans = [[3], [0], [0], [2], [0, 1]]
-watchEffect(() => {
+const stopExercise = watchEffect(() => {
   if (
     finishedExercise.value === 0 &&
     JSON.stringify(adjacencyList.value) === JSON.stringify(exercise1Ans)
@@ -167,6 +167,7 @@ watchEffect(() => {
     JSON.stringify(adjacencyList.value) === JSON.stringify(exercise2Ans)
   ) {
     finishedExercise.value = 2
+    stopExercise()
   }
 })
 </script>

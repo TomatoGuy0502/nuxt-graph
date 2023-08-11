@@ -6,7 +6,7 @@ export const useTraversal = (
     walk: string[]
     algorithmRecords?: number[][]
   },
-  interval: MaybeRefOrGetter<number> = 500
+  interval: MaybeRefOrGetter<number> = 800
 ) => {
   /** Traversal order using index */
   const {

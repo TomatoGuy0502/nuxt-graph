@@ -14,9 +14,13 @@
       </h1>
     </div>
     <div class="flex-none">
-      <button class="btn-ghost btn-square btn">
-        <i class="i-heroicons-ellipsis-horizontal-20-solid text-2xl" />
-      </button>
+      <NuxtLink
+        class="btn-ghost btn-square btn"
+        to="https://github.com/TomatoGuy0502/nuxt-graph"
+        target="_blank"
+      >
+        <i class="i-tabler-brand-github text-2xl" />
+      </NuxtLink>
     </div>
   </div>
 </template>

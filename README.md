@@ -1,11 +1,17 @@
-# Introduction
+<h1 align="center">
+    Graph Theory Interactive Learning Platform
+</h2>
+<br>
 
 <p align="center">
-  <a href="https://graph-theory-tutorial.vercel.app/" target="_blank">
-  <img src="https://i.imgur.com/ITzths5.png" alt="Interactive Learning Aid Software landing page" width='720'>
+    <a href="https://graph-theory-tutorial.vercel.app/" target="_blank">
+        <img src="https://i.imgur.com/ITzths5.png" alt="Landing Page Screenshot" width="600"/>
+    </a>
 </p>
 
-This is the repository for **Development and Evaluation of an Interactive Learning Aid Software for Graph Theory**
+<p align="center">
+    Learn Graph Theory with interactive lessons and hands-on exercises.
+</p>
 
 
 ## Tech Stack

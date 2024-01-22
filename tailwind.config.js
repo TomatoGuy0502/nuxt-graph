@@ -1,3 +1,5 @@
+import defaultTheme from 'tailwindcss/defaultTheme'
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -15,7 +17,11 @@ module.exports = {
     `./content/**/*.md`,
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
+      },
+    },
   },
   plugins: [require('@tailwindcss/typography'), require('daisyui')],
   daisyui: {
